@@ -1,0 +1,698 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MainModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MainModelStoreContainer">
+    <EntitySet Name="Accounts" EntityType="MainModel.Store.Accounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Counties" EntityType="MainModel.Store.Counties" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Addresses" EntityType="MainModel.Store.Addresses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons" EntityType="MainModel.Store.Persons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Genders" EntityType="MainModel.Store.Genders" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RHs" EntityType="MainModel.Store.RHs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BloodTypes" EntityType="MainModel.Store.BloodTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PersonStatuses" EntityType="MainModel.Store.PersonStatuses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DonationStatuses" EntityType="MainModel.Store.DonationStatuses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons_Patient" EntityType="MainModel.Store.Persons_Patient" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons_Doctor" EntityType="MainModel.Store.Persons_Doctor" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons_Donor" EntityType="MainModel.Store.Persons_Donor" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="AddressCounty" Association="MainModel.Store.AddressCounty">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="County" EntitySet="Counties" />
+    </AssociationSet>
+    <AssociationSet Name="GenderPerson" Association="MainModel.Store.GenderPerson">
+      <End Role="Gender" EntitySet="Genders" />
+      <End Role="Person" EntitySet="Persons" />
+    </AssociationSet>
+    <AssociationSet Name="PersonAddress" Association="MainModel.Store.PersonAddress">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="PatientPersonStatus" Association="MainModel.Store.PatientPersonStatus">
+      <End Role="Patient" EntitySet="Persons_Patient" />
+      <End Role="PersonStatus" EntitySet="PersonStatuses" />
+    </AssociationSet>
+    <AssociationSet Name="RHPatient" Association="MainModel.Store.RHPatient">
+      <End Role="RH" EntitySet="RHs" />
+      <End Role="Patient" EntitySet="Persons_Patient" />
+    </AssociationSet>
+    <AssociationSet Name="BloodTypePatient" Association="MainModel.Store.BloodTypePatient">
+      <End Role="BloodType" EntitySet="BloodTypes" />
+      <End Role="Patient" EntitySet="Persons_Patient" />
+    </AssociationSet>
+    <AssociationSet Name="DoctorPatient" Association="MainModel.Store.DoctorPatient">
+      <End Role="Doctor" EntitySet="Persons_Doctor" />
+      <End Role="Patient" EntitySet="Persons_Patient" />
+    </AssociationSet>
+    <AssociationSet Name="DonationStatusDonor" Association="MainModel.Store.DonationStatusDonor">
+      <End Role="DonationStatus" EntitySet="DonationStatuses" />
+      <End Role="Donor" EntitySet="Persons_Donor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Patient_inherits_Person" Association="MainModel.Store.FK_Patient_inherits_Person">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Patient" EntitySet="Persons_Patient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Doctor_inherits_Person" Association="MainModel.Store.FK_Doctor_inherits_Person">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Doctor" EntitySet="Persons_Doctor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Donor_inherits_Person" Association="MainModel.Store.FK_Donor_inherits_Person">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Donor" EntitySet="Persons_Donor" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Accounts">
+    <Key>
+      <PropertyRef Name="AccountID" />
+    </Key>
+    <Property Name="AccountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Counties">
+    <Key>
+      <PropertyRef Name="CountyID" />
+    </Key>
+    <Property Name="CountyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Addresses">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Street" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="StreetNo" Type="smallint" Nullable="false" />
+    <Property Name="City" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CountyID" Type="int" Nullable="false" />
+    <Property Name="Zipcode" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BirthDate" Type="datetime" Nullable="false" />
+    <Property Name="GenderID" Type="int" Nullable="false" />
+    <Property Name="Nin" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PhoneNo" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AddressID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Genders">
+    <Key>
+      <PropertyRef Name="GenderID" />
+    </Key>
+    <Property Name="GenderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RHs">
+    <Key>
+      <PropertyRef Name="RHID" />
+    </Key>
+    <Property Name="RHID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Value" Type="decimal" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BloodTypes">
+    <Key>
+      <PropertyRef Name="BloodTypeID" />
+    </Key>
+    <Property Name="BloodTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PersonStatuses">
+    <Key>
+      <PropertyRef Name="PersonStatusID" />
+    </Key>
+    <Property Name="PersonStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DonationStatuses">
+    <Key>
+      <PropertyRef Name="DonationStatusID" />
+    </Key>
+    <Property Name="DonationStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Weight" Type="decimal" Nullable="false" />
+    <Property Name="Pulse" Type="smallint" Nullable="false" />
+    <Property Name="BloodPressure" Type="decimal" Nullable="false" />
+    <Property Name="HasPastSurgeries" Type="bit" Nullable="false" />
+    <Property Name="HasAlcoholConsumption" Type="bit" Nullable="false" />
+    <Property Name="HasFatConsumption" Type="bit" Nullable="false" />
+    <Property Name="IsInTreatment" Type="bit" Nullable="false" />
+    <Property Name="HasDiseases" Type="bit" Nullable="false" />
+    <Property Name="Donor_PersonID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons_Patient">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonStatusID" Type="int" Nullable="false" />
+    <Property Name="RHID" Type="int" Nullable="false" />
+    <Property Name="BloodTypeID" Type="int" Nullable="false" />
+    <Property Name="DoctorID" Type="int" Nullable="false" />
+    <Property Name="PersonID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons_Doctor">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="PersonID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons_Donor">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="AddressCounty">
+    <End Role="Address" Type="MainModel.Store.Addresses" Multiplicity="*" />
+    <End Role="County" Type="MainModel.Store.Counties" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="County">
+        <PropertyRef Name="CountyID" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="CountyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GenderPerson">
+    <End Role="Gender" Type="MainModel.Store.Genders" Multiplicity="1" />
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gender">
+        <PropertyRef Name="GenderID" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="GenderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PersonAddress">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="*" />
+    <End Role="Address" Type="MainModel.Store.Addresses" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AddressID" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="AddressID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PatientPersonStatus">
+    <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="*" />
+    <End Role="PersonStatus" Type="MainModel.Store.PersonStatuses" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="PersonStatus">
+        <PropertyRef Name="PersonStatusID" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="PersonStatusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RHPatient">
+    <End Role="RH" Type="MainModel.Store.RHs" Multiplicity="1" />
+    <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RH">
+        <PropertyRef Name="RHID" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="RHID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BloodTypePatient">
+    <End Role="BloodType" Type="MainModel.Store.BloodTypes" Multiplicity="1" />
+    <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BloodType">
+        <PropertyRef Name="BloodTypeID" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="BloodTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DoctorPatient">
+    <End Role="Doctor" Type="MainModel.Store.Persons_Doctor" Multiplicity="1" />
+    <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="DoctorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DonationStatusDonor">
+    <End Role="DonationStatus" Type="MainModel.Store.DonationStatuses" Multiplicity="*" />
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Donor">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="DonationStatus">
+        <PropertyRef Name="Donor_PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Patient_inherits_Person">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Doctor_inherits_Person">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Doctor" Type="MainModel.Store.Persons_Doctor" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Donor_inherits_Person">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Donor">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="MainModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="MainModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="MainModel.Account" />
+          <EntitySet Name="Counties" EntityType="MainModel.County" />
+          <EntitySet Name="Addresses" EntityType="MainModel.Address" />
+          <AssociationSet Name="AddressCounty" Association="MainModel.AddressCounty">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="County" EntitySet="Counties" />
+          </AssociationSet>
+          <EntitySet Name="Persons" EntityType="MainModel.Person" />
+          <EntitySet Name="Genders" EntityType="MainModel.Gender" />
+          <AssociationSet Name="GenderPerson" Association="MainModel.GenderPerson">
+            <End Role="Gender" EntitySet="Genders" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="PersonAddress" Association="MainModel.PersonAddress">
+            <End Role="Person" EntitySet="Persons" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <EntitySet Name="RHs" EntityType="MainModel.RH" />
+          <EntitySet Name="BloodTypes" EntityType="MainModel.BloodType" />
+          <EntitySet Name="PersonStatuses" EntityType="MainModel.PersonStatus" />
+          <AssociationSet Name="PatientPersonStatus" Association="MainModel.PatientPersonStatus">
+            <End Role="Patient" EntitySet="Persons" />
+            <End Role="PersonStatus" EntitySet="PersonStatuses" />
+          </AssociationSet>
+          <AssociationSet Name="RHPatient" Association="MainModel.RHPatient">
+            <End Role="RH" EntitySet="RHs" />
+            <End Role="Patient" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="BloodTypePatient" Association="MainModel.BloodTypePatient">
+            <End Role="BloodType" EntitySet="BloodTypes" />
+            <End Role="Patient" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="DoctorPatient" Association="MainModel.DoctorPatient">
+            <End Role="Doctor" EntitySet="Persons" />
+            <End Role="Patient" EntitySet="Persons" />
+          </AssociationSet>
+          <EntitySet Name="DonationStatuses" EntityType="MainModel.DonationStatus" />
+          <AssociationSet Name="DonationStatusDonor" Association="MainModel.DonationStatusDonor">
+            <End Role="DonationStatus" EntitySet="DonationStatuses" />
+            <End Role="Donor" EntitySet="Persons" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="County">
+          <Key>
+            <PropertyRef Name="CountyID" />
+          </Key>
+          <Property Name="CountyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="MainModel.AddressCounty" FromRole="County" ToRole="Address" />
+        </EntityType>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="AddressID" />
+          </Key>
+          <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Street" Type="String" Nullable="false" />
+          <Property Name="StreetNo" Type="Int16" Nullable="false" />
+          <Property Name="City" Type="String" Nullable="false" />
+          <NavigationProperty Name="County" Relationship="MainModel.AddressCounty" FromRole="Address" ToRole="County" />
+          <Property Name="CountyID" Type="Int32" Nullable="false" />
+          <Property Name="Zipcode" Type="String" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="MainModel.PersonAddress" FromRole="Address" ToRole="Person" />
+        </EntityType>
+        <Association Name="AddressCounty">
+          <End Type="MainModel.Address" Role="Address" Multiplicity="*" />
+          <End Type="MainModel.County" Role="County" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="County">
+              <PropertyRef Name="CountyID" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CountyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" />
+          <Property Name="LastName" Type="String" Nullable="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Gender" Relationship="MainModel.GenderPerson" FromRole="Person" ToRole="Gender" />
+          <Property Name="GenderID" Type="Int32" Nullable="false" />
+          <Property Name="Nin" Type="String" Nullable="false" />
+          <Property Name="PhoneNo" Type="String" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="MainModel.PersonAddress" FromRole="Person" ToRole="Address" />
+          <Property Name="AddressID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Gender">
+          <Key>
+            <PropertyRef Name="GenderID" />
+          </Key>
+          <Property Name="GenderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="MainModel.GenderPerson" FromRole="Gender" ToRole="Person" />
+        </EntityType>
+        <Association Name="GenderPerson">
+          <End Type="MainModel.Gender" Role="Gender" Multiplicity="1" />
+          <End Type="MainModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gender">
+              <PropertyRef Name="GenderID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="GenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonAddress">
+          <End Type="MainModel.Person" Role="Person" Multiplicity="*" />
+          <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="AddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RH">
+          <Key>
+            <PropertyRef Name="RHID" />
+          </Key>
+          <Property Name="RHID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Patient" Relationship="MainModel.RHPatient" FromRole="RH" ToRole="Patient" />
+        </EntityType>
+        <EntityType Name="BloodType">
+          <Key>
+            <PropertyRef Name="BloodTypeID" />
+          </Key>
+          <Property Name="BloodTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" />
+          <NavigationProperty Name="Patient" Relationship="MainModel.BloodTypePatient" FromRole="BloodType" ToRole="Patient" />
+        </EntityType>
+        <EntityType Name="Patient" BaseType="MainModel.Person">
+          <NavigationProperty Name="PersonStatus" Relationship="MainModel.PatientPersonStatus" FromRole="Patient" ToRole="PersonStatus" />
+          <Property Name="PersonStatusID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RH" Relationship="MainModel.RHPatient" FromRole="Patient" ToRole="RH" />
+          <Property Name="RHID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BloodType" Relationship="MainModel.BloodTypePatient" FromRole="Patient" ToRole="BloodType" />
+          <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Doctor" Relationship="MainModel.DoctorPatient" FromRole="Patient" ToRole="Doctor" />
+          <Property Name="DoctorID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PersonStatus">
+          <Key>
+            <PropertyRef Name="PersonStatusID" />
+          </Key>
+          <Property Name="PersonStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" Nullable="false" />
+          <NavigationProperty Name="Patient" Relationship="MainModel.PatientPersonStatus" FromRole="PersonStatus" ToRole="Patient" />
+        </EntityType>
+        <Association Name="PatientPersonStatus">
+          <End Type="MainModel.Patient" Role="Patient" Multiplicity="*" />
+          <End Type="MainModel.PersonStatus" Role="PersonStatus" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="PersonStatus">
+              <PropertyRef Name="PersonStatusID" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PersonStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RHPatient">
+          <End Type="MainModel.RH" Role="RH" Multiplicity="1" />
+          <End Type="MainModel.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RH">
+              <PropertyRef Name="RHID" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="RHID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloodTypePatient">
+          <End Type="MainModel.BloodType" Role="BloodType" Multiplicity="1" />
+          <End Type="MainModel.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloodType">
+              <PropertyRef Name="BloodTypeID" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="BloodTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Donor" BaseType="MainModel.Person">
+          <NavigationProperty Name="DonationStatus" Relationship="MainModel.DonationStatusDonor" FromRole="Donor" ToRole="DonationStatus" />
+        </EntityType>
+        <EntityType Name="Doctor" BaseType="MainModel.Person">
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Patient" Relationship="MainModel.DoctorPatient" FromRole="Doctor" ToRole="Patient" />
+        </EntityType>
+        <Association Name="DoctorPatient">
+          <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="MainModel.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="DoctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DonationStatus">
+          <Key>
+            <PropertyRef Name="DonationStatusID" />
+          </Key>
+          <Property Name="DonationStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" />
+          <Property Name="Pulse" Type="Int16" Nullable="false" />
+          <Property Name="BloodPressure" Type="Decimal" Nullable="false" />
+          <Property Name="HasPastSurgeries" Type="Boolean" Nullable="false" />
+          <Property Name="HasAlcoholConsumption" Type="Boolean" Nullable="false" />
+          <Property Name="HasFatConsumption" Type="Boolean" Nullable="false" />
+          <Property Name="IsInTreatment" Type="Boolean" Nullable="false" />
+          <Property Name="HasDiseases" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Donor" Relationship="MainModel.DonationStatusDonor" FromRole="DonationStatus" ToRole="Donor" />
+        </EntityType>
+        <Association Name="DonationStatusDonor">
+          <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
+          <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MainModelStoreContainer" CdmEntityContainer="MainModelContainer">
+    <EntitySetMapping Name="Accounts">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Account)">
+        <MappingFragment StoreEntitySet="Accounts">
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Counties">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.County)">
+        <MappingFragment StoreEntitySet="Counties">
+          <ScalarProperty Name="CountyID" ColumnName="CountyID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Addresses">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Address)">
+        <MappingFragment StoreEntitySet="Addresses">
+          <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="StreetNo" ColumnName="StreetNo" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="CountyID" ColumnName="CountyID" />
+          <ScalarProperty Name="Zipcode" ColumnName="Zipcode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Persons">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Person)">
+        <MappingFragment StoreEntitySet="Persons">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+          <ScalarProperty Name="GenderID" ColumnName="GenderID" />
+          <ScalarProperty Name="Nin" ColumnName="Nin" />
+          <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+          <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Patient)">
+        <MappingFragment StoreEntitySet="Persons_Patient">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="PersonStatusID" ColumnName="PersonStatusID" />
+          <ScalarProperty Name="RHID" ColumnName="RHID" />
+          <ScalarProperty Name="BloodTypeID" ColumnName="BloodTypeID" />
+          <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Doctor)">
+        <MappingFragment StoreEntitySet="Persons_Doctor">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Donor)">
+        <MappingFragment StoreEntitySet="Persons_Donor">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genders">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Gender)">
+        <MappingFragment StoreEntitySet="Genders">
+          <ScalarProperty Name="GenderID" ColumnName="GenderID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RHs">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.RH)">
+        <MappingFragment StoreEntitySet="RHs">
+          <ScalarProperty Name="RHID" ColumnName="RHID" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BloodTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.BloodType)">
+        <MappingFragment StoreEntitySet="BloodTypes">
+          <ScalarProperty Name="BloodTypeID" ColumnName="BloodTypeID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PersonStatuses">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.PersonStatus)">
+        <MappingFragment StoreEntitySet="PersonStatuses">
+          <ScalarProperty Name="PersonStatusID" ColumnName="PersonStatusID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DonationStatuses">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.DonationStatus)">
+        <MappingFragment StoreEntitySet="DonationStatuses">
+          <ScalarProperty Name="DonationStatusID" ColumnName="DonationStatusID" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Pulse" ColumnName="Pulse" />
+          <ScalarProperty Name="BloodPressure" ColumnName="BloodPressure" />
+          <ScalarProperty Name="HasPastSurgeries" ColumnName="HasPastSurgeries" />
+          <ScalarProperty Name="HasAlcoholConsumption" ColumnName="HasAlcoholConsumption" />
+          <ScalarProperty Name="HasFatConsumption" ColumnName="HasFatConsumption" />
+          <ScalarProperty Name="IsInTreatment" ColumnName="IsInTreatment" />
+          <ScalarProperty Name="HasDiseases" ColumnName="HasDiseases" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="DonationStatusDonor" TypeName="MainModel.DonationStatusDonor" StoreEntitySet="DonationStatuses">
+      <EndProperty Name="Donor">
+        <ScalarProperty Name="PersonID" ColumnName="Donor_PersonID" />
+      </EndProperty>
+      <EndProperty Name="DonationStatus">
+        <ScalarProperty Name="DonationStatusID" ColumnName="DonationStatusID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f7cb54ce8b1f4c0a880ff25a39d08738" Name="Diagram1" ZoomLevel="83" >
+        <EntityTypeShape EntityType="MainModel.Account" Width="1.5" PointX="14.875" PointY="0.5" />
+        <EntityTypeShape EntityType="MainModel.County" Width="1.5" PointX="16.25" PointY="3.125" />
+        <EntityTypeShape EntityType="MainModel.Address" Width="1.5" PointX="14.25" PointY="3.75" />
+        <AssociationConnector Association="MainModel.AddressCounty" />
+        <EntityTypeShape EntityType="MainModel.Person" Width="1.5" PointX="12.25" PointY="0.5" />
+        <EntityTypeShape EntityType="MainModel.Gender" Width="1.5" PointX="12.125" PointY="5.5" />
+        <AssociationConnector Association="MainModel.GenderPerson" />
+        <AssociationConnector Association="MainModel.PersonAddress" />
+        <EntityTypeShape EntityType="MainModel.RH" Width="1.5" PointX="9.125" PointY="1.125" />
+        <EntityTypeShape EntityType="MainModel.BloodType" Width="1.5" PointX="9" PointY="3.375" />
+        <EntityTypeShape EntityType="MainModel.Patient" Width="1.5" PointX="6.375" PointY="4.25" />
+        <EntityTypeShape EntityType="MainModel.PersonStatus" Width="1.5" PointX="9.5" PointY="5.625" />
+        <AssociationConnector Association="MainModel.PatientPersonStatus" />
+        <AssociationConnector Association="MainModel.RHPatient" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="MainModel.BloodTypePatient" />
+        <EntityTypeShape EntityType="MainModel.Donor" Width="1.5" PointX="10.875" PointY="3.625" />
+        <InheritanceConnector EntityType="MainModel.Donor" />
+        <EntityTypeShape EntityType="MainModel.Doctor" Width="1.5" PointX="6.375" PointY="0.5" />
+        <InheritanceConnector EntityType="MainModel.Doctor" />
+        <AssociationConnector Association="MainModel.DoctorPatient" />
+        <EntityTypeShape EntityType="MainModel.DonationStatus" Width="1.5" PointX="4.5" PointY="1.125" />
+        <AssociationConnector Association="MainModel.DonationStatusDonor" />
+        <InheritanceConnector EntityType="MainModel.Patient" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
