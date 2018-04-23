@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="f7cb54ce8b1f4c0a880ff25a39d08738" Name="Diagram1" ZoomLevel="83" >
-        <EntityTypeShape EntityType="MainModel.Account" Width="1.5" PointX="14.875" PointY="0.5" />
+        <EntityTypeShape EntityType="MainModel.Account" Width="1.5" PointX="16.75" PointY="5" />
         <EntityTypeShape EntityType="MainModel.County" Width="1.5" PointX="16.25" PointY="3.125" />
         <EntityTypeShape EntityType="MainModel.Address" Width="1.5" PointX="14.25" PointY="3.75" />
         <AssociationConnector Association="MainModel.AddressCounty" />
@@ -29,6 +29,23 @@
         <EntityTypeShape EntityType="MainModel.DonationStatus" Width="1.5" PointX="4.5" PointY="1.125" />
         <AssociationConnector Association="MainModel.DonationStatusDonor" />
         <InheritanceConnector EntityType="MainModel.Patient" />
+        <EntityTypeShape EntityType="MainModel.Message" Width="2.125" PointX="15.25" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="MainModel.MessagePerson" />
+        <AssociationConnector Association="MainModel.MessagePerson1" />
+        <EntityTypeShape EntityType="MainModel.DonationCenter" Width="1.5" PointX="14.75" PointY="7.25" />
+        <AssociationConnector Association="MainModel.DonationCenterAddress" />
+        <EntityTypeShape EntityType="MainModel.BloodContainer" Width="1.5" PointX="18.75" PointY="7.125" />
+        <AssociationConnector Association="MainModel.BloodContainerDonationCenter" />
+        <EntityTypeShape EntityType="MainModel.BloodRequest" Width="1.5" PointX="16.875" PointY="9.5" />
+        <AssociationConnector Association="MainModel.BloodRequestBloodContainer" />
+        <AssociationConnector Association="MainModel.BloodRequestDonationCenter" />
+        <AssociationConnector Association="MainModel.BloodRequestDoctor" />
+        <EntityTypeShape EntityType="MainModel.DCPersonnel" Width="1.5" PointX="10.875" PointY="8.375" />
+        <AssociationConnector Association="MainModel.DCPersonnelDonationCenter" />
+        <InheritanceConnector EntityType="MainModel.DCPersonnel" />
+        <EntityTypeShape EntityType="MainModel.Admin" Width="1.5" PointX="14" PointY="11.25" />
+        <EntityTypeShape EntityType="MainModel.WomenInfo" Width="1.5" PointX="1.75" PointY="1.875" />
+        <AssociationConnector Association="MainModel.WomenInfoDonationStatus" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

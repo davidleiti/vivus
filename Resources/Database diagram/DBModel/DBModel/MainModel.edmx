@@ -352,6 +352,48 @@
             <End Role="DonationStatus" EntitySet="DonationStatuses" />
             <End Role="Donor" EntitySet="Persons" />
           </AssociationSet>
+          <EntitySet Name="MessageSet" EntityType="MainModel.Message" />
+          <AssociationSet Name="MessagePerson" Association="MainModel.MessagePerson">
+            <End EntitySet="MessageSet" Role="Message" />
+            <End EntitySet="Persons" Role="Person" />
+          </AssociationSet>
+          <AssociationSet Name="MessagePerson1" Association="MainModel.MessagePerson1">
+            <End EntitySet="MessageSet" Role="Message" />
+            <End EntitySet="Persons" Role="Person" />
+          </AssociationSet>
+          <EntitySet Name="DonationCenterSet" EntityType="MainModel.DonationCenter" />
+          <AssociationSet Name="DonationCenterAddress" Association="MainModel.DonationCenterAddress">
+            <End Role="DonationCenter" EntitySet="DonationCenterSet" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <EntitySet Name="BloodContainerSet" EntityType="MainModel.BloodContainer" />
+          <AssociationSet Name="BloodContainerDonationCenter" Association="MainModel.BloodContainerDonationCenter">
+            <End Role="BloodContainer" EntitySet="BloodContainerSet" />
+            <End Role="DonationCenter" EntitySet="DonationCenterSet" />
+          </AssociationSet>
+          <EntitySet Name="BloodRequestSet" EntityType="MainModel.BloodRequest" />
+          <AssociationSet Name="BloodRequestBloodContainer" Association="MainModel.BloodRequestBloodContainer">
+            <End Role="BloodRequest" EntitySet="BloodRequestSet" />
+            <End Role="BloodContainer" EntitySet="BloodContainerSet" />
+          </AssociationSet>
+          <AssociationSet Name="BloodRequestDonationCenter" Association="MainModel.BloodRequestDonationCenter">
+            <End Role="BloodRequest" EntitySet="BloodRequestSet" />
+            <End Role="DonationCenter" EntitySet="DonationCenterSet" />
+          </AssociationSet>
+          <AssociationSet Name="BloodRequestDoctor" Association="MainModel.BloodRequestDoctor">
+            <End Role="BloodRequest" EntitySet="BloodRequestSet" />
+            <End Role="Doctor" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="DCPersonnelDonationCenter" Association="MainModel.DCPersonnelDonationCenter">
+            <End Role="DCPersonnel" EntitySet="Persons" />
+            <End Role="DonationCenter" EntitySet="DonationCenterSet" />
+          </AssociationSet>
+          <EntitySet Name="AdminSet" EntityType="MainModel.Admin" />
+          <EntitySet Name="WomenInfoSet" EntityType="MainModel.WomenInfo" />
+          <AssociationSet Name="WomenInfoDonationStatus" Association="MainModel.WomenInfoDonationStatus">
+            <End Role="WomenInfo" EntitySet="WomenInfoSet" />
+            <End Role="DonationStatus" EntitySet="DonationStatuses" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -381,6 +423,7 @@
           <Property Name="CountyID" Type="Int32" Nullable="false" />
           <Property Name="Zipcode" Type="String" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="MainModel.PersonAddress" FromRole="Address" ToRole="Person" />
+          <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationCenterAddress" FromRole="Address" ToRole="DonationCenter" />
         </EntityType>
         <Association Name="AddressCounty">
           <End Type="MainModel.Address" Role="Address" Multiplicity="*" />
@@ -408,6 +451,9 @@
           <Property Name="PhoneNo" Type="String" Nullable="false" />
           <NavigationProperty Name="Address" Relationship="MainModel.PersonAddress" FromRole="Person" ToRole="Address" />
           <Property Name="AddressID" Type="Int32" Nullable="false" />
+          <Property Name="MessageMessageId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Message" Relationship="MainModel.MessagePerson" FromRole="Person" ToRole="Message" />
+          <NavigationProperty Name="Message1" Relationship="MainModel.MessagePerson1" FromRole="Person" ToRole="Message" />
         </EntityType>
         <EntityType Name="Gender">
           <Key>
@@ -517,6 +563,7 @@
         <EntityType Name="Doctor" BaseType="MainModel.Person">
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.DoctorPatient" FromRole="Doctor" ToRole="Patient" />
+          <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDoctor" FromRole="Doctor" ToRole="BloodRequest" />
         </EntityType>
         <Association Name="DoctorPatient">
           <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
@@ -544,10 +591,123 @@
           <Property Name="IsInTreatment" Type="Boolean" Nullable="false" />
           <Property Name="HasDiseases" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Donor" Relationship="MainModel.DonationStatusDonor" FromRole="DonationStatus" ToRole="Donor" />
+          <NavigationProperty Name="WomenInfo" Relationship="MainModel.WomenInfoDonationStatus" FromRole="DonationStatus" ToRole="WomenInfo" />
         </EntityType>
         <Association Name="DonationStatusDonor">
           <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
           <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageId" />
+          </Key>
+          <Property Name="MessageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="message" Type="String" Nullable="false" />
+          <NavigationProperty Name="NavigationProperty1" />
+          <NavigationProperty Name="Person" Relationship="MainModel.MessagePerson" FromRole="Message" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="MainModel.MessagePerson1" FromRole="Message" ToRole="Person" />
+        </EntityType>
+        <Association Name="MessagePerson">
+          <End Type="MainModel.Message" Multiplicity="*" Role="Message" />
+          <End Type="MainModel.Person" Multiplicity="0..1" Role="Person" />
+        </Association>
+        <Association Name="MessagePerson1">
+          <End Type="MainModel.Message" Multiplicity="*" Role="Message" />
+          <End Type="MainModel.Person" Multiplicity="0..1" Role="Person" />
+        </Association>
+        <EntityType Name="DonationCenter">
+          <Key>
+            <PropertyRef Name="DonationCenterId" />
+          </Key>
+          <Property Name="DonationCenterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="NavigationProperty1" />
+          <NavigationProperty Name="Address" Relationship="MainModel.DonationCenterAddress" FromRole="DonationCenter" ToRole="Address" />
+          <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodContainerDonationCenter" FromRole="DonationCenter" ToRole="BloodContainer" />
+          <Property Name="BloodContainerBloodConainerId" Type="Int32" Nullable="true" />
+          <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDonationCenter" FromRole="DonationCenter" ToRole="BloodRequest" />
+          <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DCPersonnelDonationCenter" FromRole="DonationCenter" ToRole="DCPersonnel" />
+        </EntityType>
+        <Association Name="DonationCenterAddress">
+          <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="1" />
+          <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
+        </Association>
+        <EntityType Name="BloodContainer">
+          <Key>
+            <PropertyRef Name="BloodConainerId" />
+          </Key>
+          <Property Name="BloodConainerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContainerCode" Type="String" Nullable="false" />
+          <Property Name="BloodType" Type="String" Nullable="false" />
+          <Property Name="RH" Type="String" Nullable="false" />
+          <Property Name="HarvestDate" Type="String" Nullable="false" />
+          <Property Name="ContainerType" Type="String" Nullable="false" />
+          <NavigationProperty Name="DonationCenter" Relationship="MainModel.BloodContainerDonationCenter" FromRole="BloodContainer" ToRole="DonationCenter" />
+          <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestBloodContainer" FromRole="BloodContainer" ToRole="BloodRequest" />
+        </EntityType>
+        <Association Name="BloodContainerDonationCenter">
+          <End Type="MainModel.BloodContainer" Role="BloodContainer" Multiplicity="0..1" />
+          <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloodContainer">
+              <PropertyRef Name="BloodConainerId" />
+            </Principal>
+            <Dependent Role="DonationCenter">
+              <PropertyRef Name="BloodContainerBloodConainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BloodRequest">
+          <Key>
+            <PropertyRef Name="BloodRequestId" />
+          </Key>
+          <Property Name="BloodRequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Patient" Type="String" Nullable="false" />
+          <Property Name="RequestPriority" Type="String" Nullable="false" />
+          <Property Name="TrombociteQuantity" Type="String" Nullable="false" />
+          <Property Name="RedCellsQuantity" Type="String" Nullable="false" />
+          <Property Name="PlasmaQuantity" Type="String" Nullable="false" />
+          <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodRequestBloodContainer" FromRole="BloodRequest" ToRole="BloodContainer" />
+          <NavigationProperty Name="DonationCenter" Relationship="MainModel.BloodRequestDonationCenter" FromRole="BloodRequest" ToRole="DonationCenter" />
+          <NavigationProperty Name="Doctor" Relationship="MainModel.BloodRequestDoctor" FromRole="BloodRequest" ToRole="Doctor" />
+        </EntityType>
+        <Association Name="BloodRequestBloodContainer">
+          <End Type="MainModel.BloodRequest" Role="BloodRequest" Multiplicity="1" />
+          <End Type="MainModel.BloodContainer" Role="BloodContainer" Multiplicity="1" />
+        </Association>
+        <Association Name="BloodRequestDonationCenter">
+          <End Type="MainModel.BloodRequest" Role="BloodRequest" Multiplicity="0..1" />
+          <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="0..1" />
+        </Association>
+        <Association Name="BloodRequestDoctor">
+          <End Type="MainModel.BloodRequest" Role="BloodRequest" Multiplicity="0..1" />
+          <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
+        </Association>
+        <EntityType Name="DCPersonnel" BaseType="MainModel.Person">
+          <Property Name="DCPersonnelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Disabled" Type="String" Nullable="false" />
+          <NavigationProperty Name="DonationCenter" Relationship="MainModel.DCPersonnelDonationCenter" FromRole="DCPersonnel" ToRole="DonationCenter" />
+        </EntityType>
+        <Association Name="DCPersonnelDonationCenter">
+          <End Type="MainModel.DCPersonnel" Role="DCPersonnel" Multiplicity="*" />
+          <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="WomenInfo">
+          <Key>
+            <PropertyRef Name="WomenInfoId" />
+          </Key>
+          <Property Name="WomenInfoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="DonationStatus" Relationship="MainModel.WomenInfoDonationStatus" FromRole="WomenInfo" ToRole="DonationStatus" />
+        </EntityType>
+        <Association Name="WomenInfoDonationStatus">
+          <End Type="MainModel.WomenInfo" Role="WomenInfo" Multiplicity="0..1" />
+          <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
