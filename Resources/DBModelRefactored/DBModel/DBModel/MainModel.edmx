@@ -813,6 +813,22 @@
             <End Role="WomenInfo" EntitySet="WomenInfos" />
             <End Role="DonationStatus" EntitySet="DonationStatuses" />
           </AssociationSet>
+          <AssociationSet Name="AddressDonor" Association="MainModel.AddressDonor">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Donor" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="DoctorAccount" Association="MainModel.DoctorAccount">
+            <End Role="Doctor" EntitySet="Persons" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="DCPersonnelAccount" Association="MainModel.DCPersonnelAccount">
+            <End Role="DCPersonnel" EntitySet="Persons" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="DonorAccount" Association="MainModel.DonorAccount">
+            <End Role="Donor" EntitySet="Persons" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -821,6 +837,10 @@
           <Property Name="AccountID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Email" Type="String" Nullable="false" />
           <Property Name="Password" Type="String" Nullable="false" />
+          <NavigationProperty Name="Doctor" Relationship="MainModel.DoctorAccount" FromRole="Account" ToRole="Doctor" />
+          <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DCPersonnelAccount" FromRole="Account" ToRole="DCPersonnel" />
+          <NavigationProperty Name="Donor" Relationship="MainModel.DonorAccount" FromRole="Account" ToRole="Donor" />
+          <Property Name="DonorPersonID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="County">
           <Key>
@@ -843,6 +863,7 @@
           <Property Name="Zipcode" Type="String" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="MainModel.PersonAddress" FromRole="Address" ToRole="Person" />
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationCenterAddress" FromRole="Address" ToRole="DonationCenter" />
+          <NavigationProperty Name="Donor" Relationship="MainModel.AddressDonor" FromRole="Address" ToRole="Donor" />
         </EntityType>
         <Association Name="AddressCounty">
           <End Type="MainModel.Address" Role="Address" Multiplicity="*" />
@@ -980,11 +1001,14 @@
         <EntityType Name="Donor" BaseType="MainModel.Person">
           <NavigationProperty Name="DonationStatus" Relationship="MainModel.DonationStatusDonor" FromRole="Donor" ToRole="DonationStatus" />
           <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDonor" FromRole="Donor" ToRole="DonationForm" />
+          <NavigationProperty Name="Residence" Relationship="MainModel.AddressDonor" FromRole="Donor" ToRole="Address" />
+          <NavigationProperty Name="Account" Relationship="MainModel.DonorAccount" FromRole="Donor" ToRole="Account" />
         </EntityType>
         <EntityType Name="Doctor" BaseType="MainModel.Person">
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.DoctorPatient" FromRole="Doctor" ToRole="Patient" />
           <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDoctor" FromRole="Doctor" ToRole="BloodRequest" />
+          <NavigationProperty Name="Account" Relationship="MainModel.DoctorAccount" FromRole="Doctor" ToRole="Account" />
         </EntityType>
         <Association Name="DoctorPatient">
           <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
@@ -1074,6 +1098,7 @@
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DCPersonnelDonationCenter" FromRole="DCPersonnel" ToRole="DonationCenter" />
           <Property Name="DonationCenterID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDCPersonnel" FromRole="DCPersonnel" ToRole="DonationForm" />
+          <NavigationProperty Name="Account" Relationship="MainModel.DCPersonnelAccount" FromRole="DCPersonnel" ToRole="Account" />
         </EntityType>
         <Association Name="DonationCenterAddress">
           <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="*" />
@@ -1295,6 +1320,30 @@
         <Association Name="WomenInfoDonationStatus">
           <End Type="MainModel.WomenInfo" Role="WomenInfo" Multiplicity="0..1" />
           <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
+        </Association>
+        <Association Name="AddressDonor">
+          <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
+        </Association>
+        <Association Name="DoctorAccount">
+          <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="MainModel.Account" Role="Account" Multiplicity="1" />
+        </Association>
+        <Association Name="DCPersonnelAccount">
+          <End Type="MainModel.DCPersonnel" Role="DCPersonnel" Multiplicity="1" />
+          <End Type="MainModel.Account" Role="Account" Multiplicity="1" />
+        </Association>
+        <Association Name="DonorAccount">
+          <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
+          <End Type="MainModel.Account" Role="Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Donor">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Account">
+              <PropertyRef Name="DonorPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>

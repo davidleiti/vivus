@@ -17,5 +17,10 @@ namespace DBModel
         public int AccountID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public int DonorPersonID { get; set; }
+    
+        public virtual Doctor Doctor { get; set; }
+        public virtual DCPersonnel DCPersonnel { get; set; }
+        public virtual Donor Donor { get; set; }
     }
 }

@@ -18,11 +18,15 @@ namespace DBModel
         public Donor()
         {
             this.DonationForm = new HashSet<DonationForm>();
+            this.Account = new HashSet<Account>();
         }
     
     
         public virtual DonationStatus DonationStatus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationForm> DonationForm { get; set; }
+        public virtual Address Residence { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Account> Account { get; set; }
     }
 }

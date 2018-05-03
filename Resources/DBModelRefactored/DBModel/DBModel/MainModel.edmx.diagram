@@ -56,6 +56,10 @@
         <EntityTypeShape EntityType="MainModel.Administrator" Width="1.5" PointX="17.25" PointY="5.875" />
         <EntityTypeShape EntityType="MainModel.Owner" Width="1.5" PointX="16" PointY="8.375" />
         <AssociationConnector Association="MainModel.WomenInfoDonationStatus" />
+        <AssociationConnector Association="MainModel.AddressDonor" />
+        <AssociationConnector Association="MainModel.DoctorAccount" />
+        <AssociationConnector Association="MainModel.DCPersonnelAccount" />
+        <AssociationConnector Association="MainModel.DonorAccount" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
