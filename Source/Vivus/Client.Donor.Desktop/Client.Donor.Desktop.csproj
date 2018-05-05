@@ -94,6 +94,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Client.Core\Client.Core.csproj">
+      <Project>{29fa88de-fd27-4985-8bd0-12faa5f2f645}</Project>
+      <Name>Client.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core.Donor\Core.Donor.csproj">
       <Project>{daffc3fb-5ad6-42ba-8848-11135d8664eb}</Project>
       <Name>Core.Donor</Name>
