@@ -60,6 +60,7 @@
         <AssociationConnector Association="MainModel.DoctorAccount" />
         <AssociationConnector Association="MainModel.DCPersonnelAccount" />
         <AssociationConnector Association="MainModel.DonorAccount" />
+        <AssociationConnector Association="MainModel.DoctorAddress" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

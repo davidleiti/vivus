@@ -19,6 +19,7 @@ namespace DBModel
         {
             this.Person = new HashSet<Person>();
             this.DonationCenter = new HashSet<DonationCenter>();
+            this.Doctor = new HashSet<Doctor>();
         }
     
         public int AddressID { get; set; }
@@ -34,5 +35,7 @@ namespace DBModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationCenter> DonationCenter { get; set; }
         public virtual Donor Donor { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Doctor> Doctor { get; set; }
     }
 }

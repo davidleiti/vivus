@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/28/2018 13:46:34
--- Generated from EDMX file: C:\Users\Gergely\Desktop\DBModel (1)\DBModel\DBModel\MainModel.edmx
+-- Date Created: 05/05/2018 14:10:57
+-- Generated from EDMX file: E:\Year 2 Semester 2\Software Engineering\vivus\Resources\DBModelRefactored\DBModel\DBModel\MainModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -40,9 +40,6 @@ IF OBJECT_ID(N'[dbo].[FK_DoctorPatient]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DonationStatusDonor]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DonationStatuses] DROP CONSTRAINT [FK_DonationStatusDonor];
-GO
-IF OBJECT_ID(N'[dbo].[FK_WomenInfoDonationStatus]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[WomenInfos] DROP CONSTRAINT [FK_WomenInfoDonationStatus];
 GO
 IF OBJECT_ID(N'[dbo].[FK_BloodContainerRH]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[BloodContainers] DROP CONSTRAINT [FK_BloodContainerRH];
@@ -82,6 +79,15 @@ IF OBJECT_ID(N'[dbo].[FK_DonationFormDCPersonnel]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DonationFormDonor]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DonationForms] DROP CONSTRAINT [FK_DonationFormDonor];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PersonMessage]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Messages] DROP CONSTRAINT [FK_PersonMessage];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PersonMessage1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Messages] DROP CONSTRAINT [FK_PersonMessage1];
+GO
+IF OBJECT_ID(N'[dbo].[FK_WomenInfoDonationStatus]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[WomenInfos] DROP CONSTRAINT [FK_WomenInfoDonationStatus];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Patient_inherits_Person]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_Patient_inherits_Person];
@@ -151,6 +157,12 @@ GO
 IF OBJECT_ID(N'[dbo].[Messages]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Messages];
 GO
+IF OBJECT_ID(N'[dbo].[Administrators]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Administrators];
+GO
+IF OBJECT_ID(N'[dbo].[Owners]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Owners];
+GO
 IF OBJECT_ID(N'[dbo].[Persons_Patient]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Persons_Patient];
 GO
@@ -175,7 +187,8 @@ GO
 CREATE TABLE [dbo].[Accounts] (
     [AccountID] int IDENTITY(1,1) NOT NULL,
     [Email] nvarchar(max)  NOT NULL,
-    [Password] nvarchar(max)  NOT NULL
+    [Password] nvarchar(max)  NOT NULL,
+    [DonorPersonID] int  NOT NULL
 );
 GO
 
@@ -193,7 +206,8 @@ CREATE TABLE [dbo].[Addresses] (
     [StreetNo] smallint  NOT NULL,
     [City] nvarchar(max)  NOT NULL,
     [CountyID] int  NOT NULL,
-    [Zipcode] nvarchar(max)  NOT NULL
+    [Zipcode] nvarchar(max)  NOT NULL,
+    [Donor_PersonID] int  NOT NULL
 );
 GO
 
@@ -355,7 +369,9 @@ GO
 -- Creating table 'Persons_Doctor'
 CREATE TABLE [dbo].[Persons_Doctor] (
     [IsActive] bit  NOT NULL,
-    [PersonID] int  NOT NULL
+    [WorkAddressID] int  NOT NULL,
+    [PersonID] int  NOT NULL,
+    [Account_AccountID] int  NOT NULL
 );
 GO
 
@@ -369,7 +385,8 @@ GO
 CREATE TABLE [dbo].[Persons_DCPersonnel] (
     [Disabled] bit  NOT NULL,
     [DonationCenterID] int  NOT NULL,
-    [PersonID] int  NOT NULL
+    [PersonID] int  NOT NULL,
+    [Account_AccountID] int  NOT NULL
 );
 GO
 
@@ -884,6 +901,81 @@ GO
 CREATE INDEX [IX_FK_WomenInfoDonationStatus]
 ON [dbo].[WomenInfos]
     ([DonationStatus_DonationStatusID]);
+GO
+
+-- Creating foreign key on [Donor_PersonID] in table 'Addresses'
+ALTER TABLE [dbo].[Addresses]
+ADD CONSTRAINT [FK_AddressDonor]
+    FOREIGN KEY ([Donor_PersonID])
+    REFERENCES [dbo].[Persons_Donor]
+        ([PersonID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_AddressDonor'
+CREATE INDEX [IX_FK_AddressDonor]
+ON [dbo].[Addresses]
+    ([Donor_PersonID]);
+GO
+
+-- Creating foreign key on [Account_AccountID] in table 'Persons_Doctor'
+ALTER TABLE [dbo].[Persons_Doctor]
+ADD CONSTRAINT [FK_DoctorAccount]
+    FOREIGN KEY ([Account_AccountID])
+    REFERENCES [dbo].[Accounts]
+        ([AccountID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DoctorAccount'
+CREATE INDEX [IX_FK_DoctorAccount]
+ON [dbo].[Persons_Doctor]
+    ([Account_AccountID]);
+GO
+
+-- Creating foreign key on [Account_AccountID] in table 'Persons_DCPersonnel'
+ALTER TABLE [dbo].[Persons_DCPersonnel]
+ADD CONSTRAINT [FK_DCPersonnelAccount]
+    FOREIGN KEY ([Account_AccountID])
+    REFERENCES [dbo].[Accounts]
+        ([AccountID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DCPersonnelAccount'
+CREATE INDEX [IX_FK_DCPersonnelAccount]
+ON [dbo].[Persons_DCPersonnel]
+    ([Account_AccountID]);
+GO
+
+-- Creating foreign key on [DonorPersonID] in table 'Accounts'
+ALTER TABLE [dbo].[Accounts]
+ADD CONSTRAINT [FK_DonorAccount]
+    FOREIGN KEY ([DonorPersonID])
+    REFERENCES [dbo].[Persons_Donor]
+        ([PersonID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DonorAccount'
+CREATE INDEX [IX_FK_DonorAccount]
+ON [dbo].[Accounts]
+    ([DonorPersonID]);
+GO
+
+-- Creating foreign key on [WorkAddressID] in table 'Persons_Doctor'
+ALTER TABLE [dbo].[Persons_Doctor]
+ADD CONSTRAINT [FK_DoctorAddress]
+    FOREIGN KEY ([WorkAddressID])
+    REFERENCES [dbo].[Addresses]
+        ([AddressID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DoctorAddress'
+CREATE INDEX [IX_FK_DoctorAddress]
+ON [dbo].[Persons_Doctor]
+    ([WorkAddressID]);
 GO
 
 -- Creating foreign key on [PersonID] in table 'Persons_Patient'

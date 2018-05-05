@@ -126,6 +126,26 @@
       <End Role="WomenInfo" EntitySet="WomenInfos" />
       <End Role="DonationStatus" EntitySet="DonationStatuses" />
     </AssociationSet>
+    <AssociationSet Name="AddressDonor" Association="MainModel.Store.AddressDonor">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="Donor" EntitySet="Persons_Donor" />
+    </AssociationSet>
+    <AssociationSet Name="DoctorAccount" Association="MainModel.Store.DoctorAccount">
+      <End Role="Doctor" EntitySet="Persons_Doctor" />
+      <End Role="Account" EntitySet="Accounts" />
+    </AssociationSet>
+    <AssociationSet Name="DCPersonnelAccount" Association="MainModel.Store.DCPersonnelAccount">
+      <End Role="DCPersonnel" EntitySet="Persons_DCPersonnel" />
+      <End Role="Account" EntitySet="Accounts" />
+    </AssociationSet>
+    <AssociationSet Name="DonorAccount" Association="MainModel.Store.DonorAccount">
+      <End Role="Donor" EntitySet="Persons_Donor" />
+      <End Role="Account" EntitySet="Accounts" />
+    </AssociationSet>
+    <AssociationSet Name="DoctorAddress" Association="MainModel.Store.DoctorAddress">
+      <End Role="Doctor" EntitySet="Persons_Doctor" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
     <AssociationSet Name="FK_Patient_inherits_Person" Association="MainModel.Store.FK_Patient_inherits_Person">
       <End Role="Person" EntitySet="Persons" />
       <End Role="Patient" EntitySet="Persons_Patient" />
@@ -150,6 +170,7 @@
     <Property Name="AccountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DonorPersonID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Counties">
     <Key>
@@ -168,6 +189,7 @@
     <Property Name="City" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CountyID" Type="int" Nullable="false" />
     <Property Name="Zipcode" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Donor_PersonID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Persons">
     <Key>
@@ -329,7 +351,9 @@
       <PropertyRef Name="PersonID" />
     </Key>
     <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="WorkAddressID" Type="int" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
+    <Property Name="Account_AccountID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Persons_Donor">
     <Key>
@@ -344,6 +368,7 @@
     <Property Name="Disabled" Type="bit" Nullable="false" />
     <Property Name="DonationCenterID" Type="int" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
+    <Property Name="Account_AccountID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="BloodRequestDonationCenter">
     <Key>
@@ -617,6 +642,66 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="AddressDonor">
+    <End Role="Address" Type="MainModel.Store.Addresses" Multiplicity="*" />
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Donor">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="Donor_PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DoctorAccount">
+    <End Role="Doctor" Type="MainModel.Store.Persons_Doctor" Multiplicity="*" />
+    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="AccountID" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="Account_AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DCPersonnelAccount">
+    <End Role="DCPersonnel" Type="MainModel.Store.Persons_DCPersonnel" Multiplicity="*" />
+    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="AccountID" />
+      </Principal>
+      <Dependent Role="DCPersonnel">
+        <PropertyRef Name="Account_AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DonorAccount">
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="1" />
+    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Donor">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Account">
+        <PropertyRef Name="DonorPersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DoctorAddress">
+    <End Role="Doctor" Type="MainModel.Store.Persons_Doctor" Multiplicity="*" />
+    <End Role="Address" Type="MainModel.Store.Addresses" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AddressID" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="WorkAddressID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_BloodRequestDonationCenter_BloodRequest">
     <End Role="BloodRequest" Type="MainModel.Store.BloodRequests" Multiplicity="1" />
     <End Role="BloodRequestDonationCenter" Type="MainModel.Store.BloodRequestDonationCenter" Multiplicity="*" />
@@ -829,6 +914,10 @@
             <End Role="Donor" EntitySet="Persons" />
             <End Role="Account" EntitySet="Accounts" />
           </AssociationSet>
+          <AssociationSet Name="DoctorAddress" Association="MainModel.DoctorAddress">
+            <End Role="Doctor" EntitySet="Persons" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -864,6 +953,7 @@
           <NavigationProperty Name="Person" Relationship="MainModel.PersonAddress" FromRole="Address" ToRole="Person" />
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationCenterAddress" FromRole="Address" ToRole="DonationCenter" />
           <NavigationProperty Name="Donor" Relationship="MainModel.AddressDonor" FromRole="Address" ToRole="Donor" />
+          <NavigationProperty Name="Doctor" Relationship="MainModel.DoctorAddress" FromRole="Address" ToRole="Doctor" />
         </EntityType>
         <Association Name="AddressCounty">
           <End Type="MainModel.Address" Role="Address" Multiplicity="*" />
@@ -1009,6 +1099,8 @@
           <NavigationProperty Name="Patient" Relationship="MainModel.DoctorPatient" FromRole="Doctor" ToRole="Patient" />
           <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDoctor" FromRole="Doctor" ToRole="BloodRequest" />
           <NavigationProperty Name="Account" Relationship="MainModel.DoctorAccount" FromRole="Doctor" ToRole="Account" />
+          <NavigationProperty Name="Address1" Relationship="MainModel.DoctorAddress" FromRole="Doctor" ToRole="Address" />
+          <Property Name="WorkAddressID" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="DoctorPatient">
           <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="1" />
@@ -1345,6 +1437,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="DoctorAddress">
+          <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="*" />
+          <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressID" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="WorkAddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1357,6 +1461,7 @@
           <ScalarProperty Name="AccountID" ColumnName="AccountID" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="DonorPersonID" ColumnName="DonorPersonID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1406,6 +1511,7 @@
         <MappingFragment StoreEntitySet="Persons_Doctor">
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="WorkAddressID" ColumnName="WorkAddressID" />
         </MappingFragment>
       </EntityTypeMapping>
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.Donor)">
@@ -1588,6 +1694,30 @@
       </EndProperty>
       <EndProperty Name="WomenInfo">
         <ScalarProperty Name="WomenInfoID" ColumnName="WomenInfoID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AddressDonor" TypeName="MainModel.AddressDonor" StoreEntitySet="Addresses">
+      <EndProperty Name="Donor">
+        <ScalarProperty Name="PersonID" ColumnName="Donor_PersonID" />
+      </EndProperty>
+      <EndProperty Name="Address">
+        <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DoctorAccount" TypeName="MainModel.DoctorAccount" StoreEntitySet="Persons_Doctor">
+      <EndProperty Name="Account">
+        <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
+      </EndProperty>
+      <EndProperty Name="Doctor">
+        <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DCPersonnelAccount" TypeName="MainModel.DCPersonnelAccount" StoreEntitySet="Persons_DCPersonnel">
+      <EndProperty Name="Account">
+        <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
+      </EndProperty>
+      <EndProperty Name="DCPersonnel">
+        <ScalarProperty Name="PersonID" ColumnName="PersonID" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>
