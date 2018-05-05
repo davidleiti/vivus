@@ -61,6 +61,7 @@
         <AssociationConnector Association="MainModel.DCPersonnelAccount" />
         <AssociationConnector Association="MainModel.DonorAccount" />
         <AssociationConnector Association="MainModel.DoctorAddress" />
+        <InheritanceConnector EntityType="MainModel.Administrator" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -23,12 +23,12 @@
     <EntitySet Name="RequestPriorities" EntityType="MainModel.Store.RequestPriorities" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DonationForms" EntityType="MainModel.Store.DonationForms" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Messages" EntityType="MainModel.Store.Messages" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Administrators" EntityType="MainModel.Store.Administrators" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Owners" EntityType="MainModel.Store.Owners" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Patient" EntityType="MainModel.Store.Persons_Patient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Doctor" EntityType="MainModel.Store.Persons_Doctor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Donor" EntityType="MainModel.Store.Persons_Donor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_DCPersonnel" EntityType="MainModel.Store.Persons_DCPersonnel" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons_Administrator" EntityType="MainModel.Store.Persons_Administrator" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodRequestDonationCenter" EntityType="MainModel.Store.BloodRequestDonationCenter" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="AddressCounty" Association="MainModel.Store.AddressCounty">
       <End Role="Address" EntitySet="Addresses" />
@@ -161,6 +161,10 @@
     <AssociationSet Name="FK_DCPersonnel_inherits_Person" Association="MainModel.Store.FK_DCPersonnel_inherits_Person">
       <End Role="Person" EntitySet="Persons" />
       <End Role="DCPersonnel" EntitySet="Persons_DCPersonnel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Administrator_inherits_Person" Association="MainModel.Store.FK_Administrator_inherits_Person">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Administrator" EntitySet="Persons_Administrator" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Accounts">
@@ -324,12 +328,6 @@
     <Property Name="SenderID" Type="int" Nullable="false" />
     <Property Name="RecieverID" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="Administrators">
-    <Key>
-      <PropertyRef Name="AdministratorID" />
-    </Key>
-    <Property Name="AdministratorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-  </EntityType>
   <EntityType Name="Owners">
     <Key>
       <PropertyRef Name="OwnerID" />
@@ -369,6 +367,13 @@
     <Property Name="DonationCenterID" Type="int" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
     <Property Name="Account_AccountID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons_Administrator">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="IsOwner" Type="bit" Nullable="false" />
+    <Property Name="PersonID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="BloodRequestDonationCenter">
     <Key>
@@ -782,6 +787,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Administrator_inherits_Person">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Administrator" Type="MainModel.Store.Persons_Administrator" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Administrator">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -892,7 +911,6 @@
             <End Role="Person" EntitySet="Persons" />
             <End Role="Message" EntitySet="Messages" />
           </AssociationSet>
-          <EntitySet Name="Administrators" EntityType="MainModel.Administrator" />
           <EntitySet Name="Owners" EntityType="MainModel.Owner" />
           <AssociationSet Name="WomenInfoDonationStatus" Association="MainModel.WomenInfoDonationStatus">
             <End Role="WomenInfo" EntitySet="WomenInfos" />
@@ -1397,11 +1415,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Administrator">
-          <Key>
-            <PropertyRef Name="AdministratorID" />
-          </Key>
-          <Property Name="AdministratorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        <EntityType Name="Administrator" BaseType="MainModel.Person">
+          <Property Name="IsOwner" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Owner">
           <Key>
@@ -1524,6 +1539,12 @@
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
           <ScalarProperty Name="Disabled" ColumnName="Disabled" />
           <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Administrator)">
+        <MappingFragment StoreEntitySet="Persons_Administrator">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="IsOwner" ColumnName="IsOwner" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1655,13 +1676,6 @@
           <ScalarProperty Name="MessageID" ColumnName="MessageID" />
           <ScalarProperty Name="SenderID" ColumnName="SenderID" />
           <ScalarProperty Name="RecieverID" ColumnName="RecieverID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Administrators">
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Administrator)">
-        <MappingFragment StoreEntitySet="Administrators">
-          <ScalarProperty Name="AdministratorID" ColumnName="AdministratorID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -12,8 +12,8 @@ namespace DBModel
     using System;
     using System.Collections.Generic;
     
-    public partial class Administrator
+    public partial class Administrator : Person
     {
-        public int AdministratorID { get; set; }
+        public bool IsOwner { get; set; }
     }
 }

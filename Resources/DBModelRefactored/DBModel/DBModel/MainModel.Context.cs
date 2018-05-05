@@ -42,7 +42,6 @@ namespace DBModel
         public virtual DbSet<RequestPriority> RequestPriorities { get; set; }
         public virtual DbSet<DonationForm> DonationForms { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
-        public virtual DbSet<Administrator> Administrators { get; set; }
         public virtual DbSet<Owner> Owners { get; set; }
     }
 }

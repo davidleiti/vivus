@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/05/2018 14:10:57
+-- Date Created: 05/05/2018 20:30:36
 -- Generated from EDMX file: E:\Year 2 Semester 2\Software Engineering\vivus\Resources\DBModelRefactored\DBModel\DBModel\MainModel.edmx
 -- --------------------------------------------------
 
@@ -89,6 +89,21 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_WomenInfoDonationStatus]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[WomenInfos] DROP CONSTRAINT [FK_WomenInfoDonationStatus];
 GO
+IF OBJECT_ID(N'[dbo].[FK_AddressDonor]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Addresses] DROP CONSTRAINT [FK_AddressDonor];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DoctorAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Persons_Doctor] DROP CONSTRAINT [FK_DoctorAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DCPersonnelAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Persons_DCPersonnel] DROP CONSTRAINT [FK_DCPersonnelAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DonorAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Accounts] DROP CONSTRAINT [FK_DonorAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DoctorAddress]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Persons_Doctor] DROP CONSTRAINT [FK_DoctorAddress];
+GO
 IF OBJECT_ID(N'[dbo].[FK_Patient_inherits_Person]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_Patient_inherits_Person];
 GO
@@ -100,6 +115,9 @@ IF OBJECT_ID(N'[dbo].[FK_Donor_inherits_Person]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DCPersonnel_inherits_Person]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Persons_DCPersonnel] DROP CONSTRAINT [FK_DCPersonnel_inherits_Person];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Administrator_inherits_Person]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Persons_Administrator] DROP CONSTRAINT [FK_Administrator_inherits_Person];
 GO
 
 -- --------------------------------------------------
@@ -157,9 +175,6 @@ GO
 IF OBJECT_ID(N'[dbo].[Messages]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Messages];
 GO
-IF OBJECT_ID(N'[dbo].[Administrators]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Administrators];
-GO
 IF OBJECT_ID(N'[dbo].[Owners]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Owners];
 GO
@@ -174,6 +189,9 @@ IF OBJECT_ID(N'[dbo].[Persons_Donor]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Persons_DCPersonnel]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Persons_DCPersonnel];
+GO
+IF OBJECT_ID(N'[dbo].[Persons_Administrator]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Persons_Administrator];
 GO
 IF OBJECT_ID(N'[dbo].[BloodRequestDonationCenter]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BloodRequestDonationCenter];
@@ -344,12 +362,6 @@ CREATE TABLE [dbo].[Messages] (
 );
 GO
 
--- Creating table 'Administrators'
-CREATE TABLE [dbo].[Administrators] (
-    [AdministratorID] int IDENTITY(1,1) NOT NULL
-);
-GO
-
 -- Creating table 'Owners'
 CREATE TABLE [dbo].[Owners] (
     [OwnerID] int IDENTITY(1,1) NOT NULL
@@ -387,6 +399,13 @@ CREATE TABLE [dbo].[Persons_DCPersonnel] (
     [DonationCenterID] int  NOT NULL,
     [PersonID] int  NOT NULL,
     [Account_AccountID] int  NOT NULL
+);
+GO
+
+-- Creating table 'Persons_Administrator'
+CREATE TABLE [dbo].[Persons_Administrator] (
+    [IsOwner] bit  NOT NULL,
+    [PersonID] int  NOT NULL
 );
 GO
 
@@ -503,12 +522,6 @@ ADD CONSTRAINT [PK_Messages]
     PRIMARY KEY CLUSTERED ([MessageID] ASC);
 GO
 
--- Creating primary key on [AdministratorID] in table 'Administrators'
-ALTER TABLE [dbo].[Administrators]
-ADD CONSTRAINT [PK_Administrators]
-    PRIMARY KEY CLUSTERED ([AdministratorID] ASC);
-GO
-
 -- Creating primary key on [OwnerID] in table 'Owners'
 ALTER TABLE [dbo].[Owners]
 ADD CONSTRAINT [PK_Owners]
@@ -536,6 +549,12 @@ GO
 -- Creating primary key on [PersonID] in table 'Persons_DCPersonnel'
 ALTER TABLE [dbo].[Persons_DCPersonnel]
 ADD CONSTRAINT [PK_Persons_DCPersonnel]
+    PRIMARY KEY CLUSTERED ([PersonID] ASC);
+GO
+
+-- Creating primary key on [PersonID] in table 'Persons_Administrator'
+ALTER TABLE [dbo].[Persons_Administrator]
+ADD CONSTRAINT [PK_Persons_Administrator]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
@@ -1008,6 +1027,15 @@ GO
 -- Creating foreign key on [PersonID] in table 'Persons_DCPersonnel'
 ALTER TABLE [dbo].[Persons_DCPersonnel]
 ADD CONSTRAINT [FK_DCPersonnel_inherits_Person]
+    FOREIGN KEY ([PersonID])
+    REFERENCES [dbo].[Persons]
+        ([PersonID])
+    ON DELETE CASCADE ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [PersonID] in table 'Persons_Administrator'
+ALTER TABLE [dbo].[Persons_Administrator]
+ADD CONSTRAINT [FK_Administrator_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
         ([PersonID])
