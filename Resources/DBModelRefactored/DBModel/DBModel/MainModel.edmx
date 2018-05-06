@@ -14,7 +14,6 @@
     <EntitySet Name="RHs" EntityType="MainModel.Store.RHs" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodTypes" EntityType="MainModel.Store.BloodTypes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="PersonStatuses" EntityType="MainModel.Store.PersonStatuses" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="DonationStatuses" EntityType="MainModel.Store.DonationStatuses" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="WomenInfos" EntityType="MainModel.Store.WomenInfos" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DonationCenters" EntityType="MainModel.Store.DonationCenters" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodContainers" EntityType="MainModel.Store.BloodContainers" store:Type="Tables" Schema="dbo" />
@@ -23,7 +22,6 @@
     <EntitySet Name="RequestPriorities" EntityType="MainModel.Store.RequestPriorities" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DonationForms" EntityType="MainModel.Store.DonationForms" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Messages" EntityType="MainModel.Store.Messages" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Owners" EntityType="MainModel.Store.Owners" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Patient" EntityType="MainModel.Store.Persons_Patient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Doctor" EntityType="MainModel.Store.Persons_Doctor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Donor" EntityType="MainModel.Store.Persons_Donor" store:Type="Tables" Schema="dbo" />
@@ -57,10 +55,6 @@
     <AssociationSet Name="DoctorPatient" Association="MainModel.Store.DoctorPatient">
       <End Role="Doctor" EntitySet="Persons_Doctor" />
       <End Role="Patient" EntitySet="Persons_Patient" />
-    </AssociationSet>
-    <AssociationSet Name="DonationStatusDonor" Association="MainModel.Store.DonationStatusDonor">
-      <End Role="DonationStatus" EntitySet="DonationStatuses" />
-      <End Role="Donor" EntitySet="Persons_Donor" />
     </AssociationSet>
     <AssociationSet Name="BloodContainerRH" Association="MainModel.Store.BloodContainerRH">
       <End Role="BloodContainer" EntitySet="BloodContainers" />
@@ -121,10 +115,6 @@
     <AssociationSet Name="PersonMessage1" Association="MainModel.Store.PersonMessage1">
       <End Role="Person" EntitySet="Persons" />
       <End Role="Message" EntitySet="Messages" />
-    </AssociationSet>
-    <AssociationSet Name="WomenInfoDonationStatus" Association="MainModel.Store.WomenInfoDonationStatus">
-      <End Role="WomenInfo" EntitySet="WomenInfos" />
-      <End Role="DonationStatus" EntitySet="DonationStatuses" />
     </AssociationSet>
     <AssociationSet Name="AddressDonor" Association="MainModel.Store.AddressDonor">
       <End Role="Address" EntitySet="Addresses" />
@@ -236,21 +226,6 @@
     <Property Name="PersonStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="DonationStatuses">
-    <Key>
-      <PropertyRef Name="DonationStatusID" />
-    </Key>
-    <Property Name="DonationStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Weight" Type="decimal" Nullable="false" />
-    <Property Name="Pulse" Type="smallint" Nullable="false" />
-    <Property Name="BloodPressure" Type="decimal" Nullable="false" />
-    <Property Name="HasPastSurgeries" Type="bit" Nullable="false" />
-    <Property Name="HasAlcoholConsumption" Type="bit" Nullable="false" />
-    <Property Name="HasFatConsumption" Type="bit" Nullable="false" />
-    <Property Name="IsInTreatment" Type="bit" Nullable="false" />
-    <Property Name="HasDiseases" Type="bit" Nullable="false" />
-    <Property Name="Donor_PersonID" Type="int" Nullable="false" />
-  </EntityType>
   <EntityType Name="WomenInfos">
     <Key>
       <PropertyRef Name="WomenInfoID" />
@@ -327,12 +302,6 @@
     <Property Name="MessageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="SenderID" Type="int" Nullable="false" />
     <Property Name="RecieverID" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Owners">
-    <Key>
-      <PropertyRef Name="OwnerID" />
-    </Key>
-    <Property Name="OwnerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
   </EntityType>
   <EntityType Name="Persons_Patient">
     <Key>
@@ -464,18 +433,6 @@
       </Principal>
       <Dependent Role="Patient">
         <PropertyRef Name="DoctorID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="DonationStatusDonor">
-    <End Role="DonationStatus" Type="MainModel.Store.DonationStatuses" Multiplicity="*" />
-    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="Donor">
-        <PropertyRef Name="PersonID" />
-      </Principal>
-      <Dependent Role="DonationStatus">
-        <PropertyRef Name="Donor_PersonID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -632,18 +589,6 @@
       </Principal>
       <Dependent Role="Message">
         <PropertyRef Name="RecieverID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="WomenInfoDonationStatus">
-    <End Role="WomenInfo" Type="MainModel.Store.WomenInfos" Multiplicity="*" />
-    <End Role="DonationStatus" Type="MainModel.Store.DonationStatuses" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="DonationStatus">
-        <PropertyRef Name="DonationStatusID" />
-      </Principal>
-      <Dependent Role="WomenInfo">
-        <PropertyRef Name="DonationStatus_DonationStatusID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -842,11 +787,6 @@
             <End Role="Doctor" EntitySet="Persons" />
             <End Role="Patient" EntitySet="Persons" />
           </AssociationSet>
-          <EntitySet Name="DonationStatuses" EntityType="MainModel.DonationStatus" />
-          <AssociationSet Name="DonationStatusDonor" Association="MainModel.DonationStatusDonor">
-            <End Role="DonationStatus" EntitySet="DonationStatuses" />
-            <End Role="Donor" EntitySet="Persons" />
-          </AssociationSet>
           <EntitySet Name="WomenInfos" EntityType="MainModel.WomenInfo" />
           <EntitySet Name="DonationCenters" EntityType="MainModel.DonationCenter" />
           <EntitySet Name="BloodContainers" EntityType="MainModel.BloodContainer" />
@@ -910,11 +850,6 @@
           <AssociationSet Name="PersonMessage1" Association="MainModel.PersonMessage1">
             <End Role="Person" EntitySet="Persons" />
             <End Role="Message" EntitySet="Messages" />
-          </AssociationSet>
-          <EntitySet Name="Owners" EntityType="MainModel.Owner" />
-          <AssociationSet Name="WomenInfoDonationStatus" Association="MainModel.WomenInfoDonationStatus">
-            <End Role="WomenInfo" EntitySet="WomenInfos" />
-            <End Role="DonationStatus" EntitySet="DonationStatuses" />
           </AssociationSet>
           <AssociationSet Name="AddressDonor" Association="MainModel.AddressDonor">
             <End Role="Address" EntitySet="Addresses" />
@@ -1107,7 +1042,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityType Name="Donor" BaseType="MainModel.Person">
-          <NavigationProperty Name="DonationStatus" Relationship="MainModel.DonationStatusDonor" FromRole="Donor" ToRole="DonationStatus" />
           <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDonor" FromRole="Donor" ToRole="DonationForm" />
           <NavigationProperty Name="Residence" Relationship="MainModel.AddressDonor" FromRole="Donor" ToRole="Address" />
           <NavigationProperty Name="Account" Relationship="MainModel.DonorAccount" FromRole="Donor" ToRole="Account" />
@@ -1132,26 +1066,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DonationStatus">
-          <Key>
-            <PropertyRef Name="DonationStatusID" />
-          </Key>
-          <Property Name="DonationStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Weight" Type="Decimal" Nullable="false" />
-          <Property Name="Pulse" Type="Int16" Nullable="false" />
-          <Property Name="BloodPressure" Type="Decimal" Nullable="false" />
-          <Property Name="HasPastSurgeries" Type="Boolean" Nullable="false" />
-          <Property Name="HasAlcoholConsumption" Type="Boolean" Nullable="false" />
-          <Property Name="HasFatConsumption" Type="Boolean" Nullable="false" />
-          <Property Name="IsInTreatment" Type="Boolean" Nullable="false" />
-          <Property Name="HasDiseases" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Donor" Relationship="MainModel.DonationStatusDonor" FromRole="DonationStatus" ToRole="Donor" />
-          <NavigationProperty Name="WomenInfo" Relationship="MainModel.WomenInfoDonationStatus" FromRole="DonationStatus" ToRole="WomenInfo" />
-        </EntityType>
-        <Association Name="DonationStatusDonor">
-          <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
-          <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
-        </Association>
         <EntityType Name="WomenInfo">
           <Key>
             <PropertyRef Name="WomenInfoID" />
@@ -1160,7 +1074,6 @@
           <Property Name="IsPregnant" Type="Boolean" Nullable="false" />
           <Property Name="PostBirth" Type="Boolean" Nullable="false" />
           <Property Name="Menstruating" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DonationStatus" Relationship="MainModel.WomenInfoDonationStatus" FromRole="WomenInfo" ToRole="DonationStatus" />
         </EntityType>
         <EntityType Name="DonationCenter">
           <Key>
@@ -1356,6 +1269,15 @@
           <Property Name="DCPersonnelID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Donor" Relationship="MainModel.DonationFormDonor" FromRole="DonationForm" ToRole="Donor" />
           <Property Name="DonorID" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Int32" Nullable="false" />
+          <Property Name="Pulse" Type="Int16" Nullable="false" />
+          <Property Name="SystolicBloodPressure" Type="Decimal" Nullable="false" />
+          <Property Name="DiastolicBloodPressure" Type="Decimal" Nullable="false" />
+          <Property Name="PastSurgeries" Type="String" Nullable="false" />
+          <Property Name="HasAlcoholConsumtion" Type="Boolean" Nullable="false" />
+          <Property Name="HasFatConsumption" Type="Boolean" Nullable="false" />
+          <Property Name="IsInTreatment" Type="Boolean" Nullable="false" />
+          <Property Name="HasDiseases" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="DonationFormDCPersonnel">
           <End Type="MainModel.DonationForm" Role="DonationForm" Multiplicity="*" />
@@ -1390,6 +1312,7 @@
           <Property Name="SenderID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Person1" Relationship="MainModel.PersonMessage1" FromRole="Message" ToRole="Person" />
           <Property Name="RecieverID" Type="Int32" Nullable="false" />
+          <Property Name="SendDate" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="PersonMessage">
           <End Type="MainModel.Person" Role="Person" Multiplicity="1" />
@@ -1418,16 +1341,6 @@
         <EntityType Name="Administrator" BaseType="MainModel.Person">
           <Property Name="IsOwner" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="Owner">
-          <Key>
-            <PropertyRef Name="OwnerID" />
-          </Key>
-          <Property Name="OwnerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-        </EntityType>
-        <Association Name="WomenInfoDonationStatus">
-          <End Type="MainModel.WomenInfo" Role="WomenInfo" Multiplicity="0..1" />
-          <End Type="MainModel.DonationStatus" Role="DonationStatus" Multiplicity="1" />
-        </Association>
         <Association Name="AddressDonor">
           <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
           <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
@@ -1580,21 +1493,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DonationStatuses">
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.DonationStatus)">
-        <MappingFragment StoreEntitySet="DonationStatuses">
-          <ScalarProperty Name="DonationStatusID" ColumnName="DonationStatusID" />
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="Pulse" ColumnName="Pulse" />
-          <ScalarProperty Name="BloodPressure" ColumnName="BloodPressure" />
-          <ScalarProperty Name="HasPastSurgeries" ColumnName="HasPastSurgeries" />
-          <ScalarProperty Name="HasAlcoholConsumption" ColumnName="HasAlcoholConsumption" />
-          <ScalarProperty Name="HasFatConsumption" ColumnName="HasFatConsumption" />
-          <ScalarProperty Name="IsInTreatment" ColumnName="IsInTreatment" />
-          <ScalarProperty Name="HasDiseases" ColumnName="HasDiseases" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="WomenInfos">
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.WomenInfo)">
         <MappingFragment StoreEntitySet="WomenInfos">
@@ -1679,35 +1577,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Owners">
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.Owner)">
-        <MappingFragment StoreEntitySet="Owners">
-          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <AssociationSetMapping Name="DonationStatusDonor" TypeName="MainModel.DonationStatusDonor" StoreEntitySet="DonationStatuses">
-      <EndProperty Name="Donor">
-        <ScalarProperty Name="PersonID" ColumnName="Donor_PersonID" />
-      </EndProperty>
-      <EndProperty Name="DonationStatus">
-        <ScalarProperty Name="DonationStatusID" ColumnName="DonationStatusID" />
-      </EndProperty>
-    </AssociationSetMapping>
     <AssociationSetMapping Name="BloodRequestDonationCenter" TypeName="MainModel.BloodRequestDonationCenter" StoreEntitySet="BloodRequestDonationCenter">
       <EndProperty Name="BloodRequest">
         <ScalarProperty Name="BloodRequestID" ColumnName="BloodRequest_BloodRequestID" />
       </EndProperty>
       <EndProperty Name="DonationCenter">
         <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenter_DonationCenterID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="WomenInfoDonationStatus" TypeName="MainModel.WomenInfoDonationStatus" StoreEntitySet="WomenInfos">
-      <EndProperty Name="DonationStatus">
-        <ScalarProperty Name="DonationStatusID" ColumnName="DonationStatus_DonationStatusID" />
-      </EndProperty>
-      <EndProperty Name="WomenInfo">
-        <ScalarProperty Name="WomenInfoID" ColumnName="WomenInfoID" />
       </EndProperty>
     </AssociationSetMapping>
     <AssociationSetMapping Name="AddressDonor" TypeName="MainModel.AddressDonor" StoreEntitySet="Addresses">
