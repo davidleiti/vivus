@@ -18,7 +18,5 @@ namespace DBModel
         public bool IsPregnant { get; set; }
         public bool PostBirth { get; set; }
         public bool Menstruating { get; set; }
-    
-        public virtual DonationStatus DonationStatus { get; set; }
     }
 }
