@@ -1264,7 +1264,6 @@
           </Key>
           <Property Name="DonationFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TravelStatus" Type="String" Nullable="false" />
-          <Property Name="DonationStatus" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DonationFormDCPersonnel" FromRole="DonationForm" ToRole="DCPersonnel" />
           <Property Name="DCPersonnelID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Donor" Relationship="MainModel.DonationFormDonor" FromRole="DonationForm" ToRole="Donor" />
@@ -1274,10 +1273,6 @@
           <Property Name="SystolicBloodPressure" Type="Decimal" Nullable="false" />
           <Property Name="DiastolicBloodPressure" Type="Decimal" Nullable="false" />
           <Property Name="PastSurgeries" Type="String" Nullable="false" />
-          <Property Name="HasAlcoholConsumtion" Type="Boolean" Nullable="false" />
-          <Property Name="HasFatConsumption" Type="Boolean" Nullable="false" />
-          <Property Name="IsInTreatment" Type="Boolean" Nullable="false" />
-          <Property Name="HasDiseases" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="DonationFormDCPersonnel">
           <End Type="MainModel.DonationForm" Role="DonationForm" Multiplicity="*" />
@@ -1562,7 +1557,6 @@
         <MappingFragment StoreEntitySet="DonationForms">
           <ScalarProperty Name="DonationFormID" ColumnName="DonationFormID" />
           <ScalarProperty Name="TravelStatus" ColumnName="TravelStatus" />
-          <ScalarProperty Name="DonationStatus" ColumnName="DonationStatus" />
           <ScalarProperty Name="DCPersonnelID" ColumnName="DCPersonnelID" />
           <ScalarProperty Name="DonorID" ColumnName="DonorID" />
         </MappingFragment>

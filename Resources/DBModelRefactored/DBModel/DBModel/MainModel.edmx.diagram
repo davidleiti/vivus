@@ -45,7 +45,7 @@
         <AssociationConnector Association="MainModel.BloodRequestDonationCenter" />
         <AssociationConnector Association="MainModel.BloodRequestBloodContainer" />
         <AssociationConnector Association="MainModel.DCPersonnelDonationCenter" />
-        <EntityTypeShape EntityType="MainModel.DonationForm" Width="1.5" PointX="12.75" PointY="8.875" />
+        <EntityTypeShape EntityType="MainModel.DonationForm" Width="1.5" PointX="12.75" PointY="9" />
         <AssociationConnector Association="MainModel.DonationFormDCPersonnel" />
         <AssociationConnector Association="MainModel.DonationFormDonor" />
         <EntityTypeShape EntityType="MainModel.Message" Width="1.5" PointX="15.875" PointY="1.125" />
