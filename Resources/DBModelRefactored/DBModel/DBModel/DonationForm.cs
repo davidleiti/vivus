@@ -16,9 +16,13 @@ namespace DBModel
     {
         public int DonationFormID { get; set; }
         public string TravelStatus { get; set; }
-        public bool DonationStatus { get; set; }
         public int DCPersonnelID { get; set; }
         public int DonorID { get; set; }
+        public int Weight { get; set; }
+        public short Pulse { get; set; }
+        public decimal SystolicBloodPressure { get; set; }
+        public decimal DiastolicBloodPressure { get; set; }
+        public string PastSurgeries { get; set; }
     
         public virtual DCPersonnel DCPersonnel { get; set; }
         public virtual Donor Donor { get; set; }

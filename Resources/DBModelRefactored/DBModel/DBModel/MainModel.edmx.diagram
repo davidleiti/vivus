@@ -26,10 +26,8 @@
         <EntityTypeShape EntityType="MainModel.Doctor" Width="1.5" PointX="6.375" PointY="0.5" />
         <InheritanceConnector EntityType="MainModel.Doctor" />
         <AssociationConnector Association="MainModel.DoctorPatient" />
-        <EntityTypeShape EntityType="MainModel.DonationStatus" Width="1.5" PointX="4.5" PointY="1.125" />
-        <AssociationConnector Association="MainModel.DonationStatusDonor" />
         <InheritanceConnector EntityType="MainModel.Patient" />
-        <EntityTypeShape EntityType="MainModel.WomenInfo" Width="1.5" PointX="2.375" PointY="1.75" />
+        <EntityTypeShape EntityType="MainModel.WomenInfo" Width="1.5" PointX="2.25" PointY="3.125" />
         <EntityTypeShape EntityType="MainModel.DonationCenter" Width="1.5" PointX="0.625" PointY="8.625" />
         <EntityTypeShape EntityType="MainModel.BloodContainer" Width="1.5" PointX="0.625" PointY="4" />
         <AssociationConnector Association="MainModel.BloodContainerRH" />
@@ -47,15 +45,13 @@
         <AssociationConnector Association="MainModel.BloodRequestDonationCenter" />
         <AssociationConnector Association="MainModel.BloodRequestBloodContainer" />
         <AssociationConnector Association="MainModel.DCPersonnelDonationCenter" />
-        <EntityTypeShape EntityType="MainModel.DonationForm" Width="1.5" PointX="12.75" PointY="8.875" />
+        <EntityTypeShape EntityType="MainModel.DonationForm" Width="1.5" PointX="12.75" PointY="9" />
         <AssociationConnector Association="MainModel.DonationFormDCPersonnel" />
         <AssociationConnector Association="MainModel.DonationFormDonor" />
         <EntityTypeShape EntityType="MainModel.Message" Width="1.5" PointX="15.875" PointY="1.125" />
         <AssociationConnector Association="MainModel.PersonMessage" />
         <AssociationConnector Association="MainModel.PersonMessage1" />
         <EntityTypeShape EntityType="MainModel.Administrator" Width="1.5" PointX="17.25" PointY="5.875" />
-        <EntityTypeShape EntityType="MainModel.Owner" Width="1.5" PointX="16" PointY="8.375" />
-        <AssociationConnector Association="MainModel.WomenInfoDonationStatus" />
         <AssociationConnector Association="MainModel.AddressDonor" />
         <AssociationConnector Association="MainModel.DoctorAccount" />
         <AssociationConnector Association="MainModel.DCPersonnelAccount" />
