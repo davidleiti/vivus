@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\DoctorValidator.cs" />
     <Compile Include="ViewModels\ManageBloodViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\PatientDetailsViewModel.cs" />
