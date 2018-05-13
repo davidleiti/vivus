@@ -8,6 +8,7 @@
         Style="{StaticResource WindowStyle}"
         WindowStartupLocation="CenterScreen"
         MinHeight="578"
+        Icon="Icon.ico"
         Title="Vivus Administration" Width="1150" Height="620">
 
     <Window.Background>
