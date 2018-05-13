@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{29FA88DE-FD27-4985-8BD0-12FAA5F2F645}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vivus.Client.Core</RootNamespace>
+    <AssemblyName>Vivus.Client.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\Build\Client.Core\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\Build\Client.Core\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Windows.Theme">
+      <HintPath>..\..\..\Resources\Libraries\Windows.Theme.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animations\FrameworkElementAnimations.cs" />
+    <Compile Include="Animations\PageAnimation.cs" />
+    <Compile Include="Animations\PageAnimations.cs" />
+    <Compile Include="Animations\StoryboardHelpers.cs" />
+    <Compile Include="AttachedProperties\Base\BaseAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\ButtonAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\Extensions\ComboBoxExtensions.cs" />
+    <Compile Include="AttachedProperties\Extensions\PasswordBoxExtensions.cs" />
+    <Compile Include="AttachedProperties\Extensions\TextBoxExtensions.cs" />
+    <Compile Include="AttachedProperties\FrameworkElementAnimationAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\NoFrameHistory.cs" />
+    <Compile Include="AttachedProperties\PasswordBoxAttachedProperties.cs" />
+    <Compile Include="Controls\Notifications\NotificationControl.xaml.cs">
+      <DependentUpon>NotificationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Notifications\NotificationsPanelControl.xaml.cs">
+      <DependentUpon>NotificationsPanelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SideMenu\SideMenuItemControl.xaml.cs">
+      <DependentUpon>SideMenuItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SideMenu\SideMenuItemListControl.xaml.cs">
+      <DependentUpon>SideMenuItemListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SideMenu\SideMenuItemListsListControl.xaml.cs">
+      <DependentUpon>SideMenuItemListsListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DesignModels\Notifications\NotificationsPanelDesignModel.cs" />
+    <Compile Include="DesignModels\SideMenu\SideMenuItemDesignModel.cs" />
+    <Compile Include="DesignModels\SideMenu\SideMenuItemListDesignModel.cs" />
+    <Compile Include="DesignModels\SideMenu\SideMenuItemListsListDesignModel.cs" />
+    <Compile Include="Pages\Base\BasePage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValueConverters\ArgbColorToBrushConverter.cs" />
+    <Compile Include="ValueConverters\Base\BaseValueConverter.cs" />
+    <Compile Include="ValueConverters\BasicEntityToBoolConverter.cs" />
+    <Compile Include="ValueConverters\BoolToVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\BoolToStringConverter.cs" />
+    <Compile Include="ValueConverters\CustomVisibilityToWindowsVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\DateTimeToStringConverter.cs" />
+    <Compile Include="ValueConverters\PopupTypeValueConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\FontAwesome-Solid.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\Notifications\NotificationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Notifications\NotificationsPanelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SideMenu\SideMenuItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SideMenu\SideMenuItemListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SideMenu\SideMenuItemListsListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\CustomDesign.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Fonts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Texts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Template.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\LoginLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Vivus.Core.csproj">
+      <Project>{23ee977c-4348-4f29-a974-0ccfeb189d95}</Project>
+      <Name>Vivus.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

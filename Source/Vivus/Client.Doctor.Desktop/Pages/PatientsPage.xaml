@@ -1,0 +1,90 @@
+﻿<pages:BasePage x:Class="Vivus.Client.Doctor.Desktop.Pages.PatientsPage"
+      x:TypeArguments="viewModel:PatientsViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="PatientsPage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Patients" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <!-- All patients -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All patients" />
+                <!-- Table -->
+                <DataGrid Height="420" Margin="0 0 0 20">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" Width="1.25*" />
+                        <DataGridTextColumn Header="Blood type" Width="*" />
+                        <DataGridTextColumn Header="Age" Width="*" />
+                        <DataGridTextColumn Header="Gender" Width="*" />
+                        <DataGridTextColumn Header="Status" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!-- New patient & Choose Buttons -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Add -->
+                    <Button Grid.Column="1" Width="Auto" Content="New patient" />
+                    <!-- Remove -->
+                    <Button Grid.Column="3" Width="Auto" Content="Choose" />
+                </Grid>
+
+                <!-- Separator -->
+                <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+
+                <!-- Your patients -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Your patients" />
+                <!-- Table -->
+                <DataGrid Height="420" Margin="0 0 0 20">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" Width="1.25*" />
+                        <DataGridTextColumn Header="Blood type" Width="*" />
+                        <DataGridTextColumn Header="Age" Width="*" />
+                        <DataGridTextColumn Header="Gender" Width="*" />
+                        <DataGridTextColumn Header="Status" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!-- Dismiss button -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width=".8*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Content="Dismiss" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

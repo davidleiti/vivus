@@ -1,12 +1,23 @@
-﻿<Window x:Class="Client.Administration.Desktop.MainWindow"
+﻿<Window x:Class="Vivus.Client.Administration.Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Client.Administration.Desktop"
+        xmlns:local="clr-namespace:Vivus.Client.Administration.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Style="{StaticResource WindowStyle}"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="578"
+        Title="Vivus Administration" Width="1150" Height="620">
+
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0, 0" EndPoint="1, 1">
+            <GradientStop Color="#fcf3f2" Offset="0.0" />
+            <GradientStop Color="#ccccd1" Offset="1.1" />
+        </LinearGradientBrush>
+    </Window.Background>
+
     <Grid>
-        
+        <Frame Background="#fafafa" Source="Pages/AdministratorsPage.xaml" />
     </Grid>
 </Window>

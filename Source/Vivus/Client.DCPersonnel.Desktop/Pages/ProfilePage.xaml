@@ -1,0 +1,185 @@
+﻿<pages:BasePage x:Class="Vivus.Client.DCPersonnel.Desktop.Pages.ProfilePage"
+      x:TypeArguments="viewModel:ProfileViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.DCPersonnel.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="ProfilePage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Profile settings" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <!-- Account settings -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Email address -->
+                    <StackPanel>
+                        <TextBlock Text="Email address" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="you@example.com" MaxLength="32" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                    </StackPanel>
+                    <!-- Password -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Password" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <PasswordBox Tag="Password" MaxLength="32" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Separator -->
+                <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+
+                <!-- Personal informations -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- First name -->
+                    <StackPanel>
+                        <TextBlock Text="First name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="John" MaxLength="18" />
+                    </StackPanel>
+                    <!-- Last name -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Last name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Doe" MaxLength="18" />
+                    </StackPanel>
+                </Grid>
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Birth date -->
+                    <StackPanel>
+                        <TextBlock Text="Birth date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- National identification number -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="0000000000000" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                    </StackPanel>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Phone number -->
+                    <StackPanel>
+                        <TextBlock Text="Phone number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="+40 712 345 678" CharacterCasing="Upper" />
+                    </StackPanel>
+                    <!-- Gender -->
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="38" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Gender" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" />
+                        <Grid Grid.Row="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="4*" />
+                            </Grid.ColumnDefinitions>
+
+                            <RadioButton Grid.Column="0" Content="Male" />
+                            <RadioButton Grid.Column="2" Content="Female" Margin="10 0 0 0" />
+                            <RadioButton Grid.Column="4" Content="Not specified" IsChecked="True" Margin="10 0 0 0" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <!-- Separator -->
+                <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+
+                <!-- Address -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Address" />
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Street name -->
+                    <StackPanel>
+                        <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Street" MaxLength="18" />
+                    </StackPanel>
+                    <!-- Street number -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Number" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                    </StackPanel>
+                    <!-- City -->
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="City" MaxLength="24" />
+                    </StackPanel>
+                </Grid>
+                <Grid Margin="0 0 0 30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- County -->
+                    <StackPanel>
+                        <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox>
+                            <ComboBoxItem>Select county</ComboBoxItem>
+                        </ComboBox>
+
+                    </StackPanel>
+                    <!-- Zip -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Update button -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="1.5*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Update" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

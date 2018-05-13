@@ -1,0 +1,112 @@
+﻿<pages:BasePage x:Class="Vivus.Client.Doctor.Desktop.Pages.RequestPage"
+      x:TypeArguments="viewModel:RequestViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="RequestPage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Requests" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <!-- Patient informations -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Patient -->
+                    <StackPanel>
+                        <TextBlock Text="Patient" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox>
+                            <ComboBoxItem>Select patient</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <!-- Priority -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Priority" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox>
+                            <ComboBoxItem>Select priority</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Thrombocytes -->
+                    <StackPanel>
+                        <TextBlock Text="Thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- Red cells -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- Plasma -->
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                </Grid>
+                <!-- Add button -->
+                <Grid Margin=" 0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width=".8*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Content="Add" />
+                </Grid>
+
+                <!-- Table -->
+                <DataGrid Height="420" Margin="0 0 0 20">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Patient" Width="*" />
+                        <DataGridTextColumn Header="Priority" Width="70" />
+                        <DataGridTextColumn Header="Thrombocytes" Width="108" />
+                        <DataGridTextColumn Header="Red cells" Width="78" />
+                        <DataGridTextColumn Header="Plasma" Width="69" />
+                        <DataGridTextColumn Header="Request status" Width="109" />
+                        <DataGridTextColumn Header="CDC" Width="*" />
+                        <DataGridTextColumn Header="DCN" Width="60" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!-- Cancel request button -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width=".8*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Content="Cancel request" />
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

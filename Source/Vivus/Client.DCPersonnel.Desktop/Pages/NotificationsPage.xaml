@@ -1,0 +1,82 @@
+﻿<pages:BasePage x:Class="Vivus.Client.DCPersonnel.Desktop.Pages.NotificationsPage"
+      x:TypeArguments="viewModel:NotificationsViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.DCPersonnel.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
+      xmlns:notifications="clr-namespace:Vivus.Client.Core.Controls.Notifications;assembly=Vivus.Client.Core"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="NotificationsPage">
+
+    <Grid>
+        <ScrollViewer>
+            <Grid Margin="75 40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Notifications" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Send notification" />
+                    <Grid Margin="0 0 0 20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="31" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="31" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Person details -->
+                        <StackPanel>
+                            <TextBlock Text="Person type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                            <ComboBox>
+                                <ComboBoxItem>Select person type</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Person name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                            <ComboBox>
+                                <ComboBoxItem>Select person name</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                            <TextBox Tag="0000000000000" IsReadOnly="True" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Message -->
+                    <StackPanel Margin="0 0 0 20">
+                        <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Message details" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
+                    </StackPanel>
+
+                    <!-- Send button -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3.2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="4" Content="Send" />
+                    </Grid>
+
+                    <!-- Separator -->
+                    <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+                </StackPanel>
+
+                <!-- Notifications panel -->
+                <notifications:NotificationsPanelControl Grid.Row="2" Height="576" />
+                <!--Height="576"-->
+            </Grid>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

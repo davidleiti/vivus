@@ -1,0 +1,26 @@
+﻿<pages:BasePage x:Class="Vivus.Client.Donor.Desktop.Pages.NotificationsPage"
+      x:TypeArguments="viewModel:NotificationsViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.Donor.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.Donor.ViewModels;assembly=Vivus.Core.Donor"
+      xmlns:notifications="clr-namespace:Vivus.Client.Core.Controls.Notifications;assembly=Vivus.Client.Core"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="NotificationsPage">
+
+    <Grid>
+        <Grid Margin="75 40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Notifications" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+            <notifications:NotificationsPanelControl Grid.Row="1" />
+        </Grid>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

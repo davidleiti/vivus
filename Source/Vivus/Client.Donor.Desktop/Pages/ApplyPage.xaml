@@ -1,0 +1,184 @@
+﻿<pages:BasePage x:Class="Vivus.Client.Donor.Desktop.Pages.ApplyPage"
+      x:TypeArguments="viewModel:ApplyViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.Donor.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.Donor.ViewModels;assembly=Vivus.Core.Donor"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="ApplyPage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Apply for donation" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <!-- Basic Info -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Physical situation" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Weight -->
+                    <StackPanel>
+                        <TextBlock Text="Weight" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Kg" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- Heart rate -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Heart rate" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Bpm" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- Blood pressure -->
+                    <Grid Grid.Column="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="38" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Blood pressure" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Systolic -->
+                            <TextBox Tag="Systolic (high)" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                            <!-- Dash -->
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="-" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}"/>
+                            <!-- Diastolic -->
+                            <TextBox Grid.Column="2" Tag="Diastolic (low)" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <!-- Separator -->
+                <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+
+                <!-- Women related info -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Women related info" />
+                <CheckBox Content="Currently pregnant" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                <CheckBox Content="Currently menstruating" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                <CheckBox Content="Gave birth in the past 6 weeks" HorizontalAlignment="Left" />
+
+                <!-- Separator -->
+                <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
+
+                <!-- Medical situiation -->
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Medical situation" />
+                <!-- Alchool consumption -->
+                <TextBlock Text="Have you consumed alcohol in the past 48 hours?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <Grid Margin="0 0 0 13">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".02*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width=".04*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="1" Content="Yes" />
+                    <RadioButton Grid.Column="3" Content="No" />
+                </Grid>
+                <!-- Foods high in fat cosumption -->
+                <TextBlock Text="Have you consumed foods high in fat in the past 48 hours?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <Grid Margin="0 0 0 13">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".02*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width=".04*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="1" Content="Yes" />
+                    <RadioButton Grid.Column="3" Content="No" />
+                </Grid>
+                <!-- Medical treatment -->
+                <TextBlock Text="Are you currently following a medical treatement?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <Grid Margin="0 0 0 13">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".02*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width=".04*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="1" Content="Yes" />
+                    <RadioButton Grid.Column="3" Content="No" />
+                </Grid>
+                <!-- Medical treatment -->
+                <TextBlock Text="Are you suffering from one or more of the following diseases?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <Grid Margin="0 0 0 7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".1*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width=".2*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width=".2*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- First column -->
+                    <StackPanel Grid.Column="1">
+                        <CheckBox Content="Hepatitis" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Syphilis" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Ulcer" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Neurological diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Heart diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                    </StackPanel>
+
+                    <!-- Second column -->
+                    <StackPanel Grid.Column="3">
+                        <CheckBox Content="Tuberculosis" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Eplilepsy" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Diabetes" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Psychological diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                    </StackPanel>
+
+                    <!-- Third column -->
+                    <StackPanel Grid.Column="5">
+                        <CheckBox Content="Cancer" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Brucellosis" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Myopia (diopters > ± 6)" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Skin diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Surgery status -->
+                <TextBlock Text="Have you had past surgeries?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <TextBox Tag="Tell us which type and when. Leave blank otherwise" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 13" />
+
+                <!-- Travel status -->
+                <TextBlock Text="Have you travelled in a foreign country in the past 3 months?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
+                <TextBox Tag="Tell us where. Leave blank otherwise" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 30" />
+
+                <!-- Apply button -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="1.5*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Apply" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>

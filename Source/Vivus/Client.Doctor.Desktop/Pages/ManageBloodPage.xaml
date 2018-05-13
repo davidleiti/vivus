@@ -1,0 +1,56 @@
+﻿<pages:BasePage x:Class="Vivus.Client.Doctor.Desktop.Pages.ManageBloodPage"
+      x:TypeArguments="viewModel:ManageBloodViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Title="ManageBloodPage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Manage blood" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <!-- Table -->
+                <DataGrid Height="420" Margin="0 0 0 20">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Container type" Width=".8*" />
+                        <DataGridTextColumn Header="Blood type" Width=".6*" />
+                        <DataGridTextColumn Header="Container code" Width="1.3*" />
+                        <DataGridTextColumn Header="Harverst date" Width=".8*" />
+                        <DataGridTextColumn Header="Expired" Width=".5*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Dismiss & Return Button -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Add -->
+                    <Button Grid.Column="1" Width="Auto" Content="Dismiss" />
+                    <!-- Remove -->
+                    <Button Grid.Column="3" Width="Auto" Content="Return" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
+    </Grid>
+</pages:BasePage>
