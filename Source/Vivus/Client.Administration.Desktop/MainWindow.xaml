@@ -19,6 +19,6 @@
     </Window.Background>
 
     <Grid>
-        <Frame Background="#fafafa" Source="Pages/AdministratorsPage.xaml" />
+        <Frame Background="#fafafa" Source="Pages/DoctorsPage.xaml" />
     </Grid>
 </Window>
