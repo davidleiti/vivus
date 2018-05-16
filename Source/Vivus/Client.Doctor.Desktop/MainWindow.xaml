@@ -19,6 +19,6 @@
     </Window.Background>
 
     <Grid>
-        <Frame Background="#fafafa" Source="Pages/NotificationsPage.xaml" />
+        <Frame Background="#fafafa" Source="Pages/ProfilePage.xaml" />
     </Grid>
 </Window>

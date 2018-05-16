@@ -19,9 +19,9 @@
                 <!-- All patients -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All patients" />
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding AllPatients}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -29,11 +29,11 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" Width="1.25*" />
-                        <DataGridTextColumn Header="Blood type" Width="*" />
-                        <DataGridTextColumn Header="Age" Width="*" />
-                        <DataGridTextColumn Header="Gender" Width="*" />
-                        <DataGridTextColumn Header="Status" Width="*" />
+                        <DataGridTextColumn Header="Name" Width="1.25*" Binding="{Binding Name, Mode=OneWay}" />
+                        <DataGridTextColumn Header="Blood type" Width="*" Binding="{Binding BloodType, Mode=OneWay}"/>
+                        <DataGridTextColumn Header="Age" Width="*" Binding="{Binding Age, Mode=OneWay, StringFormat='{}{0} years'}"/>
+                        <DataGridTextColumn Header="Gender" Width="*" Binding="{Binding Gender, Mode=OneWay}"/>
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, Mode=OneWay}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- New patient & Choose Buttons -->
@@ -46,9 +46,9 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Add -->
-                    <Button Grid.Column="1" Width="Auto" Content="New patient" />
+                    <Button Grid.Column="1" Width="Auto" Content="New patient" Command="{Binding NewPatientCommand}"/>
                     <!-- Remove -->
-                    <Button Grid.Column="3" Width="Auto" Content="Choose" />
+                    <Button Grid.Column="3" Width="Auto" Content="Choose" Command="{Binding ChooseCommand}"/>
                 </Grid>
 
                 <!-- Separator -->
@@ -57,9 +57,9 @@
                 <!-- Your patients -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Your patients" />
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding MyPatients}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -67,11 +67,11 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" Width="1.25*" />
-                        <DataGridTextColumn Header="Blood type" Width="*" />
-                        <DataGridTextColumn Header="Age" Width="*" />
-                        <DataGridTextColumn Header="Gender" Width="*" />
-                        <DataGridTextColumn Header="Status" Width="*" />
+                        <DataGridTextColumn Header="Name" Width="1.25*" Binding="{Binding Name, Mode=OneWay}"/>
+                        <DataGridTextColumn Header="Blood type" Width="*" Binding="{Binding BloodType, Mode=OneWay}"/>
+                        <DataGridTextColumn Header="Age" Width="*" Binding="{Binding Age, Mode=OneWay, StringFormat='{}{0} years'}"/>
+                        <DataGridTextColumn Header="Gender" Width="*" Binding="{Binding Gender, Mode=OneWay}"/>
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, Mode=OneWay}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- Dismiss button -->
@@ -81,7 +81,7 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Dismiss" />
+                    <Button Grid.Column="1" Content="Dismiss" Command="{Binding DismissCommand}"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

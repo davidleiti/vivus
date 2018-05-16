@@ -9,9 +9,9 @@ namespace Vivus.Core.Administration.Validators
     public static class AdministrationValidator
     {
         /// <summary>
-        /// Validates the email address of the donor.
+        /// Validates the email address of the administrator.
         /// </summary>
-        /// <param name="email">The email address of the donor.</param>
+        /// <param name="email">The email address of the administrator.</param>
         /// <returns></returns>
         public static List<string> EmailValidation(string email)
         {
@@ -54,9 +54,9 @@ namespace Vivus.Core.Administration.Validators
         }
 
         /// <summary>
-        /// Validates the password of the donor.
+        /// Validates the password of the administraor.
         /// </summary>
-        /// <param name="password">The password of the donor.</param>
+        /// <param name="password">The password of the administrator.</param>
         /// <returns></returns>
         public static List<string> PasswordValidation(SecureString password)
         {
