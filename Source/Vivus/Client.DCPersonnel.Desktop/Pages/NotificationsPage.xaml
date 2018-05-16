@@ -36,26 +36,22 @@
                         <!-- Person details -->
                         <StackPanel>
                             <TextBlock Text="Person type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <ComboBox>
-                                <ComboBoxItem>Select person type</ComboBoxItem>
-                            </ComboBox>
+                            <ComboBox x:Name="cbPersonTypes" ItemsSource="{Binding PersonTypes, ValidatesOnDataErrors=True}" SelectedItem="{Binding PersonType, ValidatesOnDataErrors=True}" />
                         </StackPanel>
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Person name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <ComboBox>
-                                <ComboBoxItem>Select person name</ComboBoxItem>
-                            </ComboBox>
+                            <ComboBox x:Name="cbPersonName" ItemsSource="{Binding Persons, ValidatesOnDataErrors=True}" SelectedItem="{Binding PersonName, ValidatesOnDataErrors=True}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Tag="0000000000000" IsReadOnly="True" />
+                            <TextBox x:Name="tbNin" Text="{Binding NationalIdentificationNumber, ValidatesOnDataErrors=True}" Tag="0000000000000" IsReadOnly="True" />
                         </StackPanel>
                     </Grid>
 
                     <!-- Message -->
                     <StackPanel Margin="0 0 0 20">
                         <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Message details" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
+                        <TextBox x:Name="tbMessage" Text="{Binding Message, ValidatesOnDataErrors=True}" Tag="Message details" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
                     </StackPanel>
 
                     <!-- Send button -->
@@ -65,7 +61,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="4" Content="Send" />
+                        <Button Grid.Column="4" Content="Send" Command="{Binding SendCommand}"/>
                     </Grid>
 
                     <!-- Separator -->
