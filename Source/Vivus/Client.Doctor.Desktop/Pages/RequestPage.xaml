@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Title="RequestPage">
@@ -27,16 +28,12 @@
                     <!-- Patient -->
                     <StackPanel>
                         <TextBlock Text="Patient" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem>Select patient</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbSelectedPatientName" ItemsSource="{Binding PatientNames}" SelectedItem="{Binding SelectedPatientName, Mode=OneWayToSource}" />
                     </StackPanel>
                     <!-- Priority -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Priority" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem>Select priority</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbSelectedPriority" ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedPriority, Mode=OneWayToSource}" />
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 20">
@@ -51,17 +48,17 @@
                     <!-- Thrombocytes -->
                     <StackPanel>
                         <TextBlock Text="Thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestThrombocytes" Tag="Containers" Text="{Binding RequestThrombocytes, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Red cells -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestRedCells" Tag="Containers" Text="{Binding RequestRedCells, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Plasma -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestPlasma" Tag="Containers" Text="{Binding RequestPlasma, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <!-- Add button -->
@@ -71,13 +68,13 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Add" />
+                    <Button Grid.Column="1" Content="Add" Command="{Binding AddCommand}" />
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding Items}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -85,14 +82,14 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Patient" Width="*" />
-                        <DataGridTextColumn Header="Priority" Width="70" />
-                        <DataGridTextColumn Header="Thrombocytes" Width="108" />
-                        <DataGridTextColumn Header="Red cells" Width="78" />
-                        <DataGridTextColumn Header="Plasma" Width="69" />
-                        <DataGridTextColumn Header="Request status" Width="109" />
-                        <DataGridTextColumn Header="CDC" Width="*" />
-                        <DataGridTextColumn Header="DCN" Width="60" />
+                        <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="*" />
+                        <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" Width="70" />
+                        <DataGridTextColumn Header="Thrombocytes" Binding="{Binding Thrombocytes}" Width="108" />
+                        <DataGridTextColumn Header="Red cells" Binding="{Binding RedCells}" Width="78" />
+                        <DataGridTextColumn Header="Plasma" Binding="{Binding Plasma}" Width="69" />
+                        <DataGridTextColumn Header="Request status" Binding="{Binding RequestStatus}" Width="109" />
+                        <DataGridTextColumn Header="CDC" Binding="{Binding Cdc}" Width="*" />
+                        <DataGridTextColumn Header="DCN" Binding="{Binding Dcn}" Width="60" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- Cancel request button -->
@@ -102,7 +99,7 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Cancel request" />
+                    <Button Grid.Column="1" Content="Cancel request" Command="{Binding CancelCommand}"/>
                 </Grid>
 
             </StackPanel>
