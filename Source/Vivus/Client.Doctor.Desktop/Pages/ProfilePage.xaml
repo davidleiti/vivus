@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Title="ProfilePage">
@@ -27,12 +28,12 @@
                     <!-- Email address -->
                     <StackPanel>
                         <TextBlock Text="Email address" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="you@example.com" MaxLength="32" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbEmail" Tag="you@example.com" Text="{Binding Email, ValidatesOnDataErrors=True}" MaxLength="32" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                     <!-- Password -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Password" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <PasswordBox Tag="Password" MaxLength="32" />
+                        <PasswordBox x:Name="pbPassword" Tag="Password" CacheMode="{Binding Password, Mode=OneWayToSource, ValidatesOnDataErrors=True}" MaxLength="32" />
                     </StackPanel>
                 </Grid>
 
@@ -50,12 +51,12 @@
                     <!-- First name -->
                     <StackPanel>
                         <TextBlock Text="First name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="John" MaxLength="18" />
+                        <TextBox x:Name="tbFirstName" Tag="John" Text="{Binding Person.FirstName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Last name -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Last name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Doe" MaxLength="18" />
+                        <TextBox x:Name="tbLastName" Tag="Doe" Text="{Binding Person.LastName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 20">
@@ -67,12 +68,12 @@
                     <!-- Birth date -->
                     <StackPanel>
                         <TextBlock Text="Birth date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbBirthDate" Tag="dd/mm/yyyy" Text="{Binding Person.BirthDate, ValidatesOnDataErrors=True}" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- National identification number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="0000000000000" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbNin" Tag="0000000000000" Text="{Binding Person.NationalIdentificationNumber, ValidatesOnDataErrors=True}" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -85,7 +86,7 @@
                     <!-- Phone number -->
                     <StackPanel>
                         <TextBlock Text="Phone number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="+40 712 345 678" CharacterCasing="Upper" />
+                        <TextBox x:Name="tbPhoneNumber" Tag="+40 712 345 678" Text="{Binding Person.PhoneNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" />
                     </StackPanel>
                     <!-- Gender -->
                     <Grid Grid.Column="2">
@@ -105,9 +106,9 @@
                                 <ColumnDefinition Width="4*" />
                             </Grid.ColumnDefinitions>
 
-                            <RadioButton Grid.Column="0" Content="Male" />
-                            <RadioButton Grid.Column="2" Content="Female" Margin="10 0 0 0" />
-                            <RadioButton Grid.Column="4" Content="Not specified" Margin="10 0 0 0" IsChecked="True" />
+                            <RadioButton Grid.Column="0" Content="Male" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Male}"/>
+                            <RadioButton Grid.Column="2" Content="Female" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Female}" Margin="10 0 0 0" />
+                            <RadioButton Grid.Column="4" Content="Not specified" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter='Not specified'}" Margin="10 0 0 0" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -129,17 +130,17 @@
                     <!-- Street name -->
                     <StackPanel>
                         <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Street" MaxLength="18" />
+                        <TextBox x:Name="tbIdentifCardStreetName" Tag="Street" Text="{Binding IdentificationCardAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Street number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Number" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbIdentifCardStreetNo" Tag="Number" Text="{Binding IdentificationCardAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                     <!-- City -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="City" MaxLength="24" />
+                        <TextBox x:Name="tbIdentifCardCity" Tag="City" Text="{Binding IdentificationCardAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -154,15 +155,13 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select county" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbIdentifCardCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
                     <!-- Zip -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbIdentifCardZipCode" Tag="000000" Text="{Binding IdentificationCardAddress.ZipCode, ValidatesOnDataErrors=True}" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 
@@ -183,17 +182,17 @@
                     <!-- Street name -->
                     <StackPanel>
                         <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Street" MaxLength="18" />
+                        <TextBox x:Name="tbWorkAddressStreetName" Tag="Street" Text="{Binding WorkAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Street number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Number" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbWorkAddressStreetNo" Tag="Number" Text="{Binding WorkAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                     <!-- City -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="City" MaxLength="24" />
+                        <TextBox x:Name="tbWorkAddressCity" Tag="City" Text="{Binding WorkAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 30">
@@ -208,15 +207,13 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select county" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbWorkAddressCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding WorkAddress.County, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
                     <!-- Zip -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbWorkAddressZipCode" Tag="000000" Text="{Binding WorkAddress.ZipCode, ValidatesOnDataErrors=True}" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 
@@ -230,7 +227,7 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Update" />
+                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Update" Command="{Binding UpdateCommand}" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>

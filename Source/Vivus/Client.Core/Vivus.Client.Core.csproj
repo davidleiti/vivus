@@ -91,6 +91,7 @@
     <Compile Include="ValueConverters\BoolToStringConverter.cs" />
     <Compile Include="ValueConverters\CustomVisibilityToWindowsVisibilityConverter.cs" />
     <Compile Include="ValueConverters\DateTimeToStringConverter.cs" />
+    <Compile Include="ValueConverters\IntToStringConverter.cs" />
     <Compile Include="ValueConverters\PopupTypeValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
