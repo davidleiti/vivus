@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.DCPersonnel.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
+      xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -28,14 +29,13 @@
                     <!-- Container type -->
                     <StackPanel>
                         <TextBlock Text="Container type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select container type" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, Mode=OneWayToSource, ValidatesOnDataErrors=True}"/>
+
                     </StackPanel>
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="XXXXXXXXXXXX" CharacterCasing="Upper" MaxLength="24" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbContainerCode" Text="{Binding ContainerCode}" Tag="XXXXXXXXXXXX" CharacterCasing="Upper" MaxLength="24" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                 </Grid>
 
@@ -51,21 +51,17 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select blood type" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbBloodTypeManage" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding AddContainerBloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select RH" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbRHManage" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding AddContainerRH, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Harverst date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbHarvestDate" Text="{Binding HarvestDate}" Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 
@@ -78,13 +74,13 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="3" Width="Auto" Content="Add" Margin="0 0 0 20" />
+                    <Button Grid.Column="3" Width="Auto" Content="Add" Margin="0 0 0 20" Command="{Binding AddCommand}" />
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch">
+                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Containers}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -92,11 +88,11 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Container code" Width="2*" />
-                        <DataGridTextColumn Header="Container type" Width="1.2*" />
-                        <DataGridTextColumn Header="Blood type" Width="*" />
-                        <DataGridTextColumn Header="Harverst date" Width="*" />
-                        <DataGridTextColumn Header="Expired" Width="*" />
+                        <DataGridTextColumn Header="Container code" Width="2*" Binding="{Binding ContainerCode, StringFormat='{}{0}'}" />
+                        <DataGridTextColumn Header="Container type" Width="1.2*" Binding="{Binding ContainerType, StringFormat='{}{0}'}" />
+                        <DataGridTextColumn Header="Blood type" Width="*" Binding="{Binding BloodType, StringFormat='{}{0}'}" />
+                        <DataGridTextColumn Header="Harverst date" Width="*" Binding="{Binding HarvestDate, StringFormat='dd/MM/yyyy'}" />
+                        <DataGridTextColumn Header="Expired" Width="*" Binding="{Binding Expired, Converter={valueConverters:BoolToStringConverter}}" />
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -117,19 +113,15 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select blood type" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbBloodTypeReq" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding RequestBloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select RH" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbRHReq" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding RequestRH, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Request button -->
-                    <Button Grid.Column="4" VerticalAlignment="Bottom" MaxHeight="148" Width="Auto" Content="Request" />
+                    <Button Grid.Column="4" VerticalAlignment="Bottom" MaxHeight="148" Width="Auto" Content="Request" Command="{Binding RequestCommand}" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>

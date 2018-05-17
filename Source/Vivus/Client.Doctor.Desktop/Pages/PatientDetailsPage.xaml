@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -28,12 +29,12 @@
                     <!-- First name -->
                     <StackPanel>
                         <TextBlock Text="First name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="John" MaxLength="18" />
+                        <TextBox x:Name="tbFirstName" Tag="John" Text="{Binding Person.FirstName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Last name -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Last name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Doe" MaxLength="18" />
+                        <TextBox x:Name="tbLastName" Tag="Doe" Text="{Binding Person.LastName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 20">
@@ -45,12 +46,12 @@
                     <!-- Birth date -->
                     <StackPanel>
                         <TextBlock Text="Birth date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbBirthDate" Tag="dd/mm/yyyy" Text="{Binding Person.BirthDate, ValidatesOnDataErrors=True}" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- National identification number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="0000000000000" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbNid" Tag="0000000000000" Text="{Binding Person.NationalIdentificationNumber, ValidatesOnDataErrors=True}" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -63,7 +64,7 @@
                     <!-- Phone number -->
                     <StackPanel>
                         <TextBlock Text="Phone number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="+40 712 345 678" CharacterCasing="Upper" />
+                        <TextBox x:Name="tbPhoneNumber" Tag="+40 712 345 678" Text="{Binding Person.PhoneNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" />
                     </StackPanel>
                     <!-- Gender -->
                     <Grid Grid.Column="2">
@@ -83,9 +84,9 @@
                                 <ColumnDefinition Width="4*" />
                             </Grid.ColumnDefinitions>
 
-                            <RadioButton Grid.Column="0" Content="Male" />
-                            <RadioButton Grid.Column="2" Content="Female" Margin="10 0 0 0" />
-                            <RadioButton Grid.Column="4" Content="Not specified" Margin="10 0 0 0" IsChecked="True" />
+                            <RadioButton Grid.Column="0" Content="Male" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Male}" />
+                            <RadioButton Grid.Column="2" Content="Female" Margin="10 0 0 0" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Female}"/>
+                            <RadioButton Grid.Column="4" Content="Not specified" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter='Not specified'}" Margin="10 0 0 0" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -107,17 +108,17 @@
                     <!-- Street name -->
                     <StackPanel>
                         <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Street" MaxLength="18" />
+                        <TextBox x:Name="tbStreet" Tag="Street" Text="{Binding IdentificationCardAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Street number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Number" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbNumber" Tag="Number" Text="{Binding IdentificationCardAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                     <!-- City -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="City" MaxLength="24" />
+                        <TextBox x:Name="tbCity" Tag="City" Text="{Binding WorkAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -132,15 +133,13 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem Content="Select county" />
-                        </ComboBox>
+                        <ComboBox x:Name="cbCountry" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}"/>
 
                     </StackPanel>
                     <!-- Zip -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbZipCode" Tag="000000" Text="{Binding IdentificationCardAddress.ZipCode, ValidatesOnDataErrors=True}" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 
@@ -160,17 +159,15 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem>Select blood type</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbBloodType" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding BloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+
                     </StackPanel>
 
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
-                            <ComboBoxItem>Select RH</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbRh" ItemsSource="{Binding RhTypes}" SelectedItem="{Binding RhType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+
                     </StackPanel>
 
                     <!-- Status -->
@@ -183,14 +180,15 @@
                         <TextBlock Text="Status" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <Grid Grid.Row="1" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="12" />
+                                <ColumnDefinition Width="45"/>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="5*" />
                             </Grid.ColumnDefinitions>
 
-                            <RadioButton Grid.Column="0" Content="Alive" IsChecked="True" />
-                            <RadioButton Grid.Column="2" Content="Dead" Margin="10 0 0 0" />
+                            <RadioButton Grid.Column="0" Content="Alive" IsChecked="{Binding Status, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Alive}" Grid.ColumnSpan="2" />
+                            <RadioButton Grid.Column="3" Content="Dead" IsChecked="{Binding Status, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Dead}" Margin="10 0 0 0" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -205,7 +203,7 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Add" />
+                    <Button Command="{Binding AddCommand}" Grid.Column="2" FontSize="16" Margin="10 0" Content="Add" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>

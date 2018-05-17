@@ -96,7 +96,9 @@
     <Compile Include="ValueConverters\DateTimeToStringConverter.cs" />
     <Compile Include="ValueConverters\NullableBoolRadioButtonIsCheckBoolConverter.cs" />
     <Compile Include="ValueConverters\PopupTypeToBrushConverter.cs" />
+    <Compile Include="ValueConverters\IntToStringConverter.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <Page Include="Controls\Notifications\NotificationControl.xaml">
       <SubType>Designer</SubType>
