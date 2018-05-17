@@ -4,6 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop"
+        xmlns:sideMenu="clr-namespace:Vivus.Client.Core.Controls.SideMenu;assembly=Vivus.Client.Core"
+        xmlns:controls="clr-namespace:Vivus.Client.Core.Controls;assembly=Vivus.Client.Core"
+        xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
+        xmlns:viewModels="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+        xmlns:valueConverter="clr-namespace:Vivus.Client.Doctor.Desktop.ValueConverters"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         WindowStartupLocation="CenterScreen"
@@ -18,7 +23,17 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid>
-        <Frame Background="#fafafa" Source="Pages/ProfilePage.xaml" />
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <controls:PageHostControl Grid.Column="1"
+                                  Background="#fafafa"
+                                  DataContext="{Binding WindowViewModel.CurrentPage, Source={x:Static viewModels:ViewModelLocator.Instance}, Converter={valueConverter:ApplicationPageToPageValueConverter}}"
+                                  CurrentPage="{Binding}" />
+
+        <sideMenu:SideMenuItemListsListControl attachedProperties:AnimateSlideInFromLeftProperty.Value="{Binding WindowViewModel.SideMenuVisibility, Source={x:Static viewModels:ViewModelLocator.Instance}}" Width="210" Background="White" />
     </Grid>
 </Window>

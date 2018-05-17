@@ -20,7 +20,7 @@ namespace DBModel
             this.DonationForm = new HashSet<DonationForm>();
         }
     
-        public bool Disabled { get; set; }
+        public bool Active { get; set; }
         public int DonationCenterID { get; set; }
     
         public virtual DonationCenter DonationCenter { get; set; }

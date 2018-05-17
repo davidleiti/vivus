@@ -17,8 +17,8 @@ namespace DBModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
         {
-            this.Message = new HashSet<Message>();
-            this.Message1 = new HashSet<Message>();
+            this.SentMessages = new HashSet<Message>();
+            this.ReceivedMessages = new HashSet<Message>();
         }
     
         public int PersonID { get; set; }
@@ -33,8 +33,8 @@ namespace DBModel
         public virtual Gender Gender { get; set; }
         public virtual Address Address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Message { get; set; }
+        public virtual ICollection<Message> SentMessages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Message1 { get; set; }
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
     }
 }

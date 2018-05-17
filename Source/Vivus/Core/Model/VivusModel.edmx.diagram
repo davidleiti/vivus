@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7891646d5af6474fb97a6eafdefe9489" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.Account" Width="1.5" PointX="0.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Address" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Administrator" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodContainer" Width="1.5" PointX="10.5" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodContainerType" Width="1.5" PointX="8.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodRequest" Width="1.5" PointX="5.25" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodType" Width="1.5" PointX="6" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.County" Width="1.5" PointX="3" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DCPersonnel" Width="1.5" PointX="6" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Doctor" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DonationCenter" Width="1.5" PointX="10.5" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DonationForm" Width="1.5" PointX="8.25" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Donor" Width="1.5" PointX="3" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Gender" Width="1.5" PointX="5.25" PointY="21.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="9.75" PointY="20" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Patient" Width="1.5" PointX="8.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Person" Width="1.5" PointX="7.5" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PersonStatus" Width="1.5" PointX="6" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.RequestPriority" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.RH" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_AdministratorAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DCPersonnelAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DoctorAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonorAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_AddressCounty" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_AddressDonor" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DoctorAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonationCenterAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_PersonAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Administrator_inherits_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodContainerBloodType" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodContainerRH" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodRequestBloodContainer" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_ContainerTypeBloodContainer" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonationCenterBloodContainer" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodRequestDoctor" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodRequestPatient" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodRequestRequestPriority" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_BloodTypePatient" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DCPersonnel_inherits_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DCPersonnelDonationCenter" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonationFormDCPersonnel" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Doctor_inherits_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DoctorPatient" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonationFormDonor" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Donor_inherits_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_GenderPerson" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_PersonMessage" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_PersonMessage1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Patient_inherits_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_PatientPersonStatus" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_RHPatient" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.BloodRequestDonationCenter" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

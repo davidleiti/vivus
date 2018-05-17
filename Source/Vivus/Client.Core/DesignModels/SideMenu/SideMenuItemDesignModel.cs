@@ -15,7 +15,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SideMenuItemDesignModel"/> class with the default values.
         /// </summary>
-        public SideMenuItemDesignModel()
+        public SideMenuItemDesignModel() : base(null)
         {
             Title = "Profile";
             NewContent = true;

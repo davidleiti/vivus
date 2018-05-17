@@ -18,6 +18,7 @@ namespace DBModel
         public BloodType()
         {
             this.Patient = new HashSet<Patient>();
+            this.BloodContainer = new HashSet<BloodContainer>();
         }
     
         public int BloodTypeID { get; set; }
@@ -25,5 +26,7 @@ namespace DBModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Patient> Patient { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BloodContainer> BloodContainer { get; set; }
     }
 }

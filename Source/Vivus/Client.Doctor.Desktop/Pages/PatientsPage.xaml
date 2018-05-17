@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="PatientsPage">
 
     <Grid>
@@ -55,7 +56,7 @@
                 <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
 
                 <!-- Your patients -->
-                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Your patients" />
+                <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="My patients" />
                 <!-- Table -->
                 <DataGrid Height="420" Margin="0 0 0 20">
                     <DataGrid.Columns>

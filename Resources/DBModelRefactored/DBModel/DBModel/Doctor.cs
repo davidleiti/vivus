@@ -21,7 +21,7 @@ namespace DBModel
             this.BloodRequest = new HashSet<BloodRequest>();
         }
     
-        public bool IsActive { get; set; }
+        public bool Active { get; set; }
         public int WorkAddressID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -29,6 +29,6 @@ namespace DBModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodRequest> BloodRequest { get; set; }
         public virtual Account Account { get; set; }
-        public virtual Address Address1 { get; set; }
+        public virtual Address WorkAddress { get; set; }
     }
 }

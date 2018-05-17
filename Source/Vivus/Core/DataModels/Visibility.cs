@@ -6,9 +6,9 @@
     public enum Visibility
     {
         /// <summary>
-        /// Do not display the element, and do not reserve space for it in layout.
+        /// Display the element.
         /// </summary>
-        Collapsed,
+        Visible,
 
         /// <summary>
         /// Do not display the element, but reserve space for the element in layout.
@@ -16,8 +16,8 @@
         Hidden,
 
         /// <summary>
-        /// Display the element.
+        /// Do not display the element, and do not reserve space for it in layout.
         /// </summary>
-        Visible
+        Collapsed
     }
 }

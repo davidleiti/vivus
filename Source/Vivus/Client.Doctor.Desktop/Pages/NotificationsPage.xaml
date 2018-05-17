@@ -10,6 +10,7 @@
       xmlns:notifications="clr-namespace:Vivus.Client.Core.Controls.Notifications;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="NotificationsPage">
 
     <Grid>

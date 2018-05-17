@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.Administration.ViewModels;assembly=Vivus.Core.Administration"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="DonationCentersPage">
 
     <Grid>

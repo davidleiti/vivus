@@ -16,7 +16,11 @@ namespace Vivus.Core.Console
         public static void WriteLine(string message, bool showDate = true)
         {
             if (showDate)
-                message = $"[{ DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") }] { message }";
+            {
+                string time = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss");
+
+                message = $"[{ time }] { message.Replace("\n", $"\n[{ time }] ").Replace($"{ Environment.NewLine }", $"\n[{ time }] ") }";
+            }
 
             System.Console.WriteLine(message);
         }
@@ -29,7 +33,11 @@ namespace Vivus.Core.Console
         public static void Write(string message, bool showDate = true)
         {
             if (showDate)
-                message = $"[{ DateTime.Now }] { message }";
+            {
+                string time = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss");
+
+                message = $"[{ time }] { message.Replace("\n", $"\n[{ time }] ").Replace($"{ Environment.NewLine }", $"\n[{ time }] ") }";
+            }
 
             System.Console.Write(message);
         }

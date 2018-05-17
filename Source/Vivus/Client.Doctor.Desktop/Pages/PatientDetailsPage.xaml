@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="PatientDetailsPage">
 
     <Grid>

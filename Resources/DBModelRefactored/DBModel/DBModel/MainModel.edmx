@@ -14,18 +14,17 @@
     <EntitySet Name="RHs" EntityType="MainModel.Store.RHs" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodTypes" EntityType="MainModel.Store.BloodTypes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="PersonStatuses" EntityType="MainModel.Store.PersonStatuses" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="WomenInfos" EntityType="MainModel.Store.WomenInfos" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DonationCenters" EntityType="MainModel.Store.DonationCenters" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodContainers" EntityType="MainModel.Store.BloodContainers" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ContainerTypes" EntityType="MainModel.Store.ContainerTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BloodContainerTypes" EntityType="MainModel.Store.BloodContainerTypes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodRequests" EntityType="MainModel.Store.BloodRequests" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RequestPriorities" EntityType="MainModel.Store.RequestPriorities" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DonationForms" EntityType="MainModel.Store.DonationForms" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Messages" EntityType="MainModel.Store.Messages" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Patient" EntityType="MainModel.Store.Persons_Patient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Doctor" EntityType="MainModel.Store.Persons_Doctor" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Persons_Donor" EntityType="MainModel.Store.Persons_Donor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_DCPersonnel" EntityType="MainModel.Store.Persons_DCPersonnel" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Persons_Donor" EntityType="MainModel.Store.Persons_Donor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Persons_Administrator" EntityType="MainModel.Store.Persons_Administrator" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BloodRequestDonationCenter" EntityType="MainModel.Store.BloodRequestDonationCenter" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="AddressCounty" Association="MainModel.Store.AddressCounty">
@@ -65,7 +64,7 @@
       <End Role="Address" EntitySet="Addresses" />
     </AssociationSet>
     <AssociationSet Name="ContainerTypeBloodContainer" Association="MainModel.Store.ContainerTypeBloodContainer">
-      <End Role="ContainerType" EntitySet="ContainerTypes" />
+      <End Role="ContainerType" EntitySet="BloodContainerTypes" />
       <End Role="BloodContainer" EntitySet="BloodContainers" />
     </AssociationSet>
     <AssociationSet Name="BloodRequestRequestPriority" Association="MainModel.Store.BloodRequestRequestPriority">
@@ -136,6 +135,14 @@
       <End Role="Doctor" EntitySet="Persons_Doctor" />
       <End Role="Address" EntitySet="Addresses" />
     </AssociationSet>
+    <AssociationSet Name="BloodContainerBloodType" Association="MainModel.Store.BloodContainerBloodType">
+      <End Role="BloodContainer" EntitySet="BloodContainers" />
+      <End Role="BloodType" EntitySet="BloodTypes" />
+    </AssociationSet>
+    <AssociationSet Name="AdministratorAccount" Association="MainModel.Store.AdministratorAccount">
+      <End Role="Administrator" EntitySet="Persons_Administrator" />
+      <End Role="Account" EntitySet="Accounts" />
+    </AssociationSet>
     <AssociationSet Name="FK_Patient_inherits_Person" Association="MainModel.Store.FK_Patient_inherits_Person">
       <End Role="Person" EntitySet="Persons" />
       <End Role="Patient" EntitySet="Persons_Patient" />
@@ -144,13 +151,13 @@
       <End Role="Person" EntitySet="Persons" />
       <End Role="Doctor" EntitySet="Persons_Doctor" />
     </AssociationSet>
-    <AssociationSet Name="FK_Donor_inherits_Person" Association="MainModel.Store.FK_Donor_inherits_Person">
-      <End Role="Person" EntitySet="Persons" />
-      <End Role="Donor" EntitySet="Persons_Donor" />
-    </AssociationSet>
     <AssociationSet Name="FK_DCPersonnel_inherits_Person" Association="MainModel.Store.FK_DCPersonnel_inherits_Person">
       <End Role="Person" EntitySet="Persons" />
       <End Role="DCPersonnel" EntitySet="Persons_DCPersonnel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Donor_inherits_Person" Association="MainModel.Store.FK_Donor_inherits_Person">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Donor" EntitySet="Persons_Donor" />
     </AssociationSet>
     <AssociationSet Name="FK_Administrator_inherits_Person" Association="MainModel.Store.FK_Administrator_inherits_Person">
       <End Role="Person" EntitySet="Persons" />
@@ -164,7 +171,6 @@
     <Property Name="AccountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="DonorPersonID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Counties">
     <Key>
@@ -179,10 +185,10 @@
     </Key>
     <Property Name="AddressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Street" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="StreetNo" Type="smallint" Nullable="false" />
+    <Property Name="StreetNo" Type="nvarchar" Nullable="false" MaxLength="6" />
     <Property Name="City" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CountyID" Type="int" Nullable="false" />
-    <Property Name="Zipcode" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ZipCode" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Donor_PersonID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Persons">
@@ -207,9 +213,9 @@
   </EntityType>
   <EntityType Name="RHs">
     <Key>
-      <PropertyRef Name="RHID" />
+      <PropertyRef Name="RhID" />
     </Key>
-    <Property Name="RHID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RhID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Value" Type="decimal" Nullable="false" />
   </EntityType>
   <EntityType Name="BloodTypes">
@@ -226,16 +232,6 @@
     <Property Name="PersonStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="WomenInfos">
-    <Key>
-      <PropertyRef Name="WomenInfoID" />
-    </Key>
-    <Property Name="WomenInfoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="IsPregnant" Type="bit" Nullable="false" />
-    <Property Name="PostBirth" Type="bit" Nullable="false" />
-    <Property Name="Menstruating" Type="bit" Nullable="false" />
-    <Property Name="DonationStatus_DonationStatusID" Type="int" Nullable="false" />
-  </EntityType>
   <EntityType Name="DonationCenters">
     <Key>
       <PropertyRef Name="DonationCenterID" />
@@ -250,21 +246,19 @@
     </Key>
     <Property Name="BloodContainerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="HarvestDate" Type="datetime" Nullable="false" />
-    <Property Name="RHID" Type="int" Nullable="false" />
+    <Property Name="RhID" Type="int" Nullable="false" />
     <Property Name="ContainerCode" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ContainerTypeID" Type="int" Nullable="false" />
     <Property Name="DonationCenterID" Type="int" Nullable="false" />
-    <Property Name="IsExpired" Type="bit" Nullable="false" />
-    <Property Name="BloodRequestBloodRequestID" Type="int" Nullable="false" />
+    <Property Name="BloodRequestID" Type="int" Nullable="false" />
+    <Property Name="BloodTypeID" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="ContainerTypes">
+  <EntityType Name="BloodContainerTypes">
     <Key>
       <PropertyRef Name="ContainerTypeID" />
     </Key>
     <Property Name="ContainerTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="RedCell" Type="int" Nullable="false" />
-    <Property Name="Plasma" Type="int" Nullable="false" />
-    <Property Name="Thrombocyte" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="BloodRequests">
     <Key>
@@ -290,10 +284,16 @@
       <PropertyRef Name="DonationFormID" />
     </Key>
     <Property Name="DonationFormID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="TravelStatus" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="DonationStatus" Type="bit" Nullable="false" />
+    <Property Name="TravelStatus" Type="nvarchar" Nullable="true" MaxLength="256" />
     <Property Name="DCPersonnelID" Type="int" Nullable="false" />
     <Property Name="DonorID" Type="int" Nullable="false" />
+    <Property Name="Weight" Type="int" Nullable="false" />
+    <Property Name="HeartRate" Type="int" Nullable="false" />
+    <Property Name="SystolicBloodPressure" Type="int" Nullable="false" />
+    <Property Name="DiastolicBloodPressure" Type="int" Nullable="false" />
+    <Property Name="PastSurgeries" Type="nvarchar" Nullable="true" MaxLength="256" />
+    <Property Name="ApplyDate" Type="datetime" Nullable="false" />
+    <Property Name="DonationDate" Type="datetime" Nullable="true" />
   </EntityType>
   <EntityType Name="Messages">
     <Key>
@@ -302,13 +302,15 @@
     <Property Name="MessageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="SenderID" Type="int" Nullable="false" />
     <Property Name="RecieverID" Type="int" Nullable="false" />
+    <Property Name="SendDate" Type="datetime" Nullable="false" />
+    <Property Name="Content" Type="nvarchar" Nullable="false" MaxLength="256" />
   </EntityType>
   <EntityType Name="Persons_Patient">
     <Key>
       <PropertyRef Name="PersonID" />
     </Key>
     <Property Name="PersonStatusID" Type="int" Nullable="false" />
-    <Property Name="RHID" Type="int" Nullable="false" />
+    <Property Name="RhID" Type="int" Nullable="false" />
     <Property Name="BloodTypeID" Type="int" Nullable="false" />
     <Property Name="DoctorID" Type="int" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
@@ -317,8 +319,17 @@
     <Key>
       <PropertyRef Name="PersonID" />
     </Key>
-    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
     <Property Name="WorkAddressID" Type="int" Nullable="false" />
+    <Property Name="PersonID" Type="int" Nullable="false" />
+    <Property Name="Account_AccountID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persons_DCPersonnel">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="Active" Type="bit" Nullable="false" />
+    <Property Name="DonationCenterID" Type="int" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
     <Property Name="Account_AccountID" Type="int" Nullable="false" />
   </EntityType>
@@ -327,14 +338,6 @@
       <PropertyRef Name="PersonID" />
     </Key>
     <Property Name="PersonID" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Persons_DCPersonnel">
-    <Key>
-      <PropertyRef Name="PersonID" />
-    </Key>
-    <Property Name="Disabled" Type="bit" Nullable="false" />
-    <Property Name="DonationCenterID" Type="int" Nullable="false" />
-    <Property Name="PersonID" Type="int" Nullable="false" />
     <Property Name="Account_AccountID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Persons_Administrator">
@@ -342,7 +345,9 @@
       <PropertyRef Name="PersonID" />
     </Key>
     <Property Name="IsOwner" Type="bit" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
     <Property Name="PersonID" Type="int" Nullable="false" />
+    <Property Name="Account_AccountID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="BloodRequestDonationCenter">
     <Key>
@@ -405,10 +410,10 @@
     <End Role="Patient" Type="MainModel.Store.Persons_Patient" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="RH">
-        <PropertyRef Name="RHID" />
+        <PropertyRef Name="RhID" />
       </Principal>
       <Dependent Role="Patient">
-        <PropertyRef Name="RHID" />
+        <PropertyRef Name="RhID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -441,10 +446,10 @@
     <End Role="RH" Type="MainModel.Store.RHs" Multiplicity="1" />
     <ReferentialConstraint>
       <Principal Role="RH">
-        <PropertyRef Name="RHID" />
+        <PropertyRef Name="RhID" />
       </Principal>
       <Dependent Role="BloodContainer">
-        <PropertyRef Name="RHID" />
+        <PropertyRef Name="RhID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -461,7 +466,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="ContainerTypeBloodContainer">
-    <End Role="ContainerType" Type="MainModel.Store.ContainerTypes" Multiplicity="1" />
+    <End Role="ContainerType" Type="MainModel.Store.BloodContainerTypes" Multiplicity="1" />
     <End Role="BloodContainer" Type="MainModel.Store.BloodContainers" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ContainerType">
@@ -528,7 +533,7 @@
         <PropertyRef Name="BloodRequestID" />
       </Principal>
       <Dependent Role="BloodContainer">
-        <PropertyRef Name="BloodRequestBloodRequestID" />
+        <PropertyRef Name="BloodRequestID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -629,14 +634,14 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="DonorAccount">
-    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="1" />
-    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="*" />
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="*" />
+    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Donor">
-        <PropertyRef Name="PersonID" />
+      <Principal Role="Account">
+        <PropertyRef Name="AccountID" />
       </Principal>
-      <Dependent Role="Account">
-        <PropertyRef Name="DonorPersonID" />
+      <Dependent Role="Donor">
+        <PropertyRef Name="Account_AccountID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -649,6 +654,30 @@
       </Principal>
       <Dependent Role="Doctor">
         <PropertyRef Name="WorkAddressID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BloodContainerBloodType">
+    <End Role="BloodContainer" Type="MainModel.Store.BloodContainers" Multiplicity="*" />
+    <End Role="BloodType" Type="MainModel.Store.BloodTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="BloodType">
+        <PropertyRef Name="BloodTypeID" />
+      </Principal>
+      <Dependent Role="BloodContainer">
+        <PropertyRef Name="BloodTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdministratorAccount">
+    <End Role="Administrator" Type="MainModel.Store.Persons_Administrator" Multiplicity="*" />
+    <End Role="Account" Type="MainModel.Store.Accounts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="AccountID" />
+      </Principal>
+      <Dependent Role="Administrator">
+        <PropertyRef Name="Account_AccountID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -704,20 +733,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Donor_inherits_Person">
-    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Person">
-        <PropertyRef Name="PersonID" />
-      </Principal>
-      <Dependent Role="Donor">
-        <PropertyRef Name="PersonID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DCPersonnel_inherits_Person">
     <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -728,6 +743,20 @@
         <PropertyRef Name="PersonID" />
       </Principal>
       <Dependent Role="DCPersonnel">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Donor_inherits_Person">
+    <End Role="Person" Type="MainModel.Store.Persons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Donor" Type="MainModel.Store.Persons_Donor" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Donor">
         <PropertyRef Name="PersonID" />
       </Dependent>
     </ReferentialConstraint>
@@ -787,7 +816,6 @@
             <End Role="Doctor" EntitySet="Persons" />
             <End Role="Patient" EntitySet="Persons" />
           </AssociationSet>
-          <EntitySet Name="WomenInfos" EntityType="MainModel.WomenInfo" />
           <EntitySet Name="DonationCenters" EntityType="MainModel.DonationCenter" />
           <EntitySet Name="BloodContainers" EntityType="MainModel.BloodContainer" />
           <AssociationSet Name="BloodContainerRH" Association="MainModel.BloodContainerRH">
@@ -798,9 +826,9 @@
             <End Role="DonationCenter" EntitySet="DonationCenters" />
             <End Role="Address" EntitySet="Addresses" />
           </AssociationSet>
-          <EntitySet Name="ContainerTypes" EntityType="MainModel.ContainerType" />
+          <EntitySet Name="BloodContainerTypes" EntityType="MainModel.BloodContainerType" />
           <AssociationSet Name="ContainerTypeBloodContainer" Association="MainModel.ContainerTypeBloodContainer">
-            <End Role="ContainerType" EntitySet="ContainerTypes" />
+            <End Role="ContainerType" EntitySet="BloodContainerTypes" />
             <End Role="BloodContainer" EntitySet="BloodContainers" />
           </AssociationSet>
           <EntitySet Name="BloodRequests" EntityType="MainModel.BloodRequest" />
@@ -871,6 +899,14 @@
             <End Role="Doctor" EntitySet="Persons" />
             <End Role="Address" EntitySet="Addresses" />
           </AssociationSet>
+          <AssociationSet Name="BloodContainerBloodType" Association="MainModel.BloodContainerBloodType">
+            <End Role="BloodContainer" EntitySet="BloodContainers" />
+            <End Role="BloodType" EntitySet="BloodTypes" />
+          </AssociationSet>
+          <AssociationSet Name="AdministratorAccount" Association="MainModel.AdministratorAccount">
+            <End Role="Administrator" EntitySet="Persons" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -882,7 +918,7 @@
           <NavigationProperty Name="Doctor" Relationship="MainModel.DoctorAccount" FromRole="Account" ToRole="Doctor" />
           <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DCPersonnelAccount" FromRole="Account" ToRole="DCPersonnel" />
           <NavigationProperty Name="Donor" Relationship="MainModel.DonorAccount" FromRole="Account" ToRole="Donor" />
-          <Property Name="DonorPersonID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Administrator" Relationship="MainModel.AdministratorAccount" FromRole="Account" ToRole="Administrator" />
         </EntityType>
         <EntityType Name="County">
           <Key>
@@ -898,11 +934,11 @@
           </Key>
           <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Street" Type="String" Nullable="false" />
-          <Property Name="StreetNo" Type="Int16" Nullable="false" />
+          <Property Name="StreetNo" Type="String" Nullable="false" MaxLength="6" />
           <Property Name="City" Type="String" Nullable="false" />
           <NavigationProperty Name="County" Relationship="MainModel.AddressCounty" FromRole="Address" ToRole="County" />
           <Property Name="CountyID" Type="Int32" Nullable="false" />
-          <Property Name="Zipcode" Type="String" Nullable="false" />
+          <Property Name="ZipCode" Type="String" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="MainModel.PersonAddress" FromRole="Address" ToRole="Person" />
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationCenterAddress" FromRole="Address" ToRole="DonationCenter" />
           <NavigationProperty Name="Donor" Relationship="MainModel.AddressDonor" FromRole="Address" ToRole="Donor" />
@@ -934,8 +970,8 @@
           <Property Name="PhoneNo" Type="String" Nullable="false" />
           <NavigationProperty Name="Address" Relationship="MainModel.PersonAddress" FromRole="Person" ToRole="Address" />
           <Property Name="AddressID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Message" Relationship="MainModel.PersonMessage" FromRole="Person" ToRole="Message" />
-          <NavigationProperty Name="Message1" Relationship="MainModel.PersonMessage1" FromRole="Person" ToRole="Message" />
+          <NavigationProperty Name="SentMessages" Relationship="MainModel.PersonMessage" FromRole="Person" ToRole="Message" />
+          <NavigationProperty Name="ReceivedMessages" Relationship="MainModel.PersonMessage1" FromRole="Person" ToRole="Message" />
         </EntityType>
         <EntityType Name="Gender">
           <Key>
@@ -971,9 +1007,9 @@
         </Association>
         <EntityType Name="RH">
           <Key>
-            <PropertyRef Name="RHID" />
+            <PropertyRef Name="RhID" />
           </Key>
-          <Property Name="RHID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RhID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.RHPatient" FromRole="RH" ToRole="Patient" />
           <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodContainerRH" FromRole="RH" ToRole="BloodContainer" />
@@ -985,12 +1021,13 @@
           <Property Name="BloodTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="String" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.BloodTypePatient" FromRole="BloodType" ToRole="Patient" />
+          <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodContainerBloodType" FromRole="BloodType" ToRole="BloodContainer" />
         </EntityType>
         <EntityType Name="Patient" BaseType="MainModel.Person">
           <NavigationProperty Name="PersonStatus" Relationship="MainModel.PatientPersonStatus" FromRole="Patient" ToRole="PersonStatus" />
           <Property Name="PersonStatusID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RH" Relationship="MainModel.RHPatient" FromRole="Patient" ToRole="RH" />
-          <Property Name="RHID" Type="Int32" Nullable="false" />
+          <Property Name="RhID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="BloodType" Relationship="MainModel.BloodTypePatient" FromRole="Patient" ToRole="BloodType" />
           <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Doctor" Relationship="MainModel.DoctorPatient" FromRole="Patient" ToRole="Doctor" />
@@ -1022,10 +1059,10 @@
           <End Type="MainModel.Patient" Role="Patient" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RH">
-              <PropertyRef Name="RHID" />
+              <PropertyRef Name="RhID" />
             </Principal>
             <Dependent Role="Patient">
-              <PropertyRef Name="RHID" />
+              <PropertyRef Name="RhID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1047,11 +1084,11 @@
           <NavigationProperty Name="Account" Relationship="MainModel.DonorAccount" FromRole="Donor" ToRole="Account" />
         </EntityType>
         <EntityType Name="Doctor" BaseType="MainModel.Person">
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.DoctorPatient" FromRole="Doctor" ToRole="Patient" />
           <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDoctor" FromRole="Doctor" ToRole="BloodRequest" />
           <NavigationProperty Name="Account" Relationship="MainModel.DoctorAccount" FromRole="Doctor" ToRole="Account" />
-          <NavigationProperty Name="Address1" Relationship="MainModel.DoctorAddress" FromRole="Doctor" ToRole="Address" />
+          <NavigationProperty Name="WorkAddress" Relationship="MainModel.DoctorAddress" FromRole="Doctor" ToRole="Address" />
           <Property Name="WorkAddressID" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="DoctorPatient">
@@ -1066,15 +1103,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="WomenInfo">
-          <Key>
-            <PropertyRef Name="WomenInfoID" />
-          </Key>
-          <Property Name="WomenInfoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IsPregnant" Type="Boolean" Nullable="false" />
-          <Property Name="PostBirth" Type="Boolean" Nullable="false" />
-          <Property Name="Menstruating" Type="Boolean" Nullable="false" />
-        </EntityType>
         <EntityType Name="DonationCenter">
           <Key>
             <PropertyRef Name="DonationCenterID" />
@@ -1094,30 +1122,31 @@
           <Property Name="BloodContainerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="HarvestDate" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="RH" Relationship="MainModel.BloodContainerRH" FromRole="BloodContainer" ToRole="RH" />
-          <Property Name="RHID" Type="Int32" Nullable="false" />
+          <Property Name="RhID" Type="Int32" Nullable="false" />
           <Property Name="ContainerCode" Type="String" Nullable="false" />
           <NavigationProperty Name="ContainerType" Relationship="MainModel.ContainerTypeBloodContainer" FromRole="BloodContainer" ToRole="ContainerType" />
           <Property Name="ContainerTypeID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationCenterBloodContainer" FromRole="BloodContainer" ToRole="DonationCenter" />
           <Property Name="DonationCenterID" Type="Int32" Nullable="false" />
-          <Property Name="IsExpired" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestBloodContainer" FromRole="BloodContainer" ToRole="BloodRequest" />
-          <Property Name="BloodRequestBloodRequestID" Type="Int32" Nullable="false" />
+          <Property Name="BloodRequestID" Type="Int32" Nullable="false" />
+          <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BloodType" Relationship="MainModel.BloodContainerBloodType" FromRole="BloodContainer" ToRole="BloodType" />
         </EntityType>
         <Association Name="BloodContainerRH">
           <End Type="MainModel.BloodContainer" Role="BloodContainer" Multiplicity="*" />
           <End Type="MainModel.RH" Role="RH" Multiplicity="1" />
           <ReferentialConstraint>
             <Principal Role="RH">
-              <PropertyRef Name="RHID" />
+              <PropertyRef Name="RhID" />
             </Principal>
             <Dependent Role="BloodContainer">
-              <PropertyRef Name="RHID" />
+              <PropertyRef Name="RhID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityType Name="DCPersonnel" BaseType="MainModel.Person" >
-          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="DonationCenter" Relationship="MainModel.DCPersonnelDonationCenter" FromRole="DCPersonnel" ToRole="DonationCenter" />
           <Property Name="DonationCenterID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDCPersonnel" FromRole="DCPersonnel" ToRole="DonationForm" />
@@ -1135,18 +1164,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ContainerType">
+        <EntityType Name="BloodContainerType">
           <Key>
             <PropertyRef Name="ContainerTypeID" />
           </Key>
           <Property Name="ContainerTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RedCell" Type="Int32" Nullable="false" />
-          <Property Name="Plasma" Type="Int32" Nullable="false" />
-          <Property Name="Thrombocyte" Type="Int32" Nullable="false" />
           <NavigationProperty Name="BloodContainer" Relationship="MainModel.ContainerTypeBloodContainer" FromRole="ContainerType" ToRole="BloodContainer" />
+          <Property Name="Name" Type="String" Nullable="false" />
         </EntityType>
         <Association Name="ContainerTypeBloodContainer">
-          <End Type="MainModel.ContainerType" Role="ContainerType" Multiplicity="1" />
+          <End Type="MainModel.BloodContainerType" Role="ContainerType" Multiplicity="1" />
           <End Type="MainModel.BloodContainer" Role="BloodContainer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ContainerType">
@@ -1242,7 +1269,7 @@
               <PropertyRef Name="BloodRequestID" />
             </Principal>
             <Dependent Role="BloodContainer">
-              <PropertyRef Name="BloodRequestBloodRequestID" />
+              <PropertyRef Name="BloodRequestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1263,16 +1290,18 @@
             <PropertyRef Name="DonationFormID" />
           </Key>
           <Property Name="DonationFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TravelStatus" Type="String" Nullable="false" />
+          <Property Name="TravelStatus" Type="String" Nullable="true" MaxLength="256" />
           <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DonationFormDCPersonnel" FromRole="DonationForm" ToRole="DCPersonnel" />
           <Property Name="DCPersonnelID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Donor" Relationship="MainModel.DonationFormDonor" FromRole="DonationForm" ToRole="Donor" />
           <Property Name="DonorID" Type="Int32" Nullable="false" />
           <Property Name="Weight" Type="Int32" Nullable="false" />
-          <Property Name="Pulse" Type="Int16" Nullable="false" />
-          <Property Name="SystolicBloodPressure" Type="Decimal" Nullable="false" />
-          <Property Name="DiastolicBloodPressure" Type="Decimal" Nullable="false" />
-          <Property Name="PastSurgeries" Type="String" Nullable="false" />
+          <Property Name="HeartRate" Type="Int32" Nullable="false" />
+          <Property Name="SystolicBloodPressure" Type="Int32" Nullable="false" />
+          <Property Name="DiastolicBloodPressure" Type="Int32" Nullable="false" />
+          <Property Name="PastSurgeries" Type="String" Nullable="true" MaxLength="256" />
+          <Property Name="ApplyDate" Type="DateTime" Nullable="false" />
+          <Property Name="DonationDate" Type="DateTime" Nullable="true" />
         </EntityType>
         <Association Name="DonationFormDCPersonnel">
           <End Type="MainModel.DonationForm" Role="DonationForm" Multiplicity="*" />
@@ -1303,11 +1332,12 @@
             <PropertyRef Name="MessageID" />
           </Key>
           <Property Name="MessageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Person" Relationship="MainModel.PersonMessage" FromRole="Message" ToRole="Person" />
+          <NavigationProperty Name="Sender" Relationship="MainModel.PersonMessage" FromRole="Message" ToRole="Person" />
           <Property Name="SenderID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Person1" Relationship="MainModel.PersonMessage1" FromRole="Message" ToRole="Person" />
+          <NavigationProperty Name="Receiver" Relationship="MainModel.PersonMessage1" FromRole="Message" ToRole="Person" />
           <Property Name="RecieverID" Type="Int32" Nullable="false" />
           <Property Name="SendDate" Type="DateTime" Nullable="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="256" />
         </EntityType>
         <Association Name="PersonMessage">
           <End Type="MainModel.Person" Role="Person" Multiplicity="1" />
@@ -1335,6 +1365,8 @@
         </Association>
         <EntityType Name="Administrator" BaseType="MainModel.Person">
           <Property Name="IsOwner" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="MainModel.AdministratorAccount" FromRole="Administrator" ToRole="Account" />
         </EntityType>
         <Association Name="AddressDonor">
           <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
@@ -1350,15 +1382,7 @@
         </Association>
         <Association Name="DonorAccount">
           <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
-          <End Type="MainModel.Account" Role="Account" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Donor">
-              <PropertyRef Name="PersonID" />
-            </Principal>
-            <Dependent Role="Account">
-              <PropertyRef Name="DonorPersonID" />
-            </Dependent>
-          </ReferentialConstraint>
+          <End Type="MainModel.Account" Role="Account" Multiplicity="1" />
         </Association>
         <Association Name="DoctorAddress">
           <End Type="MainModel.Doctor" Role="Doctor" Multiplicity="*" />
@@ -1372,6 +1396,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="BloodContainerBloodType">
+          <End Type="MainModel.BloodContainer" Role="BloodContainer" Multiplicity="*" />
+          <End Type="MainModel.BloodType" Role="BloodType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BloodType">
+              <PropertyRef Name="BloodTypeID" />
+            </Principal>
+            <Dependent Role="BloodContainer">
+              <PropertyRef Name="BloodTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AdministratorAccount">
+          <End Type="MainModel.Administrator" Role="Administrator" Multiplicity="1" />
+          <End Type="MainModel.Account" Role="Account" Multiplicity="1" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1384,7 +1424,6 @@
           <ScalarProperty Name="AccountID" ColumnName="AccountID" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="DonorPersonID" ColumnName="DonorPersonID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1404,7 +1443,7 @@
           <ScalarProperty Name="StreetNo" ColumnName="StreetNo" />
           <ScalarProperty Name="City" ColumnName="City" />
           <ScalarProperty Name="CountyID" ColumnName="CountyID" />
-          <ScalarProperty Name="Zipcode" ColumnName="Zipcode" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1425,7 +1464,7 @@
         <MappingFragment StoreEntitySet="Persons_Patient">
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
           <ScalarProperty Name="PersonStatusID" ColumnName="PersonStatusID" />
-          <ScalarProperty Name="RHID" ColumnName="RHID" />
+          <ScalarProperty Name="RhID" ColumnName="RhID" />
           <ScalarProperty Name="BloodTypeID" ColumnName="BloodTypeID" />
           <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
         </MappingFragment>
@@ -1433,8 +1472,15 @@
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.Doctor)">
         <MappingFragment StoreEntitySet="Persons_Doctor">
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
           <ScalarProperty Name="WorkAddressID" ColumnName="WorkAddressID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.DCPersonnel)">
+        <MappingFragment StoreEntitySet="Persons_DCPersonnel">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
         </MappingFragment>
       </EntityTypeMapping>
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.Donor)">
@@ -1442,17 +1488,11 @@
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
         </MappingFragment>
       </EntityTypeMapping>
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.DCPersonnel)">
-        <MappingFragment StoreEntitySet="Persons_DCPersonnel">
-          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
-          <ScalarProperty Name="Disabled" ColumnName="Disabled" />
-          <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
-        </MappingFragment>
-      </EntityTypeMapping>
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.Administrator)">
         <MappingFragment StoreEntitySet="Persons_Administrator">
           <ScalarProperty Name="PersonID" ColumnName="PersonID" />
           <ScalarProperty Name="IsOwner" ColumnName="IsOwner" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1467,7 +1507,7 @@
     <EntitySetMapping Name="RHs">
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.RH)">
         <MappingFragment StoreEntitySet="RHs">
-          <ScalarProperty Name="RHID" ColumnName="RHID" />
+          <ScalarProperty Name="RhID" ColumnName="RhID" />
           <ScalarProperty Name="Value" ColumnName="Value" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -1488,16 +1528,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="WomenInfos">
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.WomenInfo)">
-        <MappingFragment StoreEntitySet="WomenInfos">
-          <ScalarProperty Name="WomenInfoID" ColumnName="WomenInfoID" />
-          <ScalarProperty Name="IsPregnant" ColumnName="IsPregnant" />
-          <ScalarProperty Name="PostBirth" ColumnName="PostBirth" />
-          <ScalarProperty Name="Menstruating" ColumnName="Menstruating" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DonationCenters">
       <EntityTypeMapping TypeName="IsTypeOf(MainModel.DonationCenter)">
         <MappingFragment StoreEntitySet="DonationCenters">
@@ -1512,22 +1542,20 @@
         <MappingFragment StoreEntitySet="BloodContainers">
           <ScalarProperty Name="BloodContainerID" ColumnName="BloodContainerID" />
           <ScalarProperty Name="HarvestDate" ColumnName="HarvestDate" />
-          <ScalarProperty Name="RHID" ColumnName="RHID" />
+          <ScalarProperty Name="RhID" ColumnName="RhID" />
           <ScalarProperty Name="ContainerCode" ColumnName="ContainerCode" />
           <ScalarProperty Name="ContainerTypeID" ColumnName="ContainerTypeID" />
           <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
-          <ScalarProperty Name="IsExpired" ColumnName="IsExpired" />
-          <ScalarProperty Name="BloodRequestBloodRequestID" ColumnName="BloodRequestBloodRequestID" />
+          <ScalarProperty Name="BloodRequestID" ColumnName="BloodRequestID" />
+          <ScalarProperty Name="BloodTypeID" ColumnName="BloodTypeID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ContainerTypes">
-      <EntityTypeMapping TypeName="IsTypeOf(MainModel.ContainerType)">
-        <MappingFragment StoreEntitySet="ContainerTypes">
+    <EntitySetMapping Name="BloodContainerTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(MainModel.BloodContainerType)">
+        <MappingFragment StoreEntitySet="BloodContainerTypes">
           <ScalarProperty Name="ContainerTypeID" ColumnName="ContainerTypeID" />
-          <ScalarProperty Name="RedCell" ColumnName="RedCell" />
-          <ScalarProperty Name="Plasma" ColumnName="Plasma" />
-          <ScalarProperty Name="Thrombocyte" ColumnName="Thrombocyte" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1559,6 +1587,13 @@
           <ScalarProperty Name="TravelStatus" ColumnName="TravelStatus" />
           <ScalarProperty Name="DCPersonnelID" ColumnName="DCPersonnelID" />
           <ScalarProperty Name="DonorID" ColumnName="DonorID" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="HeartRate" ColumnName="HeartRate" />
+          <ScalarProperty Name="SystolicBloodPressure" ColumnName="SystolicBloodPressure" />
+          <ScalarProperty Name="DiastolicBloodPressure" ColumnName="DiastolicBloodPressure" />
+          <ScalarProperty Name="PastSurgeries" ColumnName="PastSurgeries" />
+          <ScalarProperty Name="ApplyDate" ColumnName="ApplyDate" />
+          <ScalarProperty Name="DonationDate" ColumnName="DonationDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1568,6 +1603,8 @@
           <ScalarProperty Name="MessageID" ColumnName="MessageID" />
           <ScalarProperty Name="SenderID" ColumnName="SenderID" />
           <ScalarProperty Name="RecieverID" ColumnName="RecieverID" />
+          <ScalarProperty Name="SendDate" ColumnName="SendDate" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1600,6 +1637,22 @@
         <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
       </EndProperty>
       <EndProperty Name="DCPersonnel">
+        <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DonorAccount" TypeName="MainModel.DonorAccount" StoreEntitySet="Persons_Donor">
+      <EndProperty Name="Account">
+        <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
+      </EndProperty>
+      <EndProperty Name="Donor">
+        <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdministratorAccount" TypeName="MainModel.AdministratorAccount" StoreEntitySet="Persons_Administrator">
+      <EndProperty Name="Account">
+        <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
+      </EndProperty>
+      <EndProperty Name="Administrator">
         <ScalarProperty Name="PersonID" ColumnName="PersonID" />
       </EndProperty>
     </AssociationSetMapping>

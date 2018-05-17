@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="ProfilePage">
 
     <Grid>

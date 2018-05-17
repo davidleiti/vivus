@@ -12,10 +12,17 @@
     /// </summary>
     public class SideMenuItemViewModel : BaseViewModel
     {
+        #region Private Members
+
         private string title;
+        private Visibility visibility;
         private bool newContent;
         private bool isSelected;
-        private static SideMenuItemViewModel selectedItem = new SideMenuItemViewModel();
+        private static SideMenuItemViewModel selectedItem = new SideMenuItemViewModel(null);
+
+        #endregion
+
+        #region Public Members
 
         /// <summary>
         /// Gets or sets the title for the <see cref="SideMenuItemControl"/>.
@@ -30,6 +37,24 @@
                     return;
 
                 title = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the visibility of the <see cref="SideMenuItemControl"/>.
+        /// </summary>
+        public Visibility Visibility
+        {
+            get => visibility;
+
+            set
+            {
+                if (visibility == value)
+                    return;
+
+                visibility = value;
 
                 OnPropertyChanged();
             }
@@ -82,26 +107,41 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the visibility status of the news cirlce.
+        /// </summary>
         public Visibility ChangesVisibility
         {
-            get => NewContent ? Visibility.Visible : Visibility.Collapsed;
+            get => NewContent ? Visibility.Visible : Visibility.Hidden;
         }
 
+        #endregion
+
+        #region Public Commands
+
+        /// <summary>
+        /// Gets or sets the on click command.
+        /// </summary>
         public ICommand OpenPageCommand { get; }
 
-        public SideMenuItemViewModel()
-        {
-            OpenPageCommand = new RelayCommand(() => { OpenPage(); });
-            Thread t = new Thread(async () => await ThreadAction());
+        #endregion
 
-            t.Start();
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SideMenuItemViewModel"/> class with the givn value.
+        /// </summary>
+        /// <param name="openPageCommand">The action to be executed when the user clicks on the <see cref="SideMenuItemControl"/>.</param>
+        public SideMenuItemViewModel(Action openPageCommand)
+        {
+            OpenPageCommand = new RelayCommand(() => { IsSelected = true; openPageCommand(); });
+
+            new Thread(async () => await ThreadAction()).Start();
         }
 
-        private void OpenPage()
-        {
-            //NewContentCount = 0;
-            IsSelected = true;
-        }
+        #endregion
+
+        #region Private Methods
 
         private async Task ThreadAction()
         {
@@ -121,5 +161,7 @@
                 }
             }
         }
+
+        #endregion
     }
 }

@@ -33,10 +33,9 @@ namespace DBModel
         public virtual DbSet<RH> RHs { get; set; }
         public virtual DbSet<BloodType> BloodTypes { get; set; }
         public virtual DbSet<PersonStatus> PersonStatuses { get; set; }
-        public virtual DbSet<WomenInfo> WomenInfos { get; set; }
         public virtual DbSet<DonationCenter> DonationCenters { get; set; }
         public virtual DbSet<BloodContainer> BloodContainers { get; set; }
-        public virtual DbSet<ContainerType> ContainerTypes { get; set; }
+        public virtual DbSet<BloodContainerType> BloodContainerTypes { get; set; }
         public virtual DbSet<BloodRequest> BloodRequests { get; set; }
         public virtual DbSet<RequestPriority> RequestPriorities { get; set; }
         public virtual DbSet<DonationForm> DonationForms { get; set; }

@@ -9,7 +9,7 @@
     /// <summary>
     /// Converts the <see cref="PopupType"/> to an actual color.
     /// </summary>
-    public class PopupTypeValueConverter : BaseValueConverter<PopupTypeValueConverter>
+    public class PopupTypeToBrushConverter : BaseValueConverter<PopupTypeToBrushConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

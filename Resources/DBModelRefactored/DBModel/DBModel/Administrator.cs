@@ -15,5 +15,8 @@ namespace DBModel
     public partial class Administrator : Person
     {
         public bool IsOwner { get; set; }
+        public bool Active { get; set; }
+    
+        public virtual Account Account { get; set; }
     }
 }

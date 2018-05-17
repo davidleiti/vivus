@@ -24,10 +24,10 @@ namespace DBModel
     
         public int AddressID { get; set; }
         public string Street { get; set; }
-        public short StreetNo { get; set; }
+        public string StreetNo { get; set; }
         public string City { get; set; }
         public int CountyID { get; set; }
-        public string Zipcode { get; set; }
+        public string ZipCode { get; set; }
     
         public virtual County County { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

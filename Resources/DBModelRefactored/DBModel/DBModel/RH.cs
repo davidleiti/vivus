@@ -21,7 +21,7 @@ namespace DBModel
             this.BloodContainer = new HashSet<BloodContainer>();
         }
     
-        public int RHID { get; set; }
+        public int RhID { get; set; }
         public decimal Value { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

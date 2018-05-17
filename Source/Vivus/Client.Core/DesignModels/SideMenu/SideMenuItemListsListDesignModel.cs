@@ -18,22 +18,22 @@
         /// </summary>
         public SideMenuItemListsListDesignModel()
         {
-            Lists = new List<SideMenuItemListViewModel>
+            MenuCategories = new List<SideMenuItemListViewModel>
             {
                 new SideMenuItemListViewModel
                 {
-                    Title = "Donor2",
+                    Title = "Donor",
                     Items = new List<SideMenuItemViewModel>
                     {
-                        new SideMenuItemViewModel
+                        new SideMenuItemViewModel(null)
                         {
                             Title = "Dashboard"
                         },
-                        new SideMenuItemViewModel
+                        new SideMenuItemViewModel(null)
                         {
                             Title = "Apply"
                         },
-                        new SideMenuItemViewModel
+                        new SideMenuItemViewModel(null)
                         {
                             Title = "History"
                         }
@@ -44,11 +44,11 @@
                     Title = "Account Settings",
                     Items = new List<SideMenuItemViewModel>
                     {
-                        new SideMenuItemViewModel
+                        new SideMenuItemViewModel(null)
                         {
                             Title = "Profile"
                         },
-                        new SideMenuItemViewModel
+                        new SideMenuItemViewModel(null)
                         {
                             Title = "Notifications"
                         }
@@ -56,7 +56,7 @@
                 }
             };
 
-            Lists[0].Items[0].IsSelected = true;
+            MenuCategories[0].Items[0].IsSelected = true;
         }
     }
 }

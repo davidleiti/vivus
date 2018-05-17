@@ -16,16 +16,17 @@ namespace DBModel
     {
         public int BloodContainerID { get; set; }
         public System.DateTime HarvestDate { get; set; }
-        public int RHID { get; set; }
+        public int RhID { get; set; }
         public string ContainerCode { get; set; }
         public int ContainerTypeID { get; set; }
         public int DonationCenterID { get; set; }
-        public bool IsExpired { get; set; }
-        public int BloodRequestBloodRequestID { get; set; }
+        public int BloodRequestID { get; set; }
+        public int BloodTypeID { get; set; }
     
         public virtual RH RH { get; set; }
-        public virtual ContainerType ContainerType { get; set; }
+        public virtual BloodContainerType ContainerType { get; set; }
         public virtual DonationCenter DonationCenter { get; set; }
         public virtual BloodRequest BloodRequest { get; set; }
+        public virtual BloodType BloodType { get; set; }
     }
 }

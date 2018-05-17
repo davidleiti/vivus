@@ -7,8 +7,11 @@
       xmlns:local="clr-namespace:Vivus.Client.Donor.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Donor.ViewModels;assembly=Vivus.Core.Donor"
+      xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="ApplyPage">
 
     <Grid>
@@ -30,12 +33,12 @@
                     <!-- Weight -->
                     <StackPanel>
                         <TextBlock Text="Weight" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Kg" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbWeight" Tag="Kg" Text="{Binding Weight, ValidatesOnDataErrors=True}" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Heart rate -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Heart rate" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Bpm" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbHeartRate" Tag="Bpm" Text="{Binding HeartRate, ValidatesOnDataErrors=True}" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Blood pressure -->
                     <Grid Grid.Column="4">
@@ -53,11 +56,11 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Systolic -->
-                            <TextBox Tag="Systolic (high)" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                            <TextBox x:Name="tbSystolicBP" Tag="Systolic (high)" Text="{Binding SystolicBloodPressure, ValidatesOnDataErrors=True}" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                             <!-- Dash -->
                             <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="-" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}"/>
                             <!-- Diastolic -->
-                            <TextBox Grid.Column="2" Tag="Diastolic (low)" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                            <TextBox x:Name="tbDiastolicBP" Grid.Column="2" Tag="Diastolic (low)" Text="{Binding DiastolicBloodPressure, ValidatesOnDataErrors=True}" MaxLength="3" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -67,9 +70,9 @@
 
                 <!-- Women related info -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="Women related info" />
-                <CheckBox Content="Currently pregnant" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                <CheckBox Content="Currently menstruating" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                <CheckBox Content="Gave birth in the past 6 weeks" HorizontalAlignment="Left" />
+                <CheckBox Content="Currently pregnant" IsChecked="{Binding IsPregnant}" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                <CheckBox Content="Currently menstruating" IsChecked="{Binding IsMenstruating}" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                <CheckBox Content="Gave birth in the past 6 weeks" IsChecked="{Binding IsPostBirth}" HorizontalAlignment="Left" />
 
                 <!-- Separator -->
                 <Rectangle Height="1" Fill="#ced4da" Margin="0 19 0 16" />
@@ -87,8 +90,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton Grid.Column="1" Content="Yes" />
-                    <RadioButton Grid.Column="3" Content="No" />
+                    <RadioButton Grid.Column="1" Content="Yes" IsChecked="{Binding ConsumedAlcohol, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=True}" />
+                    <RadioButton Grid.Column="3" Content="No" IsChecked="{Binding ConsumedAlcohol, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=False}" />
                 </Grid>
                 <!-- Foods high in fat cosumption -->
                 <TextBlock Text="Have you consumed foods high in fat in the past 48 hours?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
@@ -101,8 +104,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton Grid.Column="1" Content="Yes" />
-                    <RadioButton Grid.Column="3" Content="No" />
+                    <RadioButton Grid.Column="1" Content="Yes" IsChecked="{Binding ConsumedHighFatFood, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=True}" />
+                    <RadioButton Grid.Column="3" Content="No" IsChecked="{Binding ConsumedHighFatFood, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=False}" />
                 </Grid>
                 <!-- Medical treatment -->
                 <TextBlock Text="Are you currently following a medical treatement?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
@@ -115,8 +118,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton Grid.Column="1" Content="Yes" />
-                    <RadioButton Grid.Column="3" Content="No" />
+                    <RadioButton Grid.Column="1" Content="Yes" IsChecked="{Binding UnderMedicalTreatment, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=True}" />
+                    <RadioButton Grid.Column="3" Content="No" IsChecked="{Binding UnderMedicalTreatment, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=False}" />
                 </Grid>
                 <!-- Medical treatment -->
                 <TextBlock Text="Are you suffering from one or more of the following diseases?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
@@ -133,37 +136,37 @@
 
                     <!-- First column -->
                     <StackPanel Grid.Column="1">
-                        <CheckBox Content="Hepatitis" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Syphilis" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Ulcer" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Neurological diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Heart diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Hepatitis" Margin="0 0 0 6" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" />
+                        <CheckBox Content="Syphilis" Margin="0 0 0 6" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" />
+                        <CheckBox Content="Ulcer" Margin="0 0 0 6" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" />
+                        <CheckBox Content="Neurological diseases" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Heart diseases" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
                     </StackPanel>
 
                     <!-- Second column -->
                     <StackPanel Grid.Column="3">
-                        <CheckBox Content="Tuberculosis" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Eplilepsy" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Diabetes" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Psychological diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Tuberculosis" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Eplilepsy" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Diabetes" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Psychological diseases" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
                     </StackPanel>
 
                     <!-- Third column -->
                     <StackPanel Grid.Column="5">
-                        <CheckBox Content="Cancer" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Brucellosis" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Myopia (diopters > ± 6)" Margin="0 0 0 6" HorizontalAlignment="Left" />
-                        <CheckBox Content="Skin diseases" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Cancer" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Brucellosis" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Myopia (diopters > ± 6)" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
+                        <CheckBox Content="Skin diseases" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="0 0 0 6" HorizontalAlignment="Left" />
                     </StackPanel>
                 </Grid>
 
                 <!-- Surgery status -->
                 <TextBlock Text="Have you had past surgeries?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
-                <TextBox Tag="Tell us which type and when. Leave blank otherwise" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 13" />
+                <TextBox x:Name="tbPastSurgeries" Tag="Tell us which type and when. Leave blank otherwise" Text="{Binding HadPastSurgeries, ValidatesOnDataErrors=True}" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 13" />
 
                 <!-- Travel status -->
                 <TextBlock Text="Have you travelled in a foreign country in the past 3 months?" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 8" />
-                <TextBox Tag="Tell us where. Leave blank otherwise" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 30" />
+                <TextBox x:Name="tbTravelStatus" Tag="Tell us where. Leave blank otherwise" Text="{Binding HadTravelled, ValidatesOnDataErrors=True}" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Margin="0 0 0 30" />
 
                 <!-- Apply button -->
                 <Grid>
@@ -175,7 +178,7 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Apply" />
+                    <Button Grid.Column="2" Content="Apply" Command="{Binding ApplyCommand}" attachedProperties:IsBusyProperty.Value="{Binding ApplyIsRunning}" FontSize="16" Margin="10 0" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>
