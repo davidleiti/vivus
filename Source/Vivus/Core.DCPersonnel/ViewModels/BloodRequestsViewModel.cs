@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.ViewModels;
+    using Vivus = Console;
 
     /// <summary>
     /// Represents a view model for the blood requests page.
@@ -80,15 +83,66 @@
         {
             get { return null; }
         }
-        #endregion
+        public IPage ParentPage { get; set; }
 
+        
+        public ObservableCollection<RequestDetailsItem> RequestDetailsItems { get; }
+        public ObservableCollection<AllRequestsItem> AllRequestsItems { get; }
+        public ICommand AddCommand { get; }
+        public ICommand RemoveCommand { get; }
+        public ICommand RedirectCommand { get; }
+
+        #endregion
         #region Constructors
         public BloodRequestsViewModel()
         {
             //ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
 
-           // ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            AddCommand = new RelayCommand(addRequest);
+            RemoveCommand = new RelayCommand(removeRequest);
+            RedirectCommand = new RelayCommand(redirectRequest);
+
+            
+        }
+        #endregion
+        #region Public Methods
+        public void addRequest()
+        {
+            ParentPage.AllowErrors();
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
+            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Popup("Successfull operation!", PopupType.Successful);
+        }
+        public void removeRequest()
+        {
+            ParentPage.AllowErrors();
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
+            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Popup("Successfull operation!", PopupType.Successful);
+        }
+        public void redirectRequest()
+        {
+            ParentPage.AllowErrors();
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
+            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Popup("Successfull operation!", PopupType.Successful);
         }
         #endregion
     }
@@ -220,4 +274,5 @@
         #endregion
 
     }
+   
 }
