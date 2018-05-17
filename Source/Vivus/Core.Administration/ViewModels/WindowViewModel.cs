@@ -71,7 +71,7 @@
             {
                 new SideMenuItemListViewModel
                 {
-                    Title = "DC Personnel",
+                    Title = "Administration",
                     Items = new List<SideMenuItemViewModel>
                     {
                         new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.Doctors)
