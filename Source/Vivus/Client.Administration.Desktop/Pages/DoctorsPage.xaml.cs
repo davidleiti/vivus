@@ -55,5 +55,10 @@
             cbWorkCounty.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             tbWorkZipCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
         }
+
+        private void tbFirstName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
