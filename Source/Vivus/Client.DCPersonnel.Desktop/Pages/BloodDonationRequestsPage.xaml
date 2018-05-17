@@ -27,12 +27,12 @@
                     <!-- Name -->
                     <StackPanel>
                         <TextBlock Text="Name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Full name" IsReadOnly="True" />
+                        <TextBox Tag="Full name" IsReadOnly="True" Text="{Binding FullName,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                     <!-- National identification number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="0000000000000" IsReadOnly="True" />
+                        <TextBox Tag="0000000000000" IsReadOnly="True" Text="{Binding Nin,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 20">
@@ -47,17 +47,17 @@
                     <!-- Age -->
                     <StackPanel>
                         <TextBlock Text="Age" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Years" IsReadOnly="True" />
+                        <TextBox Tag="Years" IsReadOnly="True" Text="{Binding Age,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Weight -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Weight" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Kg" IsReadOnly="True" />
+                        <TextBox Tag="Kg" IsReadOnly="True" Text="{Binding Weight,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Heart rate -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Heart rate" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Bpm" IsReadOnly="True" />
+                        <TextBox Tag="Bpm" IsReadOnly="True" Text="{Binding HeartRate,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -82,15 +82,15 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Systolic -->
-                        <TextBox Tag="Systolic (high)" IsReadOnly="True" />
+                        <TextBox Tag="Systolic (high)" IsReadOnly="True" Text="{Binding SystolicBP,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                         <!-- Dash -->
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="-" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}"/>
                         <!-- Diastolic -->
-                        <TextBox Grid.Column="2" Tag="Diastolic (low)" IsReadOnly="True" />
+                        <TextBox Grid.Column="2" Tag="Diastolic (low)" IsReadOnly="True" Text="{Binding DiastolicBP,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </Grid>
 
                     <TextBlock Grid.Column="2" Text="Apply date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <TextBox Grid.Column="2" Grid.Row="1" Tag="dd/mm/yyyy" IsReadOnly="True" />
+                    <TextBox Grid.Column="2" Grid.Row="1" Tag="dd/mm/yyyy" IsReadOnly="True" Text="{Binding ApplyDate,ValidatesOnDataErrors=True,Mode=OneWay}" />
                 </Grid>
 
                 <!-- Separator -->
@@ -99,7 +99,7 @@
                 <!-- Past surgeries -->
                 <StackPanel>
                     <TextBlock Text="Past surgeries" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <TextBox Tag="None" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
+                    <TextBox Tag="None" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Text="{Binding PastSurgeries,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                 </StackPanel>
 
                 <!-- Separator -->
@@ -108,7 +108,7 @@
                 <!-- Travel status -->
                 <StackPanel>
                     <TextBlock Text="Travel status" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <TextBox Tag="None" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
+                    <TextBox Tag="None" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Text="{Binding TravelStatus,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                 </StackPanel>
 
                 <!-- Separator -->
@@ -117,7 +117,7 @@
                 <!-- Message -->
                 <StackPanel Margin="0 0 0 20">
                     <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <TextBox Tag="Evaluation result" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
+                    <TextBox Tag="Evaluation result" TextWrapping="Wrap" x:Name="dcMessages"  AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Text="{Binding Messages,ValidatesOnDataErrors=True}"/>
                 </StackPanel>
 
                 <!-- Approve & Deny Buttons -->
@@ -130,12 +130,12 @@
                         <ColumnDefinition Width=".55*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" Content="Approve" />
-                    <Button Grid.Column="4" Content="Deny" />
+                    <Button Grid.Column="2" Content="Approve" Command="{Binding ApproveCommand}" />
+                    <Button Grid.Column="4" Content="Deny" Command="{Binding DenyCommand}"/>
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Grid.Row="2" Height="420">
+                <DataGrid Grid.Row="2" Height="420" ItemsSource="{Binding BloodDonationRequestItems}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#">
                             <DataGridTextColumn.HeaderStyle>
@@ -145,10 +145,10 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Apply date" Width=".8*" />
-                        <DataGridTextColumn Header="Name" Width="*" />
-                        <DataGridTextColumn Header="NIN" Width="1.2*" />
-                        <DataGridTextColumn Header="Age" Width=".4*" />
+                        <DataGridTextColumn Header="Apply date" Width=".8*" Binding="{Binding ApplyDate,ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding FullName,ValidatesOnDataErrors=True}" />
+                        <DataGridTextColumn Header="NIN" Width="1.2*" Binding="{Binding Nin, ValidatesOnDataErrors=True}" />
+                        <DataGridTextColumn Header="Age" Width=".4*" Binding="{Binding Age,ValidatesOnDataErrors=True}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

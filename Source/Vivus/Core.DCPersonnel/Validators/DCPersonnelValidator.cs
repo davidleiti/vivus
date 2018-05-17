@@ -71,5 +71,11 @@ namespace Vivus.Core.DCPersonnel.Validators
 
             return null;
         }
+        public static List<string> MessagesValidation(string messages)
+        {
+         //   Vivus.Console.WriteLine(messages);
+            if (string.IsNullOrEmpty(messages)) return new List<string> { "evaluation results field cannot be empty." };
+            return null;
+        }
     }
 }

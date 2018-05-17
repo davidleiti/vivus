@@ -30,17 +30,17 @@
                     <!-- Thrombocytes -->
                     <StackPanel>
                         <TextBlock Text="Thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity" IsReadOnly="True"  Text="{Binding Thrombocytes,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                     <!-- Red cells -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity" IsReadOnly="True" Text="{Binding RedCells,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Plasma -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity"  IsReadOnly="True" Text="{Binding Plasma,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
@@ -64,22 +64,22 @@
                     <!-- Priority -->
                     <StackPanel>
                         <TextBlock Text="Priority" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Priority" IsReadOnly="True" />
+                        <TextBox Tag="Priority" IsReadOnly="True" Text="{Binding Priority,ValidatesOnDataErrors=true,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Current Thrombocytes -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Current thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentThrombocytes,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Current Red cells -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Current red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentRedCells,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                     <!-- Current Plasma -->
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Current plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentPlasma,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
 
@@ -98,26 +98,26 @@
                     <!-- Container type -->
                     <StackPanel>
                         <TextBlock Text="Container type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select container type</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select container code</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <!-- Container blood type -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Type" IsReadOnly="True" />
+                        <TextBox Tag="Type" IsReadOnly="True" Text="{Binding BloodType,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Harverst date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" />
+                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" Text="{Binding HarvestDate,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
@@ -169,7 +169,7 @@
                     <!-- Donation center redirect -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Donation center redirect" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select donation center</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
