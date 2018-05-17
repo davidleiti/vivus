@@ -33,7 +33,7 @@
                     <!-- Password -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Password" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <PasswordBox x:Name="pbPassword" Tag="Password" MaxLength="32" />
+                        <PasswordBox x:Name="pbPassword" CacheMode="{Binding Password, Mode=OneWayToSource, ValidatesOnDataErrors=True}" Tag="Password" MaxLength="32" />
                     </StackPanel>
                 </Grid>
                 <!-- Administrator status -->

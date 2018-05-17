@@ -50,7 +50,7 @@
 					return;
 
 				password = value;
-
+				
 				OnPropertyChanged();
 			}
 		}
@@ -122,6 +122,15 @@
 			Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select a county") };
 			Administrators = new ObservableCollection<AdministratorItemViewModel>();
 			Address = new AddressViewModel();
+
+			//Test to see if the administratorsTable is working or not
+			Administrators.Add(new AdministratorItemViewModel {
+				Id = 1,
+				FullName = "John Smith",
+				PhoneNumber = "1234567890",
+				Email = "your@email.com",
+				FullAddress = "Cluj-Napoca, Street str. 22"
+			});
 			AddCommand = new RelayCommand(Add);
 		}
 
@@ -140,8 +149,8 @@
 				return;
 			}
 
-			Vivus.Console.WriteLine("Donor: Registration worked!");
-			Popup("Successfull operation!", PopupType.Successful);
+			Vivus.Console.WriteLine("Adminstrator added successfully!");
+			Popup("Adminstrator added successfully!", PopupType.Successful);
 		}
 
 		#endregion
