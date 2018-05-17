@@ -138,7 +138,7 @@
             Items = new ObservableCollection<DCPItemViewModel>();
 
             // Test whether the binding was done right or not
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new DCPItemViewModel
                 {
