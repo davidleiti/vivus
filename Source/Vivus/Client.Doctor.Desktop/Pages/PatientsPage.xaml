@@ -20,7 +20,7 @@
                 <!-- All patients -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All patients" />
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding AllPatients}">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding AllPatients}" SelectedItem="{Binding SelectedPatient}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>
@@ -58,7 +58,7 @@
                 <!-- Your patients -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="My patients" />
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding MyPatients}">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding MyPatients}" SelectedItem="{Binding MySelectedPatient}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>

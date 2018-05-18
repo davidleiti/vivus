@@ -13,6 +13,14 @@
 
     public class PatientsViewModel : BaseViewModel
     {
+
+        #region Private Members
+
+        private PatientItemViewModel selectedPatient;
+        private PatientItemViewModel mySelectedPatient;
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -39,6 +47,42 @@
         /// Get the dismiss command
         /// </summary>
         public ICommand DismissCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the selected patient
+        /// </summary>
+        public PatientItemViewModel SelectedPatient {
+            get => selectedPatient;
+
+            set
+            {
+                if (selectedPatient == value)
+                    return;
+
+                selectedPatient = value;
+                Vivus.Console.WriteLine(selectedPatient.Name);
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or set the my selected patient
+        /// </summary>
+        public PatientItemViewModel MySelectedPatient {
+            get => mySelectedPatient;
+
+            set
+            {
+                if (mySelectedPatient == value)
+                    return;
+
+                mySelectedPatient = value;
+                Vivus.Console.WriteLine(mySelectedPatient.Name);
+
+                OnPropertyChanged();
+            }
+        }
 
         #endregion
 

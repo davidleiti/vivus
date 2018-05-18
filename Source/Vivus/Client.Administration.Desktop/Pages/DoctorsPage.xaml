@@ -239,7 +239,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="420" ItemsSource="{Binding Doctors}">
+                <DataGrid Height="420" ItemsSource="{Binding Doctors}" SelectedItem="{Binding SelectedDoctor}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>

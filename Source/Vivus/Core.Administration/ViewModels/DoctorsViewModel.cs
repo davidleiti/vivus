@@ -19,6 +19,7 @@
         private string email;
         private object password;
         private bool status = true;
+        private DoctorItemViewModel selectedDoctor;
 
         #endregion
 
@@ -108,6 +109,24 @@
         /// Gets the collection of doctors
         /// </summary>
         public ObservableCollection<DoctorItemViewModel> Doctors { get; }
+
+        /// <summary>
+        /// Gets or sets the selected doctor
+        /// </summary>
+        public DoctorItemViewModel SelectedDoctor {
+            get => selectedDoctor;
+
+            set
+            {
+                if (selectedDoctor == value)
+                    return;
+
+                selectedDoctor = value;
+                Vivus.Console.WriteLine(selectedDoctor.Name);
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// 
