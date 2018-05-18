@@ -172,7 +172,7 @@
                     <!-- Zip -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbZipCode" Text="{Binding Address.ZipCode}" Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbZipCode" Text="{Binding Address.ZipCode, ValidatesOnDataErrors=True}" Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 
@@ -184,7 +184,7 @@
 
                     <Button Grid.Column="1" Content="Add" Command="{Binding AddCommand}"/>
                 </Grid>
-                <DataGrid Grid.Row="1" ItemsSource="{Binding Administrators}" Height="420" RenderTransformOrigin="0.5,0.5">
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Administrators}" SelectedItem ="{Binding SelectedItem}"  Height="420" RenderTransformOrigin="0.5,0.5">
                     <DataGrid.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
