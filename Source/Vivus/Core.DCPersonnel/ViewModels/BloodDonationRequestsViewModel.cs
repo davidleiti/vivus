@@ -106,11 +106,11 @@
             Parentpage.AllowErrors();
             if (Errors > 0)
             {
-                Popup("Cannot approve/decline.Some errors were found");
+                Popup("Some errors were found. Fix them before going forward.");
                 return;
             }
             Vivus.Console.WriteLine("DCPersonnel approval/denial successful");
-            Popup("Successfull approval/denial!", PopupType.Successful);
+            Popup("Successfull operation!", PopupType.Successful);
 
         }
         #endregion

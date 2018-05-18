@@ -106,7 +106,7 @@
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
+                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select container code</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
@@ -138,7 +138,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="280" ItemsSource="{Binding RequestDetailItems}" >
+                <DataGrid Height="280" ItemsSource="{Binding RequestDetailsItems}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#">
                             <DataGridTextColumn.HeaderStyle>
@@ -170,7 +170,7 @@
                     <!-- Donation center redirect -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Donation center redirect" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
+                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select donation center</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
@@ -192,7 +192,7 @@
                 <!-- Table -->
                 <DataGrid Height="420" ItemsSource="{Binding AllRequestsItems}" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Id}">
+                        <DataGridTextColumn Header="#">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -205,7 +205,7 @@
                         <DataGridTextColumn Header="Thrombocytes" Width=".8*" Binding="{Binding Thrombocytes, ValidatesOnDataErrors=True}"/>
                         <DataGridTextColumn Header="Red cells" Width=".8*" Binding="{Binding RedCells, ValidatesOnDataErrors=True}" />
                         <DataGridTextColumn Header="Plasma" Width=".8*" Binding="{Binding Plasma, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodTypes, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodType, ValidatesOnDataErrors=True}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

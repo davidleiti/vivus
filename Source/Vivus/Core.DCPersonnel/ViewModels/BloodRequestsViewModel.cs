@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.DCPersonnel.Validators;
     using Vivus.Core.ViewModels;
     using Vivus = Console;
 
@@ -81,11 +82,18 @@
         }
         public override string this[string propertyName]
         {
-            get { return null; }
+            get
+            {
+                if (propertyName == nameof(ContainerType))
+                    return GetErrorString(propertyName, DCPersonnelValidator.ContainerTypeValidation(ContainerType));
+                if (propertyName == nameof(ContainerCode))
+                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(containerCode));
+                return null;
+            }
         }
         public IPage ParentPage { get; set; }
 
-        
+
         public ObservableCollection<RequestDetailsItem> RequestDetailsItems { get; }
         public ObservableCollection<AllRequestsItem> AllRequestsItems { get; }
         public ICommand AddCommand { get; }
@@ -96,15 +104,17 @@
         #region Constructors
         public BloodRequestsViewModel()
         {
-            //ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
+            // ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
-
+            //ContainerTypes = new List<BasicEntity<string>> { };
             //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             AddCommand = new RelayCommand(addRequest);
             RemoveCommand = new RelayCommand(removeRequest);
             RedirectCommand = new RelayCommand(redirectRequest);
+            RequestDetailsItems = new ObservableCollection<RequestDetailsItem> { new RequestDetailsItem() };
+            AllRequestsItems = new ObservableCollection<AllRequestsItem> { new AllRequestsItem() };
 
-            
+
         }
         #endregion
         #region Public Methods
@@ -114,10 +124,11 @@
             if (Errors > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
+
                 return;
             }
 
-            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request added!");
             Popup("Successfull operation!", PopupType.Successful);
         }
         public void removeRequest()
@@ -129,7 +140,7 @@
                 return;
             }
 
-            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request removed!");
             Popup("Successfull operation!", PopupType.Successful);
         }
         public void redirectRequest()
@@ -141,7 +152,7 @@
                 return;
             }
 
-            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
+            Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request redirected!");
             Popup("Successfull operation!", PopupType.Successful);
         }
         #endregion
@@ -201,11 +212,18 @@
                 OnPropertyChanged();
             }
         }
+        public override string this[string propertyName]
+        {
+            get { return null; }
+        }
         #endregion
         #region Contrucors
         public RequestDetailsItem()
         {
-
+            ContainerCode = "lol";
+            ContainerType = "typeee";
+            bloodType = "rhpoz";
+            harvestDate = new DateTime(2012, 11, 1);
         }
         #endregion
     }
@@ -220,9 +238,21 @@
 
         #endregion
         #region Public Properties
-        public int? Thrombocytes {
+        public string Doctor {
+            get => doctor;
+            set
+            {
+                if (value == doctor)
+                    return;
+                doctor = value;
+                OnPropertyChanged();
+            }
+        }
+        public int? Thrombocytes
+        {
             get => thrombocytes;
-        set {
+            set
+            {
                 if (value == thrombocytes)
                     return;
                 thrombocytes = value;
@@ -231,7 +261,8 @@
             }
 
         }
-        public int? Plasma {
+        public int? Plasma
+        {
             get => plasma;
             set
             {
@@ -242,7 +273,8 @@
 
             }
         }
-        public int? RedCells {
+        public int? RedCells
+        {
             get => redCells;
             set
             {
@@ -265,14 +297,22 @@
                 OnPropertyChanged();
             }
         }
+        public override string this[string propertyName]
+        {
+            get { return null; }
+        }
         #endregion
         #region Constructors
         public AllRequestsItem()
         {
-
+            Doctor = "doc";
+            Thrombocytes = 10;
+            redCells = 11;
+            Plasma = 12;
+            BloodType = "rhneg";
         }
         #endregion
 
     }
-   
+
 }

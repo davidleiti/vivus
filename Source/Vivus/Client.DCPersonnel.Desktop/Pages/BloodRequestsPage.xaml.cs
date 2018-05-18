@@ -1,5 +1,6 @@
 ﻿namespace Vivus.Client.DCPersonnel.Desktop.Pages
 {
+    using Vivus.Client.Core.AttachedProperties;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
     using Vivus.Core.DCPersonnel.ViewModels;
@@ -17,6 +18,11 @@
         public void AllowErrors()
         {
             //todo
+           // cbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            //cbContainerType.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            cbContainerCode.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            cbDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
         }
     }
 }
