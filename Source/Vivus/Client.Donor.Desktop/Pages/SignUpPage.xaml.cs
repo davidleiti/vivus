@@ -14,6 +14,10 @@
     {
         public SignUpPage()
         {
+            // Add page animations
+            PageLoadAnimation = Core.Animations.PageAnimation.SlideAndFadeInFromRight;
+            PageUnloadAnimation = Core.Animations.PageAnimation.SlideAndFadeOutToLeft;
+
             InitializeComponent();
 
             ViewModel.ParentPage = this;

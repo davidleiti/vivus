@@ -11,6 +11,6 @@
         /// <summary>
         /// Gets or sets the side menu lists for the main list.
         /// </summary>
-        public List<SideMenuItemListViewModel> Lists { get; set; }
+        public List<SideMenuItemListViewModel> MenuCategories { get; set; }
     }
 }

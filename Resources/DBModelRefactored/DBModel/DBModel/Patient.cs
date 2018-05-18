@@ -21,7 +21,7 @@ namespace DBModel
         }
     
         public int PersonStatusID { get; set; }
-        public int RHID { get; set; }
+        public int RhID { get; set; }
         public int BloodTypeID { get; set; }
         public int DoctorID { get; set; }
     

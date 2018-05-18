@@ -71,5 +71,83 @@
 
             return null;
         }
+
+        /// <summary>
+        /// Validates the weight of the donor.
+        /// </summary>
+        /// <param name="weight">The weight of the donor.</param>
+        /// <returns></returns>
+        public static List<string> WeightValidation(int? weight)
+        {
+            if (!weight.HasValue)
+                return new List<string> { "Weight field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the heart rate of the donor.
+        /// </summary>
+        /// <param name="hearRate">The heart rate of the donor.</param>
+        /// <returns></returns>
+        public static List<string> HearRateValidation(int? hearRate)
+        {
+            if (!hearRate.HasValue)
+                return new List<string> { "Heart rate field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the systolic blood pressure of the donor.
+        /// </summary>
+        /// <param name="systolicBP">The systolic blood pressure of the donor.</param>
+        /// <returns></returns>
+        public static List<string> SystolicBloodPressureValidation(int? systolicBP)
+        {
+            if (!systolicBP.HasValue)
+                return new List<string> { "Systolic blood pressure field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the diastolic blood pressure of the donor.
+        /// </summary>
+        /// <param name="diastolicBP">The diastolic blood pressure of the donor.</param>
+        /// <returns></returns>
+        public static List<string> DiastolicBloodPressureValidation(int? diastolicBP)
+        {
+            if (!diastolicBP.HasValue)
+                return new List<string> { "Diastolic blood pressure field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the past surgeries of the donor.
+        /// </summary>
+        /// <param name="pastSurgeries">The past surgeries of the donor.</param>
+        /// <returns></returns>
+        public static List<string> PastSurgeriesValidation(string pastSurgeries)
+        {
+            if (!string.IsNullOrEmpty(pastSurgeries) && pastSurgeries.Length < 5)
+                return new List<string> { "Please be more specific." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the travelling status of the donor.
+        /// </summary>
+        /// <param name="travelStatus">The travelling status of the donor.</param>
+        /// <returns></returns>
+        public static List<string> TravelStatusValidation(string travelStatus)
+        {
+            if (!string.IsNullOrEmpty(travelStatus) && travelStatus.Length < 5)
+                return new List<string> { "Please be more specific." };
+
+            return null;
+        }
     }
 }

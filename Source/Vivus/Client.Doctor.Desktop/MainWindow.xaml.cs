@@ -3,8 +3,9 @@
     using System;
     using System.Windows;
     using System.Windows.Interop;
-    using Vivus = Vivus.Core.Console;
+    using VivusConsole = Vivus.Core.Console.Console;
     using Windows.Theme.Data;
+    using Vivus.Core.Doctor.IoC;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -13,11 +14,11 @@
     {
         public MainWindow()
         {
-            Vivus.Console.WriteLine("Loading application.");
+            VivusConsole.WriteLine("Loading application.");
 
             InitializeComponent();
 
-            DataContext = new WindowViewModel();
+            DataContext = IoCContainer.Get<Vivus.Core.Doctor.ViewModels.WindowViewModel>();
 
             SourceInitialized += MainWindow_SourceInitialized;
         }

@@ -18,7 +18,7 @@
     
     <Grid d:DataContext="{x:Static designModel:SideMenuItemListsListDesignModel.Instance}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Lists}" KeyboardNavigation.IsTabStop="False">
+            <ItemsControl ItemsSource="{Binding MenuCategories}" KeyboardNavigation.IsTabStop="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:SideMenuItemListControl Margin="0 5 0 10" />

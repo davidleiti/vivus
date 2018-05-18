@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="BloodRequestsPage">
 
     <Grid>
@@ -30,17 +31,17 @@
                     <!-- Thrombocytes -->
                     <StackPanel>
                         <TextBlock Text="Thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity" IsReadOnly="True"  Text="{Binding Thrombocytes,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                     <!-- Red cells -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity" IsReadOnly="True" Text="{Binding RedCells,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Plasma -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Quantity" Text="None" IsReadOnly="True" />
+                        <TextBox Tag="Quantity"  IsReadOnly="True" Text="{Binding Plasma,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
@@ -64,22 +65,22 @@
                     <!-- Priority -->
                     <StackPanel>
                         <TextBlock Text="Priority" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Priority" IsReadOnly="True" />
+                        <TextBox Tag="Priority" IsReadOnly="True" Text="{Binding Priority,ValidatesOnDataErrors=true,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Current Thrombocytes -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Current thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentThrombocytes,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Current Red cells -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Current red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentRedCells,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                     <!-- Current Plasma -->
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Current plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Containers" IsReadOnly="True" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentPlasma,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
 
@@ -98,26 +99,26 @@
                     <!-- Container type -->
                     <StackPanel>
                         <TextBlock Text="Container type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select container type</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select container code</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <!-- Container blood type -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="Type" IsReadOnly="True" />
+                        <TextBox Tag="Type" IsReadOnly="True" Text="{Binding BloodType,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Harverst date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" />
+                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" Text="{Binding HarvestDate,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
@@ -131,13 +132,13 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Add -->
-                    <Button Grid.Column="1" Width="Auto" Content="Add" />
+                    <Button Grid.Column="1" Width="Auto" Content="Add" Command="{Binding AddCommand}"/>
                     <!-- Remove -->
-                    <Button Grid.Column="3" Width="Auto" Content="Remove" />
+                    <Button Grid.Column="3" Width="Auto" Content="Remove" Command="{Binding RemoveCommand}"/>
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="280">
+                <DataGrid Height="280" ItemsSource="{Binding RequestDetailItems}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#">
                             <DataGridTextColumn.HeaderStyle>
@@ -147,10 +148,10 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Container code" Width="1.2*" />
-                        <DataGridTextColumn Header="Container type" Width="*" />
-                        <DataGridTextColumn Header="Blood type" Width=".5*" />
-                        <DataGridTextColumn Header="Harverst date" Width=".8*" />
+                        <DataGridTextColumn Header="Container code" Width="1.2*" Binding="{Binding ContainerCode, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Container type" Width="*" Binding="{Binding ContainerType, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Blood type" Width=".5*" Binding="{Binding BloodType, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Harverst date" Width=".8*" Binding="{Binding HarvestDate, ValidatesOnDataErrors=True}"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -169,7 +170,7 @@
                     <!-- Donation center redirect -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Donation center redirect" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox>
+                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, Mode=OneWayToSource, ValidatesOnDataErrors=True}">
                             <ComboBoxItem>Select donation center</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
@@ -179,7 +180,7 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="38" />
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="1" Width="Auto" Content="Continue" />
+                        <Button Grid.Row="1" Width="Auto" Content="Continue" Command="{Binding RedirectCommand}"/>
                     </Grid>
                 </Grid>
 
@@ -189,9 +190,9 @@
                 <!-- All requests -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All requests" />
                 <!-- Table -->
-                <DataGrid Height="420">
+                <DataGrid Height="420" ItemsSource="{Binding AllRequestsItems}" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -199,12 +200,12 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Doctor" Width="*" />
-                        <DataGridTextColumn Header="Priority" Width=".8*" />
-                        <DataGridTextColumn Header="Thrombocytes" Width=".8*" />
-                        <DataGridTextColumn Header="Red cells" Width=".8*" />
-                        <DataGridTextColumn Header="Plasma" Width=".8*" />
-                        <DataGridTextColumn Header="Blood type" Width=".8*" />
+                        <DataGridTextColumn Header="Doctor" Width="*" Binding="{Binding Doctor, ValidatesOnDataErrors=True}" />
+                        <DataGridTextColumn Header="Priority" Width=".8*" Binding="{Binding Priority, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Thrombocytes" Width=".8*" Binding="{Binding Thrombocytes, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Red cells" Width=".8*" Binding="{Binding RedCells, ValidatesOnDataErrors=True}" />
+                        <DataGridTextColumn Header="Plasma" Width=".8*" Binding="{Binding Plasma, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodTypes, ValidatesOnDataErrors=True}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

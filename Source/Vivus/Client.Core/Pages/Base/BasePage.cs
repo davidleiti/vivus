@@ -77,7 +77,7 @@
         /// Animates the current page in.
         /// </summary>
         /// <returns></returns>
-        public async Task AnimateIn()
+        public virtual async Task AnimateIn()
         {
             // Make sure there is something to do
             if (PageLoadAnimation == PageAnimation.None)
@@ -98,7 +98,7 @@
         /// Animates the current page out.
         /// </summary>
         /// <returns></returns>
-        public async Task AnimateOut()
+        public virtual async Task AnimateOut()
         {
             // Make sure there is something to do
             if (PageUnloadAnimation == PageAnimation.None)

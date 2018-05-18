@@ -8,8 +8,10 @@
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Donor.ViewModels;assembly=Vivus.Core.Donor"
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="SignUpPage">
 
     <Grid>
@@ -229,7 +231,10 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Register" Command="{Binding RegisterCommand}" />
+                    <StackPanel Grid.Column="2">
+                        <Button Content="Register" Command="{Binding RegisterCommand}" attachedProperties:IsBusyProperty.Value="{Binding RegisterIsRunning}" FontSize="16" Margin="10 0" />
+                        <Button Content="I already have an account" Command="{Binding LoginCommand}" attachedProperties:IsBusyProperty.Value="{Binding LoginIsRunning}" Style="{StaticResource LoginTextButton}" FontFamily="{StaticResource SFProDisplay-Light}" FontSize="14.7" Margin="0 11 0 0" Width="Auto" HorizontalAlignment="Center" />
+                    </StackPanel>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

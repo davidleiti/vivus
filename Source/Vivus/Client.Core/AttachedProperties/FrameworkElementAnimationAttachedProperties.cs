@@ -2,14 +2,15 @@
 {
     using Client.Core.Animations;
     using System.Windows;
+    using VivusVisibility = Vivus.Core.DataModels.Visibility;
 
     /// <summary>
     /// Represents a base class to run any animation method when a boolean is set to visible
     /// and a reverse animation when set to hidden.
     /// </summary>
     /// <typeparam name="Parent"></typeparam>
-    public abstract class AnimateBaseProperty<Parent> : BaseAttachedProperty<Parent, Vivus.Core.DataModels.Visibility>
-        where Parent : BaseAttachedProperty<Parent, Vivus.Core.DataModels.Visibility>, new()
+    public abstract class AnimateBaseProperty<Parent> : BaseAttachedProperty<Parent, VivusVisibility>
+        where Parent : BaseAttachedProperty<Parent, VivusVisibility>, new()
     {
         #region Public Properties
 
@@ -36,7 +37,7 @@
                     element.Loaded -= onLoaded;
 
                     // Executes the desired animation
-                    DoAnimation(element, (Vivus.Core.DataModels.Visibility)value);
+                    DoAnimation(element, (VivusVisibility)value);
 
                     // Make sure you're not anymore in the first load
                     FirstLoad = false;
@@ -47,7 +48,7 @@
             }
             else
                 // Executes the desired animation
-                DoAnimation(element, (Vivus.Core.DataModels.Visibility)value);
+                DoAnimation(element, (VivusVisibility)value);
         }
 
         /// <summary>
@@ -55,7 +56,7 @@
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="visibility">The new value.</param>
-        protected virtual void DoAnimation(FrameworkElement element, Vivus.Core.DataModels.Visibility value)
+        protected virtual void DoAnimation(FrameworkElement element, VivusVisibility value)
         {
 
         }
@@ -66,9 +67,9 @@
     /// </summary>
     public class AnimateSlideInFromLeftProperty : AnimateBaseProperty<AnimateSlideInFromLeftProperty>
     {
-        protected override async void DoAnimation(FrameworkElement element, Vivus.Core.DataModels.Visibility value)
+        protected override async void DoAnimation(FrameworkElement element, VivusVisibility value)
         {
-            if (value == Vivus.Core.DataModels.Visibility.Visible)
+            if (value == VivusVisibility.Visible)
                 // Animate in
                 await element.SlideAndFadeInFromLeft(FirstLoad ? 0 : .3f, false);
             else

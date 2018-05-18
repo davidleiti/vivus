@@ -18,8 +18,9 @@ namespace DBModel
         public int SenderID { get; set; }
         public int RecieverID { get; set; }
         public System.DateTime SendDate { get; set; }
+        public string Content { get; set; }
     
-        public virtual Person Person { get; set; }
-        public virtual Person Person1 { get; set; }
+        public virtual Person Sender { get; set; }
+        public virtual Person Receiver { get; set; }
     }
 }

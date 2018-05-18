@@ -21,43 +21,43 @@
             Title = "Your Library";
             Items = new List<SideMenuItemViewModel>
             {
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Your Daily Mix",
                     NewContent = true
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Recently Played",
                     NewContent = true
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Songs",
                     IsSelected = true
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Albums",
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Artists",
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Stations"
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Local Files"
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Videos",
                     NewContent = true
                 },
-                new SideMenuItemViewModel
+                new SideMenuItemViewModel(null)
                 {
                     Title = "Podcasts"
                 }

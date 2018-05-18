@@ -120,7 +120,7 @@
             Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
             UpdateCommand = new RelayCommand(Update);
 
-            this.email = "salam";
+            email = "salam";
 
             Application.Current.Dispatcher.Invoke(() =>
             {

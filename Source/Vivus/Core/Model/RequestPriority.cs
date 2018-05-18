@@ -7,25 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBModel
+namespace Vivus.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class ContainerType
+    public partial class RequestPriority
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ContainerType()
+        public RequestPriority()
         {
-            this.BloodContainer = new HashSet<BloodContainer>();
+            this.BloodRequests = new HashSet<BloodRequest>();
         }
     
-        public int ContainerTypeID { get; set; }
-        public int RedCell { get; set; }
-        public int Plasma { get; set; }
-        public int Thrombocyte { get; set; }
+        public int RequestPriorityID { get; set; }
+        public string Priority { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BloodContainer> BloodContainer { get; set; }
+        public virtual ICollection<BloodRequest> BloodRequests { get; set; }
     }
 }

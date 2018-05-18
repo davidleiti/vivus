@@ -19,10 +19,12 @@ namespace DBModel
         public int DCPersonnelID { get; set; }
         public int DonorID { get; set; }
         public int Weight { get; set; }
-        public short Pulse { get; set; }
-        public decimal SystolicBloodPressure { get; set; }
-        public decimal DiastolicBloodPressure { get; set; }
+        public int HeartRate { get; set; }
+        public int SystolicBloodPressure { get; set; }
+        public int DiastolicBloodPressure { get; set; }
         public string PastSurgeries { get; set; }
+        public System.DateTime ApplyDate { get; set; }
+        public Nullable<System.DateTime> DonationDate { get; set; }
     
         public virtual DCPersonnel DCPersonnel { get; set; }
         public virtual Donor Donor { get; set; }

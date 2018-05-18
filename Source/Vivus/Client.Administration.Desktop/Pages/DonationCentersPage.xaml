@@ -9,6 +9,7 @@
       xmlns:viewModel="clr-namespace:Vivus.Core.Administration.ViewModels;assembly=Vivus.Core.Administration"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
+      Background="#fafafa"
       Title="DonationCentersPage">
 
     <Grid>
@@ -32,7 +33,7 @@
 
                         <StackPanel>
                             <TextBlock Text="Donation center name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Margin="0" Tag="Name" MaxLength="32" />
+                            <TextBox x:Name="tbDonationCenterName" Text="{Binding DonationCenterName, ValidatesOnDataErrors=True}" Margin="0" Tag="Name" MaxLength="32" />
                         </StackPanel>
                     </Grid>
 
@@ -53,17 +54,17 @@
                         <!-- Street name -->
                         <StackPanel>
                             <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Tag="Street" MaxLength="18" />
+                            <TextBox x:Name="tbStreet" Tag="Street" Text="{Binding ResidencyAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
                         </StackPanel>
                         <!-- Street number -->
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Tag="Number" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                            <TextBox x:Name="tbNumber" Tag="Number" Text="{Binding ResidencyAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
                         </StackPanel>
                         <!-- City -->
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Tag="City" MaxLength="24" />
+                            <TextBox x:Name="tbCity" Tag="City" Text="{Binding ResidencyAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
                         </StackPanel>
                     </Grid>
                     <Grid Margin="0 0 0 20">
@@ -78,15 +79,14 @@
                         <!-- County -->
                         <StackPanel>
                             <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <ComboBox>
-                                <ComboBoxItem Content="Select county" />
-                            </ComboBox>
+                            <ComboBox x:Name="cbCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding ResidencyAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+
 
                         </StackPanel>
                         <!-- Zip -->
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Zip code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox Tag="000000" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                            <TextBox x:Name="tbZipCode" Tag="000000" Text="{Binding ResidencyAddress.ZipCode, ValidatesOnDataErrors=True}" MaxLength="6" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                         </StackPanel>
                     </Grid>
 
@@ -96,7 +96,7 @@
                             <ColumnDefinition Width=".8*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="1" Content="Add" />
+                        <Button Grid.Column="1" Content="Add" Command="{Binding Add}" />
                     </Grid>
                 </StackPanel>
 
@@ -111,8 +111,8 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" Width="*" />
-                        <DataGridTextColumn Header="Address" Width="1.65*" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding DonationCenterName, Mode=OneWay}" Width="*" />
+                        <DataGridTextColumn Header="Address" Binding="{Binding ResidencyAddress, Mode=OneWay}" Width="1.65*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

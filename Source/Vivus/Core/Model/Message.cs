@@ -7,16 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBModel
+namespace Vivus.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class WomenInfo
+    public partial class Message
     {
-        public int WomenInfoID { get; set; }
-        public bool IsPregnant { get; set; }
-        public bool PostBirth { get; set; }
-        public bool Menstruating { get; set; }
+        public int MessageID { get; set; }
+        public int SenderID { get; set; }
+        public int RecieverID { get; set; }
+        public System.DateTime SendDate { get; set; }
+        public string Content { get; set; }
+    
+        public virtual Person Person { get; set; }
+        public virtual Person Person1 { get; set; }
     }
 }
