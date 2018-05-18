@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Doctor.Validators;
     using Vivus.Core.ViewModels;
     using Vivus.Core.ViewModels.Notifications;
     using Vivus = Console;
@@ -28,7 +29,7 @@
         public List<BasicEntity<string>> PersonNames { get; }
         public BasicEntity<string> SelectedPersonName { get; set; }
 
-        public string Nin
+        public string NationalIdentificationNumber
         {
             get => nin;
 
@@ -69,23 +70,49 @@
         /// </summary>
         public ObservableCollection<NotificationViewModel> Items { get; }
 
+        /// <summary>
+        /// Gets the error string of a property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns></returns>
+        public override string this[string propertyName]
+        {
+            get
+            {
+                if (propertyName == nameof(SelectedPersonType))
+                    return GetErrorString(propertyName, DoctorValidator.PersonTypeValidation(SelectedPersonType));
+
+                if (propertyName == nameof(SelectedPersonName))
+                    return GetErrorString(propertyName, DoctorValidator.PersonTypeValidation(SelectedPersonName));
+
+                if (propertyName == nameof(NationalIdentificationNumber))
+                    return GetErrorString(propertyName, DoctorValidator.NinValidation(NationalIdentificationNumber));
+
+                if (propertyName == nameof(Message))
+                    return GetErrorString(propertyName, DoctorValidator.MessageValidation(Message));
+
+                return null;
+            }
+        }
+
 
         public NotificationsViewModel()
         {
-            PersonTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select person muie") };
-            PersonNames = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select person fk") };
-
-            nin = "123";
-            message = "sal";
+            SelectedPersonType = new BasicEntity<string>(-1, "Select person type");
+            PersonTypes = new List<BasicEntity<string>> { SelectedPersonType };
+            SelectedPersonName = new BasicEntity<string>(-1, "Select person name");
+            PersonNames = new List<BasicEntity<string>> { SelectedPersonName };
 
             SendCommand = new RelayCommand(Send);
 
             Items = new ObservableCollection<NotificationViewModel>();
             // Test whether the binding was done right or not
+            /*
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), "AP", "andreipopescu", new DateTime(2018, 4, 28), "This is dă message."));
             });
+            */
         }
 
         /// <summary>
@@ -93,8 +120,15 @@
         /// </summary>
         private void Send()
         {
-         
-            Vivus.Console.WriteLine("Doctor:  Message sent!");
+            ParentPage.AllowErrors();
+
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
+            Vivus.Console.WriteLine("NotificationsPage:  Message sent!");
             Popup("Successfull operation!", PopupType.Successful);
         }
     }

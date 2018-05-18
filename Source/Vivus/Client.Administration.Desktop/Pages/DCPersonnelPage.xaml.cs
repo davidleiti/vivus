@@ -32,6 +32,8 @@
             pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
             pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
 
+            cbDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+
             // Person details
             tbFirstName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbLastName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);

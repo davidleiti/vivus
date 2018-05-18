@@ -106,13 +106,17 @@
 		/// <returns></returns>
 		public override string this[string propertyName] {
 			get {
+				if (propertyName == nameof(PersonType)) {
+					if (PersonType is null || PersonType.Id < 0)
+						return GetErrorString(propertyName, new List<string> { "Person type field is mandatory." });
+				}
 				if (propertyName == nameof(PersonName)) {
 					if (PersonName is null || PersonName.Id < 0)
-						return GetErrorString(propertyName, new List<string> { "No person was selected!" });
+						return GetErrorString(propertyName, new List<string> { "Person name field is mandatory." });
 				}
 				if (propertyName == nameof(Message))
 					if (string.IsNullOrEmpty(Message))
-						return GetErrorString(propertyName, new List<string> { "Message is empty" });
+						return GetErrorString(propertyName, new List<string> { "Message field is mandatory." });
 				return null;
 			}
 		}
@@ -131,9 +135,10 @@
 		/// </summary>
 		public NotificationsViewModel() {
 			PersonTypes = new List<BasicEntity<string>>();
+			PersonTypes.Add(new BasicEntity<string>(-1, "Select person type"));
 			PersonTypes.Add(new BasicEntity<string>(0, "Donor"));
 			PersonTypes.Add(new BasicEntity<string>(1, "Doctor"));
-			PersonTypes.Add(new BasicEntity<string>(2, "DCPersonnel"));
+			PersonTypes.Add(new BasicEntity<string>(2, "DC Personnel"));
 			Persons = new ObservableCollection<BasicEntity<string>>();
 			Persons.Add(new BasicEntity<string>(-1, "Select a person"));
 			Items = new ObservableCollection<NotificationViewModel>();

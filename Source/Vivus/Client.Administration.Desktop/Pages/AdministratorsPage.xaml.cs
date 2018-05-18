@@ -22,7 +22,6 @@
 
 		public void AllowErrors() {
 			tbEmail.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
-			//Gives an error, will have to look into it
 			pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
 			pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
 

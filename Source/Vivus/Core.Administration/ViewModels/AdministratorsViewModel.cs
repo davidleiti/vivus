@@ -17,6 +17,7 @@
 		private string email;
 		private object password;
 		private bool isActive = true;
+		private AdministratorItemViewModel selectedItem;
 		#endregion
 
 		#region Public Members
@@ -86,6 +87,22 @@
 		/// </summary>
 		public List<BasicEntity<string>> Counties { get; }
 
+
+		/// <summary>
+		/// Gets or sets the selected item in the administrators table
+		/// </summary>
+		public AdministratorItemViewModel SelectedItem {
+			get => selectedItem; 
+			set {
+				if (value == selectedItem)
+					return;
+
+				selectedItem = value;
+				Vivus.Console.WriteLine(selectedItem.FullName);
+				OnPropertyChanged();
+			}
+		}
+
 		/// <summary>
 		/// Gets the add administrator command.
 		/// </summary>
@@ -139,7 +156,7 @@
 		#region Private Methods
 
 		/// <summary>
-		/// Registers a donor.
+		/// Adds an adminstrator.
 		/// </summary>
 		private void Add() {
 			ParentPage.AllowErrors();

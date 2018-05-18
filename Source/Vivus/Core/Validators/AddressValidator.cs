@@ -73,7 +73,9 @@
         /// <returns></returns>
         public static List<string> ZipCodeValidation(string zipCode)
         {
-            if (!string.IsNullOrEmpty(zipCode) && zipCode.Length != 6)
+			if (string.IsNullOrEmpty(zipCode))
+				return new List<string> { "Zip code field is mandatory." };
+			if (!string.IsNullOrEmpty(zipCode) && zipCode.Length != 6)
                 return new List<string> { "Zip code must have exactly 6 digits." };
 
             return null;
