@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Security;
+    using Vivus.Core.DataModels;
 
     /// <summary>
     /// Represents a validator for the doctor application.
@@ -71,5 +72,61 @@
 
             return null;
         }
+
+        /// <summary>
+        /// Validates the selected person type.
+        /// </summary>
+        /// <param name="personType">The selected person type.</param>
+        /// <returns></returns>
+        public static List<string> PersonTypeValidation(BasicEntity<string> personType)
+        {
+            if (personType is null || personType.Id < 0)
+                return new List<string> { "Person type field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the selected person name.
+        /// </summary>
+        /// <param name="personName">The selected person name.</param>
+        /// <returns></returns>
+        public static List<string> PersonNameValidation(BasicEntity<string> personName)
+        {
+            if (personName is null || personName.Id < 0)
+                return new List<string> { "Person name field is mandatory." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the national identification number.
+        /// </summary>
+        /// <param name="nin">The national identification number.</param>
+        /// <returns></returns>
+        public static List<string> NinValidation(string nin)
+        {
+            if (string.IsNullOrEmpty(nin))
+                return new List<string> { "National identification number field is mandatory." };
+
+            if (nin.Length != 13)
+                return new List<string> { "National identification number must have exactly 13 digits." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public static List<string> MessageValidation(string message)
+        {
+            if (message is null)
+                return new List<string> { "Message field must not be empty." };
+
+            return null;
+        }
+
     }
 }

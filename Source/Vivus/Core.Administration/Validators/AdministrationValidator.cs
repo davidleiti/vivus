@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security;
+using Vivus.Core.DataModels;
 
 namespace Vivus.Core.Administration.Validators
 {
@@ -9,7 +10,7 @@ namespace Vivus.Core.Administration.Validators
     public static class AdministrationValidator
     {
         /// <summary>
-        /// Validates the email address of the administrator.
+        /// Validates the email address of the DCPersonnel.
         /// </summary>
         /// <param name="email">The email address of the administrator.</param>
         /// <returns></returns>
@@ -54,9 +55,9 @@ namespace Vivus.Core.Administration.Validators
         }
 
         /// <summary>
-        /// Validates the password of the administraor.
+        /// Validates the password of the DCPersonnel.
         /// </summary>
-        /// <param name="password">The password of the administrator.</param>
+        /// <param name="password">The password of the DCPersonnel.</param>
         /// <returns></returns>
         public static List<string> PasswordValidation(SecureString password)
         {
@@ -71,5 +72,19 @@ namespace Vivus.Core.Administration.Validators
 
             return null;
         }
+
+        /// <summary>
+        /// Validates the selected donation center.
+        /// </summary>
+        /// <param name="donationCenter">The selected donation center.</param>
+        /// <returns></returns>
+        public static List<string> DonationCenterValidation(BasicEntity<string> donationCenter)
+        {
+            if (donationCenter is null || donationCenter.Id < 0)
+                return new List<string> { "Donation center field is mandatory." };
+
+            return null;
+        }
+
     }
 }

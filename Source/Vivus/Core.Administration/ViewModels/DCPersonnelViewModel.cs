@@ -96,6 +96,8 @@
         /// </summary>
         public ObservableCollection<DCPItemViewModel> Items { get; }
 
+        public DCPItemViewModel SelectedTableItem { get; set; }
+
 
         /// <summary>
         /// Gets the error string of a property.
@@ -109,12 +111,14 @@
                 
                 if (propertyName == nameof(Email))
                     return GetErrorString(propertyName, AdministrationValidator.EmailValidation(Email));
+       
+                if (propertyName == nameof(Password) && ParentPage != null)
+                    return GetErrorString(propertyName, AdministrationValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
-                    
-                    if (propertyName == nameof(Password) && ParentPage != null)
-                        return GetErrorString(propertyName, AdministrationValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
-                    
-                    return null;
+                if (propertyName == nameof(SelectedDonationCenter))
+                    return GetErrorString(propertyName, AdministrationValidator.DonationCenterValidation(SelectedDonationCenter));
+
+                return null;
             }
         }
 
@@ -126,27 +130,28 @@
         /// </summary>
         public DCPersonnelViewModel()
         {
-            //email = "ie";
-
-            DonationCenters = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
+            SelectedDonationCenter = new BasicEntity<string>(-1, "Select donation center");
+            DonationCenters = new List<BasicEntity<string>> { SelectedDonationCenter };
             Active = true;
 
             Person = new PersonViewModel();
             Address = new AddressViewModel();
+            Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
             AddCommand = new RelayCommand(Add);
 
             Items = new ObservableCollection<DCPItemViewModel>();
 
             // Test whether the binding was done right or not
+             SelectedTableItem = new DCPItemViewModel
+             {
+                 Id = 1,
+                 Name = "Alex",
+                 NationalIdentificationNumber = "12345",
+                 DonationCenter = "Fsega"
+             };
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Items.Add(new DCPItemViewModel
-                {
-                    Id = 1,
-                    Name = "Alex",
-                    Nin = "12345",
-                    DonationCenter = "Fsega"
-                });
+                Items.Add(SelectedTableItem);
             });
             
            
@@ -163,7 +168,7 @@
         {
             ParentPage.AllowErrors();
 
-            if (Errors + Person.Errors + Address.Errors > 0)
+            if (Errors + Person.Errors + Address.Errors  > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
                 return;
@@ -228,7 +233,7 @@
         /// <summary>
         /// Gets or sets the nin.
         /// </summary>
-        public string Nin
+        public string NationalIdentificationNumber
         {
             get => nin;
 
