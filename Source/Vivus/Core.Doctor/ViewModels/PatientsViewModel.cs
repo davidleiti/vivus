@@ -87,7 +87,7 @@
         /// </summary>
         private void NewPatient()
         {
-            Vivus.Console.WriteLine("Doctor: Add new patient!");
+            Vivus.Console.WriteLine("PatientsPage: Add new patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
 
@@ -96,7 +96,7 @@
         /// </summary>
         private void ChoosePatient()
         {
-            Vivus.Console.WriteLine("Doctor: Choose a patient!");
+            Vivus.Console.WriteLine("PatientsPage: Choose a patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
 
@@ -105,7 +105,7 @@
         /// </summary>
         private void DismissPatient()
         {
-            Vivus.Console.WriteLine("Doctor: Dismiss a patient!");
+            Vivus.Console.WriteLine("PatientsPage: Dismiss a patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
 

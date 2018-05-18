@@ -18,7 +18,7 @@
 
         private string email;
         private object password;
-        private bool status;
+        private bool status = true;
 
         #endregion
 
@@ -171,7 +171,7 @@
 
             if(Errors + Person.Errors + HomeAddress.Errors + WorkAddress.Errors > 0)
             {
-                Popup("Some errors were found! Quick! Catch them! ");
+                Popup("Some errors were found! Fix them before going forward.");
                 return;
             }
 

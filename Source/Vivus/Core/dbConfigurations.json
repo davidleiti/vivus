@@ -1,0 +1,41 @@
+﻿{
+  "Configurations": [
+    {
+      "Name": "mainConfiguration",
+      "Fields": [
+        {
+          "Name": "data source",
+          "Value": "den1.mssql4.gear.host"
+        },
+        {
+          "Name": "initial catalog",
+          "Value": "vivus"
+        },
+        {
+          "Name": "persist security info",
+          "Value": "True"
+        },
+        {
+          "Name": "user id",
+          "Value": "vivus"
+        },
+        {
+          "Name": "password",
+          "Value": "Oa3Wz7-~DMBM"
+        },
+        {
+          "Name": "MultipleActiveResultSets",
+          "Value": "True"
+        },
+        {
+          "Name": "App",
+          "Value": "EntityFramework"
+        }
+      ]
+    },
+    {
+      "Name": "testConfiguration",
+      "Fields": []
+    }
+  ]
+}
