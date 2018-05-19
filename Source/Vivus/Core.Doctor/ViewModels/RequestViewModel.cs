@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Windows.Input;
     using Vivus = Console;
+    using Vivus.Core.Doctor.Validators;
 
     /// <summary>
     /// Represents a view model for the request page.
@@ -32,9 +33,13 @@
         /// </summary>
         public ObservableCollection<RequestItemViewModel> Items { get; }
 
+        public RequestItemViewModel SelectedTableItem { get; set; }
+
         public List<BasicEntity<string>> PatientNames { get; }
 
         public List<BasicEntity<string>> Priorities { get; }
+
+        public IPage ParentPage { get; set; }
 
         /// <summary>
         /// Gets the register command.
@@ -136,6 +141,29 @@
             }
         }
 
+        public override string this[string propertyName]
+        {
+            get
+            {
+                if (propertyName == nameof(SelectedPatientName))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPatientName));
+
+                if (propertyName == nameof(SelectedPriority))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPriority));
+
+                if (propertyName == nameof(RequestThrombocytes))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestThrombocytes));
+
+                if (propertyName == nameof(RequestRedCells))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestRedCells));
+
+                if (propertyName == nameof(RequestPlasma))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestPlasma));
+
+                return null;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -147,15 +175,15 @@
         {
 
             Items = new ObservableCollection<RequestItemViewModel>();
-            PatientNames = new List<BasicEntity<string>>();
-            Priorities = new List<BasicEntity<string>>();
+            PatientNames = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select patient name") };
+            Priorities = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select priority") };
             AddCommand = new RelayCommand(Add);
             CancelCommand = new RelayCommand(Cancel);
 
 
 
 
-            // Test whether the binding was done right or not
+            /*// Test whether the binding was done right or not
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new RequestItemViewModel
@@ -181,7 +209,7 @@
                 Priorities.Add(new BasicEntity<string>(1, "???"));
 
                 RequestThrombocytes = 456;
-            });
+            });*/
         }
         #endregion
 
@@ -192,6 +220,14 @@
         /// </summary>
         private void Add()
         {
+            ParentPage.AllowErrors();
+
+            if(Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
             Vivus.Console.WriteLine("Doctor: Add works!");
             Popup("Add works!", PopupType.Successful);
         }
@@ -201,6 +237,14 @@
         /// </summary>
         private void Cancel()
         {
+            /*ParentPage.AllowErrors();
+
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }*/
+
             Vivus.Console.WriteLine("Doctor: Cancel works!");
             Popup("Cancel works!", PopupType.Successful);
         }

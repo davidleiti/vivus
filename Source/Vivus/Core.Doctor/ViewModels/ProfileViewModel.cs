@@ -120,25 +120,6 @@
             Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
             UpdateCommand = new RelayCommand(Update);
 
-            email = "salam";
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Counties.Add(new BasicEntity<string>(1, "Sandu"));
-                Counties.Add(new BasicEntity<string>(2, "Sandu Ciorba"));
-                Counties.Add(new BasicEntity<string>(3, "Sandu Alex"));
-
-                Counties.Add(new BasicEntity<string>(1, "Smeck"));
-                Counties.Add(new BasicEntity<string>(1, "Damn"));
-                Counties.Add(new BasicEntity<string>(1, "???"));
-
-                Person.Gender = new BasicEntity<string>(1,"Male");
-                Person.NationalIdentificationNumber = "1234";
-                Person.BirthDate = "dasFuk";
-
-                WorkAddress.City = "Bucuresti";
-            });
-
         }
 
         #endregion

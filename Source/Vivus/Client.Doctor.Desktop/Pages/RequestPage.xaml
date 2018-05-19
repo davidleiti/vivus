@@ -29,12 +29,12 @@
                     <!-- Patient -->
                     <StackPanel>
                         <TextBlock Text="Patient" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbSelectedPatientName" ItemsSource="{Binding PatientNames}" SelectedItem="{Binding SelectedPatientName, Mode=OneWayToSource}" />
+                        <ComboBox x:Name="cbSelectedPatientName" ItemsSource="{Binding PatientNames}" SelectedItem="{Binding SelectedPatientName, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Priority -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Priority" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbSelectedPriority" ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedPriority, Mode=OneWayToSource}" />
+                        <ComboBox x:Name="cbSelectedPriority" ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedPriority, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                 </Grid>
                 <Grid Margin="0 0 0 20">
@@ -49,17 +49,17 @@
                     <!-- Thrombocytes -->
                     <StackPanel>
                         <TextBlock Text="Thrombocytes" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbRequestThrombocytes" Tag="Containers" Text="{Binding RequestThrombocytes, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestThrombocytes" Tag="Containers" Text="{Binding RequestThrombocytes, Converter={valueConverters:IntToStringConverter}, ValidatesOnDataErrors=True}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Red cells -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Red cells" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbRequestRedCells" Tag="Containers" Text="{Binding RequestRedCells, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestRedCells" Tag="Containers" Text="{Binding RequestRedCells, Converter={valueConverters:IntToStringConverter}, ValidatesOnDataErrors=True}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                     <!-- Plasma -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbRequestPlasma" Tag="Containers" Text="{Binding RequestPlasma, Converter={valueConverters:IntToStringConverter}}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbRequestPlasma" Tag="Containers" Text="{Binding RequestPlasma, Converter={valueConverters:IntToStringConverter}, ValidatesOnDataErrors=True}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <!-- Add button -->
@@ -73,7 +73,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding Items}">
+                <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedTableItem}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>

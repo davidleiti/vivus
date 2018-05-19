@@ -128,5 +128,25 @@
             return null;
         }
 
+        public static List<string> NotNullStringFieldValidation(BasicEntity<string> field)
+        {
+            if (field is null || field.Id < 0)
+                return new List<string> { "This field is mandatory." };
+
+            return null;
+        }
+
+        public static List<string> NotNullIntegerFieldValidation(int? field)
+        {
+            if (field is null)
+                return new List<string> { "This field is mandatory." };
+            else if (field < 0)
+                return new List<string> { "This field must be positive." };
+
+            return null;
+        }
+
+
+
     }
 }
