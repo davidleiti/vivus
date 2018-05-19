@@ -7,6 +7,7 @@
     using System.Windows.Input;
     using System.Windows;
     using Vivus = Console;
+    using Vivus.Core.DCPersonnel.Validators;
     using System;
 
     /// <summary>
@@ -22,13 +23,13 @@
 
         private string containerCode;
         private string harvestDate;
-        private string containerType;
+        private BasicEntity<string> containerType;
 
-        private string addContainerBloodType;
-        private string requestBloodType;
+        private BasicEntity<string> addContainerBloodType;
+        private BasicEntity<string> requestBloodType;
 
-        private string addContainerRH;
-        private string requestRH;
+        private BasicEntity<string> addContainerRH;
+        private BasicEntity<string> requestRH;
 
         #endregion
 
@@ -42,7 +43,7 @@
         public List<BasicEntity<string>> BloodTypes { get; }
         public List<BasicEntity<string>> RHTypes { get; }
 
-        public string ContainerType
+        public BasicEntity<string> ContainerType
         {
             get => containerType;
 
@@ -57,7 +58,7 @@
             }
         }
 
-        public string AddContainerBloodType
+        public BasicEntity<string> AddContainerBloodType
         {
             get => addContainerBloodType;
 
@@ -72,7 +73,7 @@
             }
         }
 
-        public string RequestBloodType
+        public BasicEntity<string> RequestBloodType
         {
             get => requestBloodType;
 
@@ -87,7 +88,7 @@
             }
         }
 
-        public string AddContainerRH
+        public BasicEntity<string> AddContainerRH
         {
             get => addContainerRH;
 
@@ -102,7 +103,7 @@
             }
         }
 
-        public string RequestRH
+        public BasicEntity<string> RequestRH
         {
             get => requestRH;
 
@@ -155,6 +156,21 @@
         {
             get
             {
+                if (propertyName == nameof(HarvestDate))
+                    return GetErrorString(propertyName, ContainerInfoValidator.HarvestDateValidation(HarvestDate));
+                if (propertyName == nameof(ContainerType))
+                    return GetErrorString(propertyName, ContainerInfoValidator.ContainerTypeValidation(ContainerType));
+                if (propertyName == nameof(ContainerCode))
+                    return GetErrorString(propertyName, ContainerInfoValidator.ContainerCodeValidation(ContainerCode));
+                if (propertyName == nameof(AddContainerBloodType))
+                    return GetErrorString(propertyName, ContainerInfoValidator.BloodTypeValidation(AddContainerBloodType));
+                if (propertyName == nameof(RequestBloodType))
+                    return GetErrorString(propertyName, ContainerInfoValidator.BloodTypeValidation(RequestBloodType));
+                if (propertyName == nameof(AddContainerRH))
+                    return GetErrorString(propertyName, ContainerInfoValidator.RHValidation(AddContainerRH));
+                if (propertyName == nameof(RequestRH))
+                    return GetErrorString(propertyName, ContainerInfoValidator.RHValidation(RequestRH));
+
                 return null;
             }
         }

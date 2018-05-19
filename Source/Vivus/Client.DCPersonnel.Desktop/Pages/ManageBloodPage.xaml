@@ -35,7 +35,7 @@
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbContainerCode" Text="{Binding ContainerCode}" Tag="XXXXXXXXXXXX" CharacterCasing="Upper" MaxLength="24" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbContainerCode" Text="{Binding ContainerCode, ValidatesOnDataErrors=True}" Tag="XXXXXXXXXXXX" CharacterCasing="Upper" MaxLength="24" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                 </Grid>
 
@@ -60,8 +60,8 @@
                     </StackPanel>
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="4">
-                        <TextBlock Text="Harverst date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbHarvestDate" Text="{Binding HarvestDate}" Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                        <TextBlock Text="Harvest date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox x:Name="tbHarvestDate" Text="{Binding HarvestDate, ValidatesOnDataErrors=True}" Tag="dd/mm/yyyy" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
 

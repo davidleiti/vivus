@@ -56,6 +56,7 @@
     <Compile Include="DataModels\ApplicationPage.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\ContainerInfoValidator.cs" />
     <Compile Include="Validators\DCPersonnelValidator.cs" />
     <Compile Include="ViewModels\BloodDonationRequestsViewModel.cs" />
     <Compile Include="ViewModels\BloodRequestsViewModel.cs" />
