@@ -24,9 +24,9 @@
         #region Public Methods
 
         /// <summary>
-        /// Returns a gender instance based on its type.
+        /// Returns a gender instance based on its type attribute.
         /// </summary>
-        /// <param name="type">The type of the gender.</param>
+        /// <param name="type">The type attribute of the gender.</param>
         /// <exception cref="System.ArgumentNullException">If the parameter is null.</exception>
         /// <exception cref="System.InvalidOperationException">If no instance was found of the given type.</exception>
         /// <returns></returns>
