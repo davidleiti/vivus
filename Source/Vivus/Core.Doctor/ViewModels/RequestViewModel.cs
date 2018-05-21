@@ -146,19 +146,19 @@
             get
             {
                 if (propertyName == nameof(SelectedPatientName))
-                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPatientName));
+                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPatientName, "Patient"));
 
                 if (propertyName == nameof(SelectedPriority))
-                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPriority));
+                    return GetErrorString(propertyName, DoctorValidator.NotNullStringFieldValidation(SelectedPriority, "Priority"));
 
                 if (propertyName == nameof(RequestThrombocytes))
-                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestThrombocytes));
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestThrombocytes, "Thrombocytes"));
 
                 if (propertyName == nameof(RequestRedCells))
-                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestRedCells));
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestRedCells, "Red cells"));
 
                 if (propertyName == nameof(RequestPlasma))
-                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestPlasma));
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestPlasma, "Plasma"));
 
                 return null;
             }
@@ -175,7 +175,7 @@
         {
 
             Items = new ObservableCollection<RequestItemViewModel>();
-            PatientNames = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select patient name") };
+            PatientNames = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select patient") };
             Priorities = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select priority") };
             AddCommand = new RelayCommand(Add);
             CancelCommand = new RelayCommand(Cancel);
@@ -183,33 +183,23 @@
 
 
 
-            /*// Test whether the binding was done right or not
+            // Test whether the binding was done right or not
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new RequestItemViewModel
                 {
                     Id = 39,
-                    PatientName = "Salam",
+                    PatientName = "Ionut",
                     Priority = "easy",
                     Thrombocytes = 1,
                     RedCells = 213,
                     Plasma = 555,
                     RequestStatus = "done",
                     Cdc = "???",
-                    Dcn = "???"
+                    Dcn = "dcn"
                 });
 
-
-                PatientNames.Add(new BasicEntity<string>(1, "Sandu"));
-                PatientNames.Add(new BasicEntity<string>(2, "Sandu Ciorba"));
-                PatientNames.Add(new BasicEntity<string>(3, "Sandu Alex"));
-
-                Priorities.Add(new BasicEntity<string>(1, "Smeck"));
-                Priorities.Add(new BasicEntity<string>(1, "Damn"));
-                Priorities.Add(new BasicEntity<string>(1, "???"));
-
-                RequestThrombocytes = 456;
-            });*/
+            });
         }
         #endregion
 
