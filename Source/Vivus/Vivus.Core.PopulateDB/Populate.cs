@@ -1,9 +1,13 @@
 ﻿namespace Vivus.Core.PopulateDB
 {
+    using System;
     using System.Linq;
     using Vivus.Core.Model;
+    using Vivus.Core.Security;
     using Vivus.Core.UoW;
     using VivusConsole = Console.Console;
+    using BCrypt.Net;
+    using Vivus.Core.Repository;
 
     /// <summary>
     /// Represents a popualtor for the database entities.
@@ -163,6 +167,52 @@
             unitOfWork.RequestPriorities.Add(new RequestPriority { Type = "High" });
 
             VivusConsole.WriteLine($"Request priorities: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the administrators table.
+        /// </summary>
+        public static void Administrators()
+        {
+            // Delete all the administrators
+            unitOfWork.Administrators.Entities.ToList().ForEach(admin =>
+                {
+                    unitOfWork.Accounts.Remove(admin.Account);
+                    unitOfWork.Addresses.Remove(admin.Person.Address);
+                    unitOfWork.Persons.Remove(admin.Person);
+                    unitOfWork.Administrators.Remove(admin);
+                });
+
+            // Add all the administrators
+            unitOfWork.Administrators.Add(new Administrator
+            {
+                Person = new Person
+                {
+                    FirstName = "Mihai",
+                    LastName = "Nitu",
+                    BirthDate = new DateTime(1979, 7, 20),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Nin = "1790720425218",
+                    PhoneNo = "+(40) 727 109 531",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("București"),
+                        City = "București",
+                        Street = "Remus",
+                        StreetNo = "7",
+                        ZipCode = "030167"
+                    },
+                },
+                Account = new Account
+                {
+                    Email = "nitu.mihai@gmail.com",
+                    Password = BCrypt.HashPassword("nitu1234")
+                },
+                IsOwner = true,
+                Active = true
+            });
+
+            VivusConsole.WriteLine($"Admnistrators: { unitOfWork.Complete() }");
         }
     }
 }

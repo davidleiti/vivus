@@ -1,12 +1,13 @@
 ﻿namespace Vivus.Core.UoW
 {
+    using System;
     using Vivus.Core.Model;
     using Vivus.Core.Repository;
 
     /// <summary>
     /// Represents an interface for a Unit of Work.
     /// </summary>
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         #region Public Repositories
 

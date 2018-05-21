@@ -59,7 +59,7 @@
 
             BasicEntity<Type> be = obj as BasicEntity<Type>;
 
-            return Value.Equals(be);
+            return Value.Equals(be.Value);
         }
 
         /// <summary>

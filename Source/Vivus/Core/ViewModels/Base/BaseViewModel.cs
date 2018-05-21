@@ -8,6 +8,8 @@
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Windows;
+    using System.Linq;
 
     public class BaseViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
@@ -15,7 +17,7 @@
 
         private string popupMessage;
         private PopupType popupType;
-        private IDictionary<string, string> errors;
+        private IDictionary<string, List<string>> errors;
 
         #endregion
 
@@ -92,7 +94,7 @@
         /// </summary>
         public BaseViewModel()
         {
-            errors = new Dictionary<string, string>();
+            errors = new Dictionary<string, List<string>>();
         }
 
         #endregion
@@ -124,9 +126,13 @@
         /// <param name="popupType">The type of the popup.</param>
         public void Popup(string message, PopupType popupType = PopupType.Error)
         {
-            PopupMessage = null;
-            PopupType = popupType;
-            PopupMessage = message;
+            // Make sure this code is run on the ui thread
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                PopupMessage = null;
+                PopupType = popupType;
+                PopupMessage = message;
+            });
         }
 
         #endregion
@@ -140,18 +146,30 @@
         /// <returns></returns>
         protected string GetErrorString(string propertyName, List<string> errors)
         {
-            string error;
-
-            if (errors is null)
+            if (errors is null || errors.Count == 0)
             {
                 this.errors.Remove(propertyName);
                 return null;
             }
 
-            error = string.Join("\n", errors.ToArray());
+            this.errors[propertyName] = errors;
+            return string.Join("\n", errors.ToArray());
+        }
 
-            this.errors[propertyName] = error;
-            return error;
+        /// <summary>
+        /// Converts a list of not mandatory errors to a string.
+        /// </summary>
+        /// <param name="errors">The list of errors.</param>
+        /// <returns></returns>
+        protected string GetNotMandatoryErrorString(string propertyName, List<string> errors)
+        {
+            if (errors is null)
+            {
+                this.errors.Remove(propertyName);
+                return null;
+            }
+            
+            return GetErrorString(propertyName, errors.Where(error => !error.Contains("mandatory")).ToList());
         }
 
         /// <summary>

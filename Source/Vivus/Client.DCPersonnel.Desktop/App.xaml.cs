@@ -1,5 +1,7 @@
 ﻿namespace Vivus.Client.DCPersonnel.Desktop
 {
+    using System.Globalization;
+    using System.Threading;
     using System.Windows;
     using Vivus.Core.DCPersonnel.IoC;
 
@@ -16,6 +18,10 @@
         {
             // Let the base application do what is needed to be done
             base.OnStartup(e);
+
+            // Setup the culture
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("ro-RO");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("ro-RO");
 
             // Setup the IoC
             IoCContainer.Setup();

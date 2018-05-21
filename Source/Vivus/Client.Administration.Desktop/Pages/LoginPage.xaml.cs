@@ -42,5 +42,16 @@
 
             await base.AnimateOut();
         }
+
+        /// <summary>
+        /// Handles the KeyDown event for a textbox.
+        /// </summary>
+        /// <param name="sender">The caller.</param>
+        /// <param name="e">The event arguments.</param>
+        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                ViewModel.LoginCommand.Execute(null);
+        }
     }
 }

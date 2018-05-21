@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using Vivus.Core.DataModels;
 
     /// <summary>
@@ -11,7 +12,7 @@
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (value is null)
                 return false;
 
             return ((BasicEntity<string>)value).Value == parameter.ToString();
@@ -19,6 +20,9 @@
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (!(bool)value)
+                return DependencyProperty.UnsetValue;
+            
             return new BasicEntity<string>(-1, parameter.ToString());
         }
     }

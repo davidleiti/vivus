@@ -37,5 +37,39 @@
 			cbCounty.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
 			tbZipCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
 		}
-	}
+
+        /// <summary>
+        /// Resets the errors allow status.
+        /// </summary>
+        public void DontAllowErrors()
+        {
+            tbEmail.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
+            pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, false);
+
+            tbFirstName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbLastName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbBirthDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbNin.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbPhoneNumber.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+
+            tbStreetName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbStreetNumber.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbCity.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            cbCounty.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+            tbZipCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+        }
+
+        /// <summary>
+        /// Allows only the optional errors to be displayed.
+        /// </summary>
+        public void AllowOptionalErrors()
+        {
+            pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
+            if (SecurePasword.Length == 0)
+                pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, false);
+            else
+                pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
+        }
+    }
 }

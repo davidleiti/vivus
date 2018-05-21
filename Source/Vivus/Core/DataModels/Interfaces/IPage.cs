@@ -6,8 +6,18 @@
     public interface IPage
     {
         /// <summary>
-        /// Allows the errors to be displayed.
+        /// Allows all the errors to be displayed.
         /// </summary>
         void AllowErrors();
+
+        /// <summary>
+        /// Resets the errors allow status.
+        /// </summary>
+        void DontAllowErrors();
+
+        /// <summary>
+        /// Allows only the optional errors to be displayed.
+        /// </summary>
+        void AllowOptionalErrors();
     }
 }

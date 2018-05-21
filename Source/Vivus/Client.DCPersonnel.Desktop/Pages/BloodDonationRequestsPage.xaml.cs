@@ -22,5 +22,15 @@
             dcMessages.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
 
         }
+
+        public void DontAllowErrors()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AllowOptionalErrors()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

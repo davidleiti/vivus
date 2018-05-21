@@ -92,13 +92,13 @@
     <Compile Include="ValueConverters\BasicEntityToBoolConverter.cs" />
     <Compile Include="ValueConverters\BoolToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\BoolToStringConverter.cs" />
+    <Compile Include="ValueConverters\ButtonTypeToStringConverter.cs" />
     <Compile Include="ValueConverters\CustomVisibilityToWindowsVisibilityConverter.cs" />
     <Compile Include="ValueConverters\DateTimeToStringConverter.cs" />
     <Compile Include="ValueConverters\NullableBoolRadioButtonIsCheckBoolConverter.cs" />
     <Compile Include="ValueConverters\PopupTypeToBrushConverter.cs" />
     <Compile Include="ValueConverters\IntToStringConverter.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <Page Include="Controls\Notifications\NotificationControl.xaml">
       <SubType>Designer</SubType>

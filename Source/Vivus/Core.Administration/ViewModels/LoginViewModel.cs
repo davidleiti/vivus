@@ -6,6 +6,11 @@
     using Vivus.Core.Administration.IoC;
     using Vivus.Core.ViewModels;
     using VivusConsole = Console.Console;
+    using Vivus.Core.UoW;
+    using System.Linq;
+    using Vivus.Core.Model;
+    using BCrypt.Net;
+    using Vivus.Core.Security;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -99,15 +104,38 @@
                     Popup("Password field is mandatory.");
                     return;
                 }
+                
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        Administrator admin = IoCContainer.Get<IUnitOfWork>().Administrators.Find(a => a.Account.Email == Email && a.Active).Single();
 
-                IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
-                IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Doctors;
-                IoCContainer.Get<WindowViewModel>().ShowMenu();
+                        if (!BCrypt.Verify(ParentPage.SecurePasword.Unsecure(), admin.Account.Password))
+                        {
+                            Popup("Invalid email or password.");
+                            VivusConsole.WriteLine("Invalid username of password.");
+                            return;
+                        }
 
-                IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
-                //IoCContainer.Get<WindowViewModel>().MenuCategories[0].Items[IoCContainer.Get<WindowViewModel>().MenuCategories[0].Items.Count - 1].Visibility = Visibility.Collapsed;
+                        IoCContainer.Get<ApplicationViewModel>().Administrator = admin;
 
-                VivusConsole.WriteLine("Successfull login!");
+                        IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
+                        IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Doctors;
+                        IoCContainer.Get<WindowViewModel>().ShowMenu();
+
+                        if (!admin.IsOwner)
+                            IoCContainer.Get<WindowViewModel>().MenuCategories[0].Items[IoCContainer.Get<WindowViewModel>().MenuCategories[0].Items.Count - 1].Visibility = Visibility.Collapsed;
+                        IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
+
+                        VivusConsole.WriteLine($"Welcome, { Email }!");
+                    }
+                    catch
+                    {
+                        Popup("Invalid email or password.");
+                        VivusConsole.WriteLine("No user found.");
+                    }
+                });
             });
         }
 

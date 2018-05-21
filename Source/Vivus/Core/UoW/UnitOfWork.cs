@@ -135,18 +135,21 @@
             BloodRequests = new Repository<BloodRequest>(this.context);
             BloodTypes = new Repository<BloodType>(this.context);
             Counties = new Repository<County>(this.context);
+            Counties = new CountiesRepository(this.context);
             DCPersonnel = new Repository<DCPersonnel>(this.context);
             Doctors = new Repository<Doctor>(this.context);
             DonationCenters = new Repository<DonationCenter>(this.context);
             DonationForms = new Repository<DonationForm>(this.context);
             Donors = new Repository<Donor>(this.context);
-            Genders = new Repository<Gender>(this.context);
+            Genders = new GendersRepository(this.context);
             Messages = new Repository<Message>(this.context);
             Patients = new Repository<Patient>(this.context);
             Persons = new Repository<Person>(this.context);
             PersonStatuses = new Repository<PersonStatus>(this.context);
             RequestPriorities = new Repository<RequestPriority>(this.context);
             RHs = new Repository<RH>(this.context);
+
+            this.context.Database.Connection.Open();
         }
 
         #endregion

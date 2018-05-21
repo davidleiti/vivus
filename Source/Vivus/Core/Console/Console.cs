@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Vivus.Core.Console
 {
@@ -13,6 +14,7 @@ namespace Vivus.Core.Console
         /// <param name="message">The message to write.</param>
         /// <param name="showDate">Wheter to write the date and time before the message or not.</param>
         /// <exception cref="System.IO.IOException"></exception>
+        [Conditional("DEBUG")]
         public static void WriteLine(string message, bool showDate = true)
         {
             if (showDate)
@@ -30,6 +32,7 @@ namespace Vivus.Core.Console
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="showDate">Wheter to write the date and time before the message or not.</param>
+        [Conditional("DEBUG")]
         public static void Write(string message, bool showDate = true)
         {
             if (showDate)

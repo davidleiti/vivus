@@ -2,7 +2,6 @@
 {
     using Vivus.Core.DataModels;
     using Vivus.Core.Validators;
-	using Vivus = Console;
 
     /// <summary>
     /// Represents a bindable address.

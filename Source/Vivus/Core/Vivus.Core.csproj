@@ -40,6 +40,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -54,18 +55,21 @@
     <Reference Include="Windows.Theme">
       <HintPath>..\..\..\Resources\Libraries\Windows.Theme.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configurations\Configurations.cs" />
     <Compile Include="Console\Console.cs" />
     <Compile Include="DataModels\ArgbColor.cs" />
     <Compile Include="DataModels\BasicEntity.cs" />
+    <Compile Include="DataModels\ButtonType.cs" />
     <Compile Include="DataModels\Gender.cs" />
     <Compile Include="DataModels\Interfaces\IContainPassword.cs" />
     <Compile Include="DataModels\Interfaces\IPage.cs" />
     <Compile Include="DataModels\PopupType.cs" />
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
+    <Compile Include="Helpers\AddressHelpers.cs" />
     <Compile Include="Model\Account.cs">
       <DependentUpon>VivusModel.tt</DependentUpon>
     </Compile>
@@ -142,8 +146,10 @@
       <DependentUpon>VivusModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\CountiesRepository.cs" />
+    <Compile Include="Repository\GendersRepository.cs" />
+    <Compile Include="Repository\Base\IRepository.cs" />
+    <Compile Include="Repository\Base\Repository.cs" />
     <Compile Include="Security\SecureStringHelpers.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />

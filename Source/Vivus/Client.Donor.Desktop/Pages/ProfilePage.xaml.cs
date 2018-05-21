@@ -72,5 +72,21 @@
             cbResidenceCounty.GetBindingExpression(ComboBox.SelectedItemProperty).UpdateTarget();
             tbResidenceZipCode.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
         }
+
+        /// <summary>
+        /// Resets the errors allow status.
+        /// </summary>
+        public void DontAllowErrors()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Allows only the optional errors to be displayed.
+        /// </summary>
+        public void AllowOptionalErrors()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -18,11 +18,21 @@
         public void AllowErrors()
         {
             //todo
-           // cbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            // cbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             //cbContainerType.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             cbContainerCode.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             cbDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+        }
+
+        public void DontAllowErrors()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AllowOptionalErrors()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

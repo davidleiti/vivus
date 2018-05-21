@@ -3,7 +3,6 @@
     using System.Windows.Controls;
     using Vivus.Client.Core.AttachedProperties;
     using Vivus.Client.Core.Pages;
-    using Vivus.Core.Console;
     using Vivus.Core.DataModels;
     using Vivus.Core.Donor.ViewModels;
 
@@ -30,6 +29,22 @@
             tbDiastolicBP.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbPastSurgeries.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbTravelStatus.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+        }
+
+        /// <summary>
+        /// Resets the errors allow status.
+        /// </summary>
+        public void DontAllowErrors()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Allows only the optional errors to be displayed.
+        /// </summary>
+        public void AllowOptionalErrors()
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

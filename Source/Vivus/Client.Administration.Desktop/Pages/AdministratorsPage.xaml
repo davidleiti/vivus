@@ -8,6 +8,7 @@
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Administration.ViewModels;assembly=Vivus.Core.Administration"
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -45,7 +46,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Administrator status" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <CheckBox x:Name="cbIsAdministrator" Grid.Row="1" Content="Active" IsChecked="{Binding IsActive}" HorizontalAlignment="Left" />
+                    <CheckBox x:Name="cbIsAdministrator" Grid.Row="1" Content="Active" IsChecked="{Binding IsActive}" IsEnabled="{Binding IsActiveIsEnabled}" HorizontalAlignment="Left" />
                 </Grid>
 
                 <!-- Separator -->
@@ -119,7 +120,7 @@
 
                             <RadioButton Grid.Column="0" Content="Male" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Male}"/>
                             <RadioButton Grid.Column="2" Content="Female" IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Female}" Margin="10 0 0 0" />
-                            <RadioButton Grid.Column="4" Content="Not specified"  IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter='Not specified'}" Margin="10 0 0 0"/>
+                            <RadioButton Grid.Column="4" Content="Not specified"  IsChecked="{Binding Person.Gender, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter='Not specified'}" Margin="10 0 0 0" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -182,7 +183,7 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Add" Command="{Binding AddCommand}"/>
+                    <Button Grid.Column="1" Content="{Binding ButtonType, Converter={valueConverters:ButtonTypeToStringConverter}, FallbackValue=Add}" Command="{Binding AddCommand}" attachedProperties:IsBusyProperty.Value="{Binding ActionIsRunning}"/>
                 </Grid>
                 <DataGrid Grid.Row="1" ItemsSource="{Binding Administrators}" SelectedItem ="{Binding SelectedItem}"  Height="420" RenderTransformOrigin="0.5,0.5">
                     <DataGrid.RenderTransform>
@@ -194,7 +195,7 @@
                         </TransformGroup>
                     </DataGrid.RenderTransform>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Id}">
+                        <DataGridTextColumn Header="#" Binding="{Binding PersonID}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -202,11 +203,27 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" Binding="{Binding FullName}" Width=".95*" />
+                        <DataGridTextColumn Header="Name" Width=".95*">
+                            <DataGridTextColumn.Binding>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="Person.FirstName" />
+                                    <Binding Path="Person.LastName" />
+                                </MultiBinding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
-                        <DataGridTextColumn Header="Phone number" Binding="{Binding PhoneNumber}" Width=".75*" />
-                        <DataGridTextColumn Header="Address" Binding="{Binding FullAddress}" Width="1.2*" />
-                        <DataGridTextColumn Header="Active" Binding="{Binding IsActive}" Width=".4*" />
+                        <DataGridTextColumn Header="Phone number" Binding="{Binding Person.PhoneNumber}" Width=".75*" />
+                        <DataGridTextColumn Header="Address" Width="1.2*">
+                            <DataGridTextColumn.Binding>
+                                <MultiBinding StringFormat="{}{0}, {1}, {2}, {3}">
+                                    <Binding Path="Address.County" />
+                                    <Binding Path="Address.City" />
+                                    <Binding Path="Address.StreetName" />
+                                    <Binding Path="Address.StreetNumber" />
+                                </MultiBinding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Active" Binding="{Binding IsActive, Converter={valueConverters:BoolToStringConverter}}" Width=".4*" />
                     </DataGrid.Columns>
                 </DataGrid>
 

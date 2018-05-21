@@ -13,7 +13,13 @@
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class, new()
     {
+        #region Protected Members
+
         protected readonly DbSet<TEntity> dbSet;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class with the given value.
@@ -23,6 +29,10 @@
         {
             dbSet = dbContext.Set<TEntity>();
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Gets an entity based on an identificator.
@@ -97,5 +107,7 @@
         {
             dbSet.RemoveRange(entities);
         }
+
+        #endregion
     }
 }

@@ -16,5 +16,10 @@
         /// Gets the window view model.
         /// </summary>
         public static WindowViewModel WindowViewModel => IoCContainer.Get<WindowViewModel>();
+        
+        /// <summary>
+        /// Gets the application view model.
+        /// </summary>
+        public static ApplicationViewModel ApplicationViewModel => IoCContainer.Get<ApplicationViewModel>();
     }
 }
