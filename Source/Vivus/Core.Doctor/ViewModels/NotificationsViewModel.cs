@@ -83,7 +83,7 @@
                     return GetErrorString(propertyName, DoctorValidator.PersonTypeValidation(SelectedPersonType));
 
                 if (propertyName == nameof(SelectedPersonName))
-                    return GetErrorString(propertyName, DoctorValidator.PersonTypeValidation(SelectedPersonName));
+                    return GetErrorString(propertyName, DoctorValidator.PersonNameValidation(SelectedPersonName));
 
                 if (propertyName == nameof(NationalIdentificationNumber))
                     return GetErrorString(propertyName, DoctorValidator.NinValidation(NationalIdentificationNumber));

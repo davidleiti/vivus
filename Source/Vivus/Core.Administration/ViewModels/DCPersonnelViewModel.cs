@@ -142,16 +142,15 @@
             Items = new ObservableCollection<DCPItemViewModel>();
 
             // Test whether the binding was done right or not
-             SelectedTableItem = new DCPItemViewModel
-             {
-                 Id = 1,
-                 Name = "Alex",
-                 NationalIdentificationNumber = "12345",
-                 DonationCenter = "Fsega"
-             };
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Items.Add(SelectedTableItem);
+                Items.Add(new DCPItemViewModel
+                {
+                    Id = 1,
+                    Name = "Alex",
+                    NationalIdentificationNumber = "12345",
+                    DonationCenter = "Fsega"
+                });
             });
             
            

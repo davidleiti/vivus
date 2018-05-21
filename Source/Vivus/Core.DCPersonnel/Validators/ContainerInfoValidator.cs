@@ -10,7 +10,7 @@
         public static List<string> ContainerTypeValidation(BasicEntity<string> containerType)
         {
             if (containerType is null || containerType.Id < 0)
-                return new List<string> { "Container Type is mandatory" };
+                return new List<string> { "Container type is mandatory." };
 
             return null;
         }
@@ -18,7 +18,7 @@
         public static List<string> ContainerCodeValidation(string containerCode)
         {
             if (string.IsNullOrEmpty(containerCode))
-                return new List<string> { "Container Code is mandatory." };
+                return new List<string> { "Container code is mandatory." };
 
             if (containerCode.Length < 12)
                 return new List<string> { "Container code must have at least 12 characters." };

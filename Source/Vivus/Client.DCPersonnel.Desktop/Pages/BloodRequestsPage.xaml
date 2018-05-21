@@ -166,9 +166,8 @@
                     <!-- Donation center redirect -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Donation center redirect" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, ValidatesOnDataErrors=True}">
-                            <ComboBoxItem>Select donation center</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, ValidatesOnDataErrors=True}"/>
+
                     </StackPanel>
                     <!-- Continue -->
                     <Grid Grid.Column="2">

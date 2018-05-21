@@ -140,7 +140,7 @@
 			PersonTypes.Add(new BasicEntity<string>(1, "Doctor"));
 			PersonTypes.Add(new BasicEntity<string>(2, "DC Personnel"));
 			Persons = new ObservableCollection<BasicEntity<string>>();
-			Persons.Add(new BasicEntity<string>(-1, "Select a person"));
+			Persons.Add(new BasicEntity<string>(-1, "Select person name"));
 			Items = new ObservableCollection<NotificationViewModel>();
 			Application.Current.Dispatcher.Invoke(() => {
 				Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), "AP", "andreipopescu", new DateTime(2018, 4, 28), "This is dă message."));

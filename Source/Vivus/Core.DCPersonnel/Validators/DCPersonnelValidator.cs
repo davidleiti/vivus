@@ -94,5 +94,13 @@ namespace Vivus.Core.DCPersonnel.Validators
             return null;
             //return new List<string> { "Container type is invalid." };
         }
+        public static List<string> DonationCenterValidation(BasicEntity<string> donationCenter)
+        {
+            if (donationCenter==null||donationCenter.Id < 0)
+            {
+                return new List<string> { "Donation center field cannot be empty." };
+            }
+            return null;
+        }
     }
 }

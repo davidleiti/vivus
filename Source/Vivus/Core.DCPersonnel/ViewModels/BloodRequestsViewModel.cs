@@ -31,7 +31,7 @@
         private BasicEntity<string> containerType;
         private BasicEntity<string> containerCode;
         private DateTime harvestDate;
-        private string donationCenter;
+        private BasicEntity<string> donationCenter;
         #endregion
 
         #region Public properties
@@ -69,7 +69,7 @@
             }
         }
         private DateTime HarvestDate { get; }
-        public string DonationCenter
+        public BasicEntity<string> DonationCenter
         {
             get => donationCenter;
             set
@@ -87,7 +87,9 @@
                 if (propertyName == nameof(ContainerType))
                     return GetErrorString(propertyName, DCPersonnelValidator.ContainerTypeValidation(ContainerType));
                 if (propertyName == nameof(ContainerCode))
-                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(ContainerCode));
+                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(containerCode));
+                if (propertyName == nameof(DonationCenter))
+                    return GetErrorString(propertyName, DCPersonnelValidator.DonationCenterValidation(donationCenter));
                 return null;
             }
         }
@@ -108,6 +110,8 @@
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
             //ContainerTypes = new List<BasicEntity<string>> { };
             ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            DonationCenters = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
             AddCommand = new RelayCommand(addRequest);
             RemoveCommand = new RelayCommand(removeRequest);
             RedirectCommand = new RelayCommand(redirectRequest);

@@ -128,20 +128,20 @@
             return null;
         }
 
-        public static List<string> NotNullStringFieldValidation(BasicEntity<string> field)
+        public static List<string> NotNullStringFieldValidation(BasicEntity<string> field, string message)
         {
             if (field is null || field.Id < 0)
-                return new List<string> { "This field is mandatory." };
+                return new List<string> { message + " field is mandatory." };
 
             return null;
         }
 
-        public static List<string> NotNullIntegerFieldValidation(int? field)
+        public static List<string> NotNullIntegerFieldValidation(int? field, string message)
         {
             if (field is null)
-                return new List<string> { "This field is mandatory." };
+                return new List<string> { message + " field is mandatory." };
             else if (field < 0)
-                return new List<string> { "This field must be positive." };
+                return new List<string> { message + " field must be positive." };
 
             return null;
         }
