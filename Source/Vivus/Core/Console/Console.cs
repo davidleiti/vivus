@@ -41,5 +41,14 @@ namespace Vivus.Core.Console
 
             System.Console.Write(message);
         }
+
+        /// <summary>
+        /// Obtains the next character or function key pressed by the user. The pressed key is displayed in the console window.
+        /// </summary>
+        /// <returns></returns>
+        public static ConsoleKeyInfo ReadKey()
+        {
+            return System.Console.ReadKey();
+        }
     }
 }
