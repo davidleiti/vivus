@@ -15,7 +15,7 @@
         /// <summary>
         /// Populates the counties table.
         /// </summary>
-        public static void Couties()
+        public static void Counties()
         {
             // Delete all the counties
             unitOfWork.Counties.Entities.ToList().ForEach(c => unitOfWork.Counties.Remove(c));

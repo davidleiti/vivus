@@ -13,7 +13,7 @@
         /// <param name="args">The console parameters.</param>
         private static void Main(string[] args)
         {
-            //Populate.Couties();
+            //Populate.Counties();
             //Populate.Genders();
             //Populate.BloodContainerTypes();
             //Populate.BloodTypes();
