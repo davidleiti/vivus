@@ -20,10 +20,10 @@ namespace Vivus.Core.Model
             this.DonationForms = new HashSet<DonationForm>();
         }
     
-        public bool Active { get; set; }
-        public int DonationCenterID { get; set; }
         public int PersonID { get; set; }
-        public int Account_AccountID { get; set; }
+        public int AccountID { get; set; }
+        public int DonationCenterID { get; set; }
+        public bool Active { get; set; }
     
         public virtual Account Account { get; set; }
         public virtual Person Person { get; set; }

@@ -19,6 +19,7 @@ namespace Vivus.Core.Model
         {
             this.Doctors = new HashSet<Doctor>();
             this.DonationCenters = new HashSet<DonationCenter>();
+            this.Donors = new HashSet<Donor>();
             this.Persons = new HashSet<Person>();
         }
     
@@ -28,14 +29,14 @@ namespace Vivus.Core.Model
         public string City { get; set; }
         public int CountyID { get; set; }
         public string ZipCode { get; set; }
-        public int Donor_PersonID { get; set; }
     
         public virtual County County { get; set; }
-        public virtual Donor Donor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Doctor> Doctors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationCenter> DonationCenters { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Donor> Donors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Person> Persons { get; set; }
     }

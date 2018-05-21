@@ -21,7 +21,7 @@ namespace Vivus.Core.Model
         }
     
         public int RequestPriorityID { get; set; }
-        public string Priority { get; set; }
+        public string Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodRequest> BloodRequests { get; set; }

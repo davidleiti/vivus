@@ -17,16 +17,15 @@ namespace Vivus.Core.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Donor()
         {
-            this.Addresses = new HashSet<Address>();
             this.DonationForms = new HashSet<DonationForm>();
         }
     
         public int PersonID { get; set; }
-        public int Account_AccountID { get; set; }
+        public int AccountID { get; set; }
+        public int ResidenceID { get; set; }
     
         public virtual Account Account { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual Address Address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationForm> DonationForms { get; set; }
         public virtual Person Person { get; set; }

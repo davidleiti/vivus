@@ -21,7 +21,7 @@ namespace Vivus.Core.Model
         }
     
         public int PersonStatusID { get; set; }
-        public string Status { get; set; }
+        public string Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Patient> Patients { get; set; }

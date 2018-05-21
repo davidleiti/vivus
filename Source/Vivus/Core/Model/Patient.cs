@@ -20,11 +20,11 @@ namespace Vivus.Core.Model
             this.BloodRequests = new HashSet<BloodRequest>();
         }
     
+        public int PersonID { get; set; }
         public int PersonStatusID { get; set; }
         public int RhID { get; set; }
         public int BloodTypeID { get; set; }
         public int DoctorID { get; set; }
-        public int PersonID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodRequest> BloodRequests { get; set; }

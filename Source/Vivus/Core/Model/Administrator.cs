@@ -14,10 +14,10 @@ namespace Vivus.Core.Model
     
     public partial class Administrator
     {
+        public int PersonID { get; set; }
+        public int AccountID { get; set; }
         public bool IsOwner { get; set; }
         public bool Active { get; set; }
-        public int PersonID { get; set; }
-        public int Account_AccountID { get; set; }
     
         public virtual Account Account { get; set; }
         public virtual Person Person { get; set; }

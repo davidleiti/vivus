@@ -22,7 +22,7 @@ namespace Vivus.Core.Model
         }
     
         public int RhID { get; set; }
-        public decimal Value { get; set; }
+        public string Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodContainer> BloodContainers { get; set; }
