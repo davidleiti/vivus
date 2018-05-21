@@ -34,8 +34,8 @@ namespace DBModel
         public virtual ICollection<Person> Person { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationCenter> DonationCenter { get; set; }
-        public virtual Donor Donor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Doctor> Doctor { get; set; }
+        public virtual Donor Donor { get; set; }
     }
 }

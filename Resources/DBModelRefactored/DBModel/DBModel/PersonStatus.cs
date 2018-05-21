@@ -21,7 +21,7 @@ namespace DBModel
         }
     
         public int PersonStatusID { get; set; }
-        public string Status { get; set; }
+        public System.TimeSpan Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Patient> Patient { get; set; }

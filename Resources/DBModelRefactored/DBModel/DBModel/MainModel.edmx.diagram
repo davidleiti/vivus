@@ -51,7 +51,6 @@
         <AssociationConnector Association="MainModel.PersonMessage" />
         <AssociationConnector Association="MainModel.PersonMessage1" />
         <EntityTypeShape EntityType="MainModel.Administrator" Width="1.5" PointX="17.25" PointY="5.875" />
-        <AssociationConnector Association="MainModel.AddressDonor" />
         <AssociationConnector Association="MainModel.DoctorAccount" />
         <AssociationConnector Association="MainModel.DCPersonnelAccount" />
         <AssociationConnector Association="MainModel.DonorAccount" />
@@ -59,6 +58,7 @@
         <InheritanceConnector EntityType="MainModel.Administrator" />
         <AssociationConnector Association="MainModel.BloodContainerBloodType" />
         <AssociationConnector Association="MainModel.AdministratorAccount" />
+        <AssociationConnector Association="MainModel.DonorAddress" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

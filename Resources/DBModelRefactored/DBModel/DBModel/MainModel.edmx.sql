@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/17/2018 21:17:50
+-- Date Created: 05/21/2018 03:02:08
 -- Generated from EDMX file: D:\Git Repostories\vivus\Resources\DBModelRefactored\DBModel\DBModel\MainModel.edmx
 -- --------------------------------------------------
 
@@ -27,16 +27,16 @@ IF OBJECT_ID(N'[dbo].[FK_PersonAddress]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Persons] DROP CONSTRAINT [FK_PersonAddress];
 GO
 IF OBJECT_ID(N'[dbo].[FK_PatientPersonStatus]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_PatientPersonStatus];
+    ALTER TABLE [dbo].[Patients] DROP CONSTRAINT [FK_PatientPersonStatus];
 GO
 IF OBJECT_ID(N'[dbo].[FK_RHPatient]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_RHPatient];
+    ALTER TABLE [dbo].[Patients] DROP CONSTRAINT [FK_RHPatient];
 GO
 IF OBJECT_ID(N'[dbo].[FK_BloodTypePatient]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_BloodTypePatient];
+    ALTER TABLE [dbo].[Patients] DROP CONSTRAINT [FK_BloodTypePatient];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DoctorPatient]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_DoctorPatient];
+    ALTER TABLE [dbo].[Patients] DROP CONSTRAINT [FK_DoctorPatient];
 GO
 IF OBJECT_ID(N'[dbo].[FK_BloodContainerRH]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[BloodContainers] DROP CONSTRAINT [FK_BloodContainerRH];
@@ -69,7 +69,7 @@ IF OBJECT_ID(N'[dbo].[FK_BloodRequestBloodContainer]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[BloodContainers] DROP CONSTRAINT [FK_BloodRequestBloodContainer];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DCPersonnelDonationCenter]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_DCPersonnel] DROP CONSTRAINT [FK_DCPersonnelDonationCenter];
+    ALTER TABLE [dbo].[DCPersonnel] DROP CONSTRAINT [FK_DCPersonnelDonationCenter];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DonationFormDCPersonnel]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DonationForms] DROP CONSTRAINT [FK_DonationFormDCPersonnel];
@@ -83,35 +83,41 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_PersonMessage1]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Messages] DROP CONSTRAINT [FK_PersonMessage1];
 GO
-IF OBJECT_ID(N'[dbo].[FK_AddressDonor]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Addresses] DROP CONSTRAINT [FK_AddressDonor];
-GO
 IF OBJECT_ID(N'[dbo].[FK_DoctorAccount]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Doctor] DROP CONSTRAINT [FK_DoctorAccount];
+    ALTER TABLE [dbo].[Doctors] DROP CONSTRAINT [FK_DoctorAccount];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DCPersonnelAccount]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_DCPersonnel] DROP CONSTRAINT [FK_DCPersonnelAccount];
+    ALTER TABLE [dbo].[DCPersonnel] DROP CONSTRAINT [FK_DCPersonnelAccount];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DonorAccount]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Accounts] DROP CONSTRAINT [FK_DonorAccount];
+    ALTER TABLE [dbo].[Donors] DROP CONSTRAINT [FK_DonorAccount];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DoctorAddress]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Doctor] DROP CONSTRAINT [FK_DoctorAddress];
+    ALTER TABLE [dbo].[Doctors] DROP CONSTRAINT [FK_DoctorAddress];
+GO
+IF OBJECT_ID(N'[dbo].[FK_BloodContainerBloodType]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[BloodContainers] DROP CONSTRAINT [FK_BloodContainerBloodType];
+GO
+IF OBJECT_ID(N'[dbo].[FK_AdministratorAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Administrators] DROP CONSTRAINT [FK_AdministratorAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DonorAddress]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Donors] DROP CONSTRAINT [FK_DonorAddress];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Patient_inherits_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Patient] DROP CONSTRAINT [FK_Patient_inherits_Person];
+    ALTER TABLE [dbo].[Patients] DROP CONSTRAINT [FK_Patient_inherits_Person];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Doctor_inherits_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Doctor] DROP CONSTRAINT [FK_Doctor_inherits_Person];
+    ALTER TABLE [dbo].[Doctors] DROP CONSTRAINT [FK_Doctor_inherits_Person];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DCPersonnel_inherits_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_DCPersonnel] DROP CONSTRAINT [FK_DCPersonnel_inherits_Person];
+    ALTER TABLE [dbo].[DCPersonnel] DROP CONSTRAINT [FK_DCPersonnel_inherits_Person];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Donor_inherits_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Donor] DROP CONSTRAINT [FK_Donor_inherits_Person];
+    ALTER TABLE [dbo].[Donors] DROP CONSTRAINT [FK_Donor_inherits_Person];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Administrator_inherits_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Persons_Administrator] DROP CONSTRAINT [FK_Administrator_inherits_Person];
+    ALTER TABLE [dbo].[Administrators] DROP CONSTRAINT [FK_Administrator_inherits_Person];
 GO
 
 -- --------------------------------------------------
@@ -148,8 +154,8 @@ GO
 IF OBJECT_ID(N'[dbo].[BloodContainers]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BloodContainers];
 GO
-IF OBJECT_ID(N'[dbo].[ContainerTypes]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[ContainerTypes];
+IF OBJECT_ID(N'[dbo].[BloodContainerTypes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[BloodContainerTypes];
 GO
 IF OBJECT_ID(N'[dbo].[BloodRequests]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BloodRequests];
@@ -163,20 +169,20 @@ GO
 IF OBJECT_ID(N'[dbo].[Messages]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Messages];
 GO
-IF OBJECT_ID(N'[dbo].[Persons_Patient]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Persons_Patient];
+IF OBJECT_ID(N'[dbo].[Patients]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Patients];
 GO
-IF OBJECT_ID(N'[dbo].[Persons_Doctor]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Persons_Doctor];
+IF OBJECT_ID(N'[dbo].[Doctors]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Doctors];
 GO
-IF OBJECT_ID(N'[dbo].[Persons_DCPersonnel]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Persons_DCPersonnel];
+IF OBJECT_ID(N'[dbo].[DCPersonnel]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DCPersonnel];
 GO
-IF OBJECT_ID(N'[dbo].[Persons_Donor]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Persons_Donor];
+IF OBJECT_ID(N'[dbo].[Donors]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Donors];
 GO
-IF OBJECT_ID(N'[dbo].[Persons_Administrator]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Persons_Administrator];
+IF OBJECT_ID(N'[dbo].[Administrators]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Administrators];
 GO
 IF OBJECT_ID(N'[dbo].[BloodRequestDonationCenter]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BloodRequestDonationCenter];
@@ -188,7 +194,7 @@ GO
 
 -- Creating table 'Accounts'
 CREATE TABLE [dbo].[Accounts] (
-    [AccountID] int IDENTITY(1,1) NOT NULL,
+    [AccountID] int IDENTITY(0,1) NOT NULL,
     [Email] nvarchar(max)  NOT NULL,
     [Password] nvarchar(max)  NOT NULL
 );
@@ -196,26 +202,25 @@ GO
 
 -- Creating table 'Counties'
 CREATE TABLE [dbo].[Counties] (
-    [CountyID] int IDENTITY(1,1) NOT NULL,
+    [CountyID] int IDENTITY(0,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'Addresses'
 CREATE TABLE [dbo].[Addresses] (
-    [AddressID] int IDENTITY(1,1) NOT NULL,
+    [AddressID] int IDENTITY(0,1) NOT NULL,
     [Street] nvarchar(max)  NOT NULL,
-    [StreetNo] nvarchar(6)  NOT NULL,
+    [StreetNo] nvarchar(max)  NOT NULL,
     [City] nvarchar(max)  NOT NULL,
     [CountyID] int  NOT NULL,
-    [ZipCode] nvarchar(max)  NOT NULL,
-    [Donor_PersonID] int  NOT NULL
+    [ZipCode] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'Persons'
 CREATE TABLE [dbo].[Persons] (
-    [PersonID] int IDENTITY(1,1) NOT NULL,
+    [PersonID] int IDENTITY(0,1) NOT NULL,
     [FirstName] nvarchar(max)  NOT NULL,
     [LastName] nvarchar(max)  NOT NULL,
     [BirthDate] datetime  NOT NULL,
@@ -228,35 +233,35 @@ GO
 
 -- Creating table 'Genders'
 CREATE TABLE [dbo].[Genders] (
-    [GenderID] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL
+    [GenderID] int IDENTITY(0,1) NOT NULL,
+    [Type] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'RHs'
 CREATE TABLE [dbo].[RHs] (
-    [RhID] int IDENTITY(1,1) NOT NULL,
-    [Value] decimal(18,0)  NOT NULL
+    [RhID] int IDENTITY(0,1) NOT NULL,
+    [Type] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'BloodTypes'
 CREATE TABLE [dbo].[BloodTypes] (
-    [BloodTypeID] int IDENTITY(1,1) NOT NULL,
+    [BloodTypeID] int IDENTITY(0,1) NOT NULL,
     [Type] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'PersonStatuses'
 CREATE TABLE [dbo].[PersonStatuses] (
-    [PersonStatusID] int IDENTITY(1,1) NOT NULL,
-    [Status] nvarchar(max)  NOT NULL
+    [PersonStatusID] int IDENTITY(0,1) NOT NULL,
+    [Type] time  NOT NULL
 );
 GO
 
 -- Creating table 'DonationCenters'
 CREATE TABLE [dbo].[DonationCenters] (
-    [DonationCenterID] int IDENTITY(1,1) NOT NULL,
+    [DonationCenterID] int IDENTITY(0,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [AddressID] int  NOT NULL
 );
@@ -264,7 +269,7 @@ GO
 
 -- Creating table 'BloodContainers'
 CREATE TABLE [dbo].[BloodContainers] (
-    [BloodContainerID] int IDENTITY(1,1) NOT NULL,
+    [BloodContainerID] int IDENTITY(0,1) NOT NULL,
     [HarvestDate] datetime  NOT NULL,
     [RhID] int  NOT NULL,
     [ContainerCode] nvarchar(max)  NOT NULL,
@@ -277,14 +282,14 @@ GO
 
 -- Creating table 'BloodContainerTypes'
 CREATE TABLE [dbo].[BloodContainerTypes] (
-    [ContainerTypeID] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL
+    [ContainerTypeID] int IDENTITY(0,1) NOT NULL,
+    [Type] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'BloodRequests'
 CREATE TABLE [dbo].[BloodRequests] (
-    [BloodRequestID] int IDENTITY(1,1) NOT NULL,
+    [BloodRequestID] int IDENTITY(0,1) NOT NULL,
     [ThrombocytesQuantity] int  NOT NULL,
     [RedCellsQuantity] int  NOT NULL,
     [PlasmaQuantity] int  NOT NULL,
@@ -296,22 +301,22 @@ GO
 
 -- Creating table 'RequestPriorities'
 CREATE TABLE [dbo].[RequestPriorities] (
-    [RequestPriorityID] int IDENTITY(1,1) NOT NULL,
-    [Priority] nvarchar(max)  NOT NULL
+    [RequestPriorityID] int IDENTITY(0,1) NOT NULL,
+    [Type] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'DonationForms'
 CREATE TABLE [dbo].[DonationForms] (
-    [DonationFormID] int IDENTITY(1,1) NOT NULL,
-    [TravelStatus] nvarchar(256)  NULL,
+    [DonationFormID] int IDENTITY(0,1) NOT NULL,
     [DCPersonnelID] int  NOT NULL,
     [DonorID] int  NOT NULL,
     [Weight] int  NOT NULL,
     [HeartRate] int  NOT NULL,
     [SystolicBloodPressure] int  NOT NULL,
     [DiastolicBloodPressure] int  NOT NULL,
-    [PastSurgeries] nvarchar(256)  NULL,
+    [PastSurgeries] nvarchar(max)  NULL,
+    [TravelStatus] nvarchar(max)  NULL,
     [ApplyDate] datetime  NOT NULL,
     [DonationDate] datetime  NULL
 );
@@ -319,55 +324,56 @@ GO
 
 -- Creating table 'Messages'
 CREATE TABLE [dbo].[Messages] (
-    [MessageID] int IDENTITY(1,1) NOT NULL,
+    [MessageID] int IDENTITY(0,1) NOT NULL,
     [SenderID] int  NOT NULL,
     [RecieverID] int  NOT NULL,
     [SendDate] datetime  NOT NULL,
-    [Content] nvarchar(256)  NOT NULL
+    [Content] nvarchar(max)  NOT NULL
 );
 GO
 
--- Creating table 'Persons_Patient'
-CREATE TABLE [dbo].[Persons_Patient] (
+-- Creating table 'Patients'
+CREATE TABLE [dbo].[Patients] (
+    [PersonID] int  NOT NULL,
     [PersonStatusID] int  NOT NULL,
     [RhID] int  NOT NULL,
     [BloodTypeID] int  NOT NULL,
-    [DoctorID] int  NOT NULL,
-    [PersonID] int  NOT NULL
+    [DoctorID] int  NOT NULL
 );
 GO
 
--- Creating table 'Persons_Doctor'
-CREATE TABLE [dbo].[Persons_Doctor] (
-    [Active] bit  NOT NULL,
-    [WorkAddressID] int  NOT NULL,
+-- Creating table 'Doctors'
+CREATE TABLE [dbo].[Doctors] (
     [PersonID] int  NOT NULL,
-    [Account_AccountID] int  NOT NULL
+    [AccountID] int  NOT NULL,
+    [Active] bit  NOT NULL,
+    [WorkAddressID] int  NOT NULL
 );
 GO
 
--- Creating table 'Persons_DCPersonnel'
-CREATE TABLE [dbo].[Persons_DCPersonnel] (
-    [Active] bit  NOT NULL,
+-- Creating table 'DCPersonnel'
+CREATE TABLE [dbo].[DCPersonnel] (
+    [PersonID] int  NOT NULL,
+    [AccountID] int  NOT NULL,
     [DonationCenterID] int  NOT NULL,
-    [PersonID] int  NOT NULL,
-    [Account_AccountID] int  NOT NULL
+    [Active] bit  NOT NULL
 );
 GO
 
--- Creating table 'Persons_Donor'
-CREATE TABLE [dbo].[Persons_Donor] (
+-- Creating table 'Donors'
+CREATE TABLE [dbo].[Donors] (
     [PersonID] int  NOT NULL,
-    [Account_AccountID] int  NOT NULL
+    [AccountID] int  NOT NULL,
+    [ResidenceID] int  NOT NULL
 );
 GO
 
--- Creating table 'Persons_Administrator'
-CREATE TABLE [dbo].[Persons_Administrator] (
+-- Creating table 'Administrators'
+CREATE TABLE [dbo].[Administrators] (
+    [PersonID] int  NOT NULL,
+    [AccountID] int  NOT NULL,
     [IsOwner] bit  NOT NULL,
-    [Active] bit  NOT NULL,
-    [PersonID] int  NOT NULL,
-    [Account_AccountID] int  NOT NULL
+    [Active] bit  NOT NULL
 );
 GO
 
@@ -472,33 +478,33 @@ ADD CONSTRAINT [PK_Messages]
     PRIMARY KEY CLUSTERED ([MessageID] ASC);
 GO
 
--- Creating primary key on [PersonID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
-ADD CONSTRAINT [PK_Persons_Patient]
+-- Creating primary key on [PersonID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
+ADD CONSTRAINT [PK_Patients]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
--- Creating primary key on [PersonID] in table 'Persons_Doctor'
-ALTER TABLE [dbo].[Persons_Doctor]
-ADD CONSTRAINT [PK_Persons_Doctor]
+-- Creating primary key on [PersonID] in table 'Doctors'
+ALTER TABLE [dbo].[Doctors]
+ADD CONSTRAINT [PK_Doctors]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
--- Creating primary key on [PersonID] in table 'Persons_DCPersonnel'
-ALTER TABLE [dbo].[Persons_DCPersonnel]
-ADD CONSTRAINT [PK_Persons_DCPersonnel]
+-- Creating primary key on [PersonID] in table 'DCPersonnel'
+ALTER TABLE [dbo].[DCPersonnel]
+ADD CONSTRAINT [PK_DCPersonnel]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
--- Creating primary key on [PersonID] in table 'Persons_Donor'
-ALTER TABLE [dbo].[Persons_Donor]
-ADD CONSTRAINT [PK_Persons_Donor]
+-- Creating primary key on [PersonID] in table 'Donors'
+ALTER TABLE [dbo].[Donors]
+ADD CONSTRAINT [PK_Donors]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
--- Creating primary key on [PersonID] in table 'Persons_Administrator'
-ALTER TABLE [dbo].[Persons_Administrator]
-ADD CONSTRAINT [PK_Persons_Administrator]
+-- Creating primary key on [PersonID] in table 'Administrators'
+ALTER TABLE [dbo].[Administrators]
+ADD CONSTRAINT [PK_Administrators]
     PRIMARY KEY CLUSTERED ([PersonID] ASC);
 GO
 
@@ -557,8 +563,8 @@ ON [dbo].[Persons]
     ([AddressID]);
 GO
 
--- Creating foreign key on [PersonStatusID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
+-- Creating foreign key on [PersonStatusID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
 ADD CONSTRAINT [FK_PatientPersonStatus]
     FOREIGN KEY ([PersonStatusID])
     REFERENCES [dbo].[PersonStatuses]
@@ -568,12 +574,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_PatientPersonStatus'
 CREATE INDEX [IX_FK_PatientPersonStatus]
-ON [dbo].[Persons_Patient]
+ON [dbo].[Patients]
     ([PersonStatusID]);
 GO
 
--- Creating foreign key on [RhID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
+-- Creating foreign key on [RhID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
 ADD CONSTRAINT [FK_RHPatient]
     FOREIGN KEY ([RhID])
     REFERENCES [dbo].[RHs]
@@ -583,12 +589,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_RHPatient'
 CREATE INDEX [IX_FK_RHPatient]
-ON [dbo].[Persons_Patient]
+ON [dbo].[Patients]
     ([RhID]);
 GO
 
--- Creating foreign key on [BloodTypeID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
+-- Creating foreign key on [BloodTypeID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
 ADD CONSTRAINT [FK_BloodTypePatient]
     FOREIGN KEY ([BloodTypeID])
     REFERENCES [dbo].[BloodTypes]
@@ -598,22 +604,22 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_BloodTypePatient'
 CREATE INDEX [IX_FK_BloodTypePatient]
-ON [dbo].[Persons_Patient]
+ON [dbo].[Patients]
     ([BloodTypeID]);
 GO
 
--- Creating foreign key on [DoctorID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
+-- Creating foreign key on [DoctorID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
 ADD CONSTRAINT [FK_DoctorPatient]
     FOREIGN KEY ([DoctorID])
-    REFERENCES [dbo].[Persons_Doctor]
+    REFERENCES [dbo].[Doctors]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DoctorPatient'
 CREATE INDEX [IX_FK_DoctorPatient]
-ON [dbo].[Persons_Patient]
+ON [dbo].[Patients]
     ([DoctorID]);
 GO
 
@@ -681,7 +687,7 @@ GO
 ALTER TABLE [dbo].[BloodRequests]
 ADD CONSTRAINT [FK_BloodRequestPatient]
     FOREIGN KEY ([PatientID])
-    REFERENCES [dbo].[Persons_Patient]
+    REFERENCES [dbo].[Patients]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -696,7 +702,7 @@ GO
 ALTER TABLE [dbo].[BloodRequests]
 ADD CONSTRAINT [FK_BloodRequestDoctor]
     FOREIGN KEY ([DoctorID])
-    REFERENCES [dbo].[Persons_Doctor]
+    REFERENCES [dbo].[Doctors]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -761,8 +767,8 @@ ON [dbo].[BloodContainers]
     ([BloodRequestID]);
 GO
 
--- Creating foreign key on [DonationCenterID] in table 'Persons_DCPersonnel'
-ALTER TABLE [dbo].[Persons_DCPersonnel]
+-- Creating foreign key on [DonationCenterID] in table 'DCPersonnel'
+ALTER TABLE [dbo].[DCPersonnel]
 ADD CONSTRAINT [FK_DCPersonnelDonationCenter]
     FOREIGN KEY ([DonationCenterID])
     REFERENCES [dbo].[DonationCenters]
@@ -772,7 +778,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DCPersonnelDonationCenter'
 CREATE INDEX [IX_FK_DCPersonnelDonationCenter]
-ON [dbo].[Persons_DCPersonnel]
+ON [dbo].[DCPersonnel]
     ([DonationCenterID]);
 GO
 
@@ -780,7 +786,7 @@ GO
 ALTER TABLE [dbo].[DonationForms]
 ADD CONSTRAINT [FK_DonationFormDCPersonnel]
     FOREIGN KEY ([DCPersonnelID])
-    REFERENCES [dbo].[Persons_DCPersonnel]
+    REFERENCES [dbo].[DCPersonnel]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -795,7 +801,7 @@ GO
 ALTER TABLE [dbo].[DonationForms]
 ADD CONSTRAINT [FK_DonationFormDonor]
     FOREIGN KEY ([DonorID])
-    REFERENCES [dbo].[Persons_Donor]
+    REFERENCES [dbo].[Donors]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -836,25 +842,10 @@ ON [dbo].[Messages]
     ([RecieverID]);
 GO
 
--- Creating foreign key on [Donor_PersonID] in table 'Addresses'
-ALTER TABLE [dbo].[Addresses]
-ADD CONSTRAINT [FK_AddressDonor]
-    FOREIGN KEY ([Donor_PersonID])
-    REFERENCES [dbo].[Persons_Donor]
-        ([PersonID])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_AddressDonor'
-CREATE INDEX [IX_FK_AddressDonor]
-ON [dbo].[Addresses]
-    ([Donor_PersonID]);
-GO
-
--- Creating foreign key on [Account_AccountID] in table 'Persons_Doctor'
-ALTER TABLE [dbo].[Persons_Doctor]
+-- Creating foreign key on [AccountID] in table 'Doctors'
+ALTER TABLE [dbo].[Doctors]
 ADD CONSTRAINT [FK_DoctorAccount]
-    FOREIGN KEY ([Account_AccountID])
+    FOREIGN KEY ([AccountID])
     REFERENCES [dbo].[Accounts]
         ([AccountID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -862,14 +853,14 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DoctorAccount'
 CREATE INDEX [IX_FK_DoctorAccount]
-ON [dbo].[Persons_Doctor]
-    ([Account_AccountID]);
+ON [dbo].[Doctors]
+    ([AccountID]);
 GO
 
--- Creating foreign key on [Account_AccountID] in table 'Persons_DCPersonnel'
-ALTER TABLE [dbo].[Persons_DCPersonnel]
+-- Creating foreign key on [AccountID] in table 'DCPersonnel'
+ALTER TABLE [dbo].[DCPersonnel]
 ADD CONSTRAINT [FK_DCPersonnelAccount]
-    FOREIGN KEY ([Account_AccountID])
+    FOREIGN KEY ([AccountID])
     REFERENCES [dbo].[Accounts]
         ([AccountID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -877,14 +868,14 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DCPersonnelAccount'
 CREATE INDEX [IX_FK_DCPersonnelAccount]
-ON [dbo].[Persons_DCPersonnel]
-    ([Account_AccountID]);
+ON [dbo].[DCPersonnel]
+    ([AccountID]);
 GO
 
--- Creating foreign key on [Account_AccountID] in table 'Persons_Donor'
-ALTER TABLE [dbo].[Persons_Donor]
+-- Creating foreign key on [AccountID] in table 'Donors'
+ALTER TABLE [dbo].[Donors]
 ADD CONSTRAINT [FK_DonorAccount]
-    FOREIGN KEY ([Account_AccountID])
+    FOREIGN KEY ([AccountID])
     REFERENCES [dbo].[Accounts]
         ([AccountID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -892,12 +883,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DonorAccount'
 CREATE INDEX [IX_FK_DonorAccount]
-ON [dbo].[Persons_Donor]
-    ([Account_AccountID]);
+ON [dbo].[Donors]
+    ([AccountID]);
 GO
 
--- Creating foreign key on [WorkAddressID] in table 'Persons_Doctor'
-ALTER TABLE [dbo].[Persons_Doctor]
+-- Creating foreign key on [WorkAddressID] in table 'Doctors'
+ALTER TABLE [dbo].[Doctors]
 ADD CONSTRAINT [FK_DoctorAddress]
     FOREIGN KEY ([WorkAddressID])
     REFERENCES [dbo].[Addresses]
@@ -907,7 +898,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DoctorAddress'
 CREATE INDEX [IX_FK_DoctorAddress]
-ON [dbo].[Persons_Doctor]
+ON [dbo].[Doctors]
     ([WorkAddressID]);
 GO
 
@@ -926,10 +917,10 @@ ON [dbo].[BloodContainers]
     ([BloodTypeID]);
 GO
 
--- Creating foreign key on [Account_AccountID] in table 'Persons_Administrator'
-ALTER TABLE [dbo].[Persons_Administrator]
+-- Creating foreign key on [AccountID] in table 'Administrators'
+ALTER TABLE [dbo].[Administrators]
 ADD CONSTRAINT [FK_AdministratorAccount]
-    FOREIGN KEY ([Account_AccountID])
+    FOREIGN KEY ([AccountID])
     REFERENCES [dbo].[Accounts]
         ([AccountID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -937,12 +928,27 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_AdministratorAccount'
 CREATE INDEX [IX_FK_AdministratorAccount]
-ON [dbo].[Persons_Administrator]
-    ([Account_AccountID]);
+ON [dbo].[Administrators]
+    ([AccountID]);
 GO
 
--- Creating foreign key on [PersonID] in table 'Persons_Patient'
-ALTER TABLE [dbo].[Persons_Patient]
+-- Creating foreign key on [ResidenceID] in table 'Donors'
+ALTER TABLE [dbo].[Donors]
+ADD CONSTRAINT [FK_DonorAddress]
+    FOREIGN KEY ([ResidenceID])
+    REFERENCES [dbo].[Addresses]
+        ([AddressID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DonorAddress'
+CREATE INDEX [IX_FK_DonorAddress]
+ON [dbo].[Donors]
+    ([ResidenceID]);
+GO
+
+-- Creating foreign key on [PersonID] in table 'Patients'
+ALTER TABLE [dbo].[Patients]
 ADD CONSTRAINT [FK_Patient_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
@@ -950,8 +956,8 @@ ADD CONSTRAINT [FK_Patient_inherits_Person]
     ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [PersonID] in table 'Persons_Doctor'
-ALTER TABLE [dbo].[Persons_Doctor]
+-- Creating foreign key on [PersonID] in table 'Doctors'
+ALTER TABLE [dbo].[Doctors]
 ADD CONSTRAINT [FK_Doctor_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
@@ -959,8 +965,8 @@ ADD CONSTRAINT [FK_Doctor_inherits_Person]
     ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [PersonID] in table 'Persons_DCPersonnel'
-ALTER TABLE [dbo].[Persons_DCPersonnel]
+-- Creating foreign key on [PersonID] in table 'DCPersonnel'
+ALTER TABLE [dbo].[DCPersonnel]
 ADD CONSTRAINT [FK_DCPersonnel_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
@@ -968,8 +974,8 @@ ADD CONSTRAINT [FK_DCPersonnel_inherits_Person]
     ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [PersonID] in table 'Persons_Donor'
-ALTER TABLE [dbo].[Persons_Donor]
+-- Creating foreign key on [PersonID] in table 'Donors'
+ALTER TABLE [dbo].[Donors]
 ADD CONSTRAINT [FK_Donor_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
@@ -977,8 +983,8 @@ ADD CONSTRAINT [FK_Donor_inherits_Person]
     ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [PersonID] in table 'Persons_Administrator'
-ALTER TABLE [dbo].[Persons_Administrator]
+-- Creating foreign key on [PersonID] in table 'Administrators'
+ALTER TABLE [dbo].[Administrators]
 ADD CONSTRAINT [FK_Administrator_inherits_Person]
     FOREIGN KEY ([PersonID])
     REFERENCES [dbo].[Persons]
