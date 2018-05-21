@@ -37,15 +37,15 @@
                         <PasswordBox x:Name="pbPassword"  Tag="Password" CacheMode="{Binding Password, Mode=OneWayToSource, ValidatesOnDataErrors=True}" MaxLength="32" />
                     </StackPanel>
                 </Grid>
-                <!-- Person status -->
-                <Grid>
+                <!-- Doctor status -->
+                <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="38" />
+                        <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Person status" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <CheckBox x:Name="chbStatus" Grid.Row="1" Content="Active" IsChecked="{Binding Status}" HorizontalAlignment="Left" />
+                    <TextBlock Text="Doctor status" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                    <CheckBox x:Name="cbIsAdministrator" Grid.Row="1" Content="Active" IsChecked="{Binding Status}" HorizontalAlignment="Left" />
                 </Grid>
 
                 <!-- Separator -->
