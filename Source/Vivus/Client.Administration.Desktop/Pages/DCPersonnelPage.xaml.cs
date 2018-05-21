@@ -46,7 +46,6 @@
             tbAddressStreetNo.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbAddressCity.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             cbAddressCounty.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            tbAddressZipCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
         }
     }
 }
