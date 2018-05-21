@@ -10,6 +10,9 @@
     /// </summary>
     static class Populate
     {
+        /// <summary>
+        /// The <see cref="IUnitOfWork"/> used in populating the database.
+        /// </summary>
         private static IUnitOfWork unitOfWork = new UnitOfWork(new VivusEntities());
 
         /// <summary>
