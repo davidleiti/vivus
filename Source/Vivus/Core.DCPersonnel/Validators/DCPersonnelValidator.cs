@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security;
+using Vivus.Core.DataModels;
 
 namespace Vivus.Core.DCPersonnel.Validators
 {
@@ -91,6 +92,14 @@ namespace Vivus.Core.DCPersonnel.Validators
                 return new List<string> { "Container code is invalid." };
             return null;
             //return new List<string> { "Container type is invalid." };
+        }
+        public static List<string> DonationCenterValidation(BasicEntity<string> donationCenter)
+        {
+            if (donationCenter==null||donationCenter.Id < 0)
+            {
+                return new List<string> { "Donation center field cannot be empty." };
+            }
+            return null;
         }
     }
 }
