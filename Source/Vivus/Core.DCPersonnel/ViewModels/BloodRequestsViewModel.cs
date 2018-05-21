@@ -28,8 +28,8 @@
         private int? currentRedCells;
         private string priority;
         private string bloodType;
-        private string containerType;
-        private string containerCode;
+        private BasicEntity<string> containerType;
+        private BasicEntity<string> containerCode;
         private DateTime harvestDate;
         private string donationCenter;
         #endregion
@@ -47,7 +47,7 @@
         public int? CurrentRedCells { get; }
         public string Priority { get; }
         public string BloodType { get; }
-        public string ContainerType
+        public BasicEntity<string> ContainerType
         {
             get => containerType;
             set
@@ -57,7 +57,7 @@
                 OnPropertyChanged();
             }
         }
-        public string ContainerCode
+        public BasicEntity<string> ContainerCode
         {
             get => containerCode;
             set
@@ -87,7 +87,7 @@
                 if (propertyName == nameof(ContainerType))
                     return GetErrorString(propertyName, DCPersonnelValidator.ContainerTypeValidation(ContainerType));
                 if (propertyName == nameof(ContainerCode))
-                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(containerCode));
+                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(ContainerCode));
                 return null;
             }
         }
@@ -104,10 +104,10 @@
         #region Constructors
         public BloodRequestsViewModel()
         {
-            // ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
+            ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
             //ContainerTypes = new List<BasicEntity<string>> { };
-            //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             AddCommand = new RelayCommand(addRequest);
             RemoveCommand = new RelayCommand(removeRequest);
             RedirectCommand = new RelayCommand(redirectRequest);

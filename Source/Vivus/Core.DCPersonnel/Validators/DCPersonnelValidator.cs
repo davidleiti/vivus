@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security;
+using Vivus.Core.DataModels;
 
 namespace Vivus.Core.DCPersonnel.Validators
 {
@@ -78,17 +79,18 @@ namespace Vivus.Core.DCPersonnel.Validators
                 return new List<string> { "Evaluation results field cannot be empty." };
             return null;
         }
-        public static List<string> ContainerTypeValidation(string containerType)
+        public static List<string> ContainerTypeValidation(BasicEntity<string> selectedContainer)
         {
-            if (string.IsNullOrEmpty(containerType))
-                return new List<string> { "Container type is invalid." };
+            if (selectedContainer.Id < 0)
+                return new List<string> { "Container type field is mandatory." };
             return null;
             //return new List<string> { "Container type is invalid." };
         }
-        public static List<string> ContainerCodeValidation(string containerCode)
+        public static List<string> ContainerCodeValidation(BasicEntity<string> selectedContainer)
         {
-            if (string.IsNullOrEmpty(containerCode)||containerCode=="Select container code")
-                return new List<string> { "Container code is invalid." };
+            if (selectedContainer.Id < 0)
+                return new List<string> { "Container code field is mandatory." };
+
             return null;
             //return new List<string> { "Container type is invalid." };
         }

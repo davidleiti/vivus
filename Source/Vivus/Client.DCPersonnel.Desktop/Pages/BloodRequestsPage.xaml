@@ -99,16 +99,12 @@
                     <!-- Container type -->
                     <StackPanel>
                         <TextBlock Text="Container type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, ValidatesOnDataErrors=True}">
-                            <ComboBoxItem>Select container type</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Container code -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Container code" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, ValidatesOnDataErrors=True}">
-                            <ComboBoxItem>Select container code</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="cbContainerCode" ItemsSource="{Binding ContainerCodes}" SelectedItem="{Binding ContainerCode, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Container blood type -->
                     <StackPanel Grid.Column="4">
