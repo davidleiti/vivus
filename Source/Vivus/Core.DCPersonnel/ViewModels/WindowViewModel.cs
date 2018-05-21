@@ -54,7 +54,7 @@
         {
             OnLoadAnimateLoginPage = false;
             OnUnloadAnimateLoginPage = true;
-            CurrentPage = ApplicationPage.ManageBlood;
+            CurrentPage = ApplicationPage.Login;
             MenuCategories[0].Items[0].IsSelected = true;
         }
 
