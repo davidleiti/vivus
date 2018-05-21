@@ -13,7 +13,7 @@
         private static IUnitOfWork unitOfWork = new UnitOfWork(new VivusEntities());
 
         /// <summary>
-        /// Populates the counties.
+        /// Populates the counties table.
         /// </summary>
         public static void Couties()
         {
@@ -65,6 +65,101 @@
             unitOfWork.Counties.Add(new County { Name = "Vrancea" });
 
             VivusConsole.WriteLine($"Counties: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the genders table.
+        /// </summary>
+        public static void Genders()
+        {
+            // Delete all the genders
+            unitOfWork.Genders.Entities.ToList().ForEach(g => unitOfWork.Genders.Remove(g));
+
+            // Add all the genders
+            unitOfWork.Genders.Add(new Gender { Type = "Male" });
+            unitOfWork.Genders.Add(new Gender { Type = "Female" });
+            unitOfWork.Genders.Add(new Gender { Type = "Not specified" });
+
+            VivusConsole.WriteLine($"Genders: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the blood container types table.
+        /// </summary>
+        public static void BloodContainerTypes()
+        {
+            // Delete all the blood container types
+            unitOfWork.BloodContainerTypes.Entities.ToList().ForEach(t => unitOfWork.BloodContainerTypes.Remove(t));
+
+            // Add all the blood container types
+            unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Thrombocytes" });
+            unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Red cells" });
+            unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Plasma" });
+
+            VivusConsole.WriteLine($"Blood container types: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the blood types table.
+        /// </summary>
+        public static void BloodTypes()
+        {
+            // Delete all the blood types
+            unitOfWork.BloodTypes.Entities.ToList().ForEach(t => unitOfWork.BloodTypes.Remove(t));
+
+            // Add all the blood types
+            unitOfWork.BloodTypes.Add(new BloodType { Type = "A" });
+            unitOfWork.BloodTypes.Add(new BloodType { Type = "B" });
+            unitOfWork.BloodTypes.Add(new BloodType { Type = "AB" });
+            unitOfWork.BloodTypes.Add(new BloodType { Type = "O" });
+
+            VivusConsole.WriteLine($"Blood types: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the RHs table.
+        /// </summary>
+        public static void RHs()
+        {
+            // Delete all the RHs
+            unitOfWork.RHs.Entities.ToList().ForEach(rh => unitOfWork.RHs.Remove(rh));
+
+            // Add all the RHs
+            unitOfWork.RHs.Add(new RH { Type = "Positive" });
+            unitOfWork.RHs.Add(new RH { Type = "Negative" });
+
+            VivusConsole.WriteLine($"RHs: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the person statuses table.
+        /// </summary>
+        public static void PersonStatuses()
+        {
+            // Delete all the person statuses
+            unitOfWork.PersonStatuses.Entities.ToList().ForEach(s => unitOfWork.PersonStatuses.Remove(s));
+
+            // Add all the person statuses
+            unitOfWork.PersonStatuses.Add(new PersonStatus { Type = "Alive" });
+            unitOfWork.PersonStatuses.Add(new PersonStatus { Type = "Dead" });
+
+            VivusConsole.WriteLine($"Person statuses: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the request priorities table.
+        /// </summary>
+        public static void RequestPriorities()
+        {
+            // Delete all the request priorities
+            unitOfWork.RequestPriorities.Entities.ToList().ForEach(p => unitOfWork.RequestPriorities.Remove(p));
+
+            // Add all the request priorities
+            unitOfWork.RequestPriorities.Add(new RequestPriority { Type = "Low" });
+            unitOfWork.RequestPriorities.Add(new RequestPriority { Type = "Medium" });
+            unitOfWork.RequestPriorities.Add(new RequestPriority { Type = "High" });
+
+            VivusConsole.WriteLine($"Request priorities: { unitOfWork.Complete() }");
         }
     }
 }
