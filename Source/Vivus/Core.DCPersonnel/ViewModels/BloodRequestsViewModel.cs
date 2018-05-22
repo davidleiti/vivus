@@ -660,12 +660,8 @@
             Plasma = 12;
             Blood = 13;
             BloodType = "rhneg";
-            setThrombocytes();
         }
-        public void setThrombocytes()
-        {
-            Thrombocytes = 15;
-        }
+       
         #endregion
     }
 
