@@ -20,9 +20,6 @@
         private int? redCells;
         private int? blood;
 
-        private List<BasicEntity<string>> containerTypes;
-        private List<BasicEntity<string>> containerCodes;
-        private List<BasicEntity<string>> donationCenters;
         private int? currentThrombocytes;
         private int? currentPlasma;
         private int? currentRedCells;
@@ -33,13 +30,64 @@
         private BasicEntity<string> containerCode;
         private DateTime harvestDate;
         private BasicEntity<string> donationCenter;
+
+        private List<BasicEntity<string>> containerTypes;
+        private List<BasicEntity<string>> containerCodes;
+        private List<BasicEntity<string>> donationCenters;
+
+        private ObservableCollection<RequestDetailsItem> requestDetailsItems;
+        private ObservableCollection<AllRequestsItem> allRequestsItems;
         #endregion
 
         #region Public properties
-        public int? Thrombocytes { get; }
-        public int? Plasma { get; }
-        public int? RedCells { get; }
+        public int? Thrombocytes
+        {
+            get => thrombocytes;
 
+            set
+            {
+                if (thrombocytes == value)
+
+                    return;
+
+                thrombocytes = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public int? Plasma
+        {
+            get => plasma;
+
+            set
+            {
+                if (plasma == value)
+
+                    return;
+
+                plasma = value;
+
+                OnPropertyChanged();
+            }
+
+        }
+        public int? RedCells
+        {
+
+            get => redCells;
+
+            set
+            {
+                if (redCells == value)
+
+                    return;
+
+                redCells = value;
+
+                OnPropertyChanged();
+            }
+
+        }
         /// <summary>
         /// Gets or sets the stored blood.
         /// </summary>
@@ -58,12 +106,53 @@
             }
         }
 
-        public List<BasicEntity<string>> ContainerTypes { get; }
-        public List<BasicEntity<string>> ContainerCodes { get; }
-        public List<BasicEntity<string>> DonationCenters { get; }
-        public int? CurrentThrombocytes { get; }
-        public int? CurrentPlasma { get; }
-        public int? CurrentRedCells { get; }
+
+        public int? CurrentThrombocytes
+        {
+
+            get => currentThrombocytes;
+
+            set
+            {
+                if (currentThrombocytes == value)
+
+                    return;
+
+                currentThrombocytes = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public int? CurrentPlasma
+        {
+            get => currentPlasma;
+
+            set
+            {
+                if (currentPlasma == value)
+
+                    return;
+
+                currentPlasma = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public int? CurrentRedCells
+        {
+            get => currentRedCells;
+
+            set
+            {
+                if (currentRedCells == value)
+                    return;
+
+                currentRedCells = value;
+
+                OnPropertyChanged();
+            }
+
+        }
         /// <summary>
         /// Gets or sets the current number of blood containers for the current request.
         /// </summary>
@@ -81,15 +170,46 @@
                 OnPropertyChanged();
             }
         }
-        public string Priority { get; }
-        public string BloodType { get; }
+
+
+        public string Priority
+        {
+            get => priority;
+            set
+            {
+                if (value == priority)
+
+                    return;
+
+                priority = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public string BloodType
+        {
+            get => bloodType;
+
+            set
+            {
+                if (bloodType == value)
+
+                    return;
+
+                bloodType = value;
+
+                OnPropertyChanged();
+            }
+        }
         public BasicEntity<string> ContainerType
         {
             get => containerType;
             set
             {
                 if (value == containerType) return;
+
                 containerType = value;
+
                 OnPropertyChanged();
             }
         }
@@ -99,20 +219,42 @@
             set
             {
                 if (value == containerCode)
+
                     return;
+
                 containerCode = value;
+
                 OnPropertyChanged();
             }
         }
-        private DateTime HarvestDate { get; }
+        private DateTime HarvestDate
+        {
+
+            get => harvestDate;
+
+            set
+            {
+                if (harvestDate == value)
+
+                    return;
+
+                harvestDate = value;
+
+                OnPropertyChanged();
+            }
+
+        }
         public BasicEntity<string> DonationCenter
         {
             get => donationCenter;
             set
             {
                 if (value == donationCenter)
+
                     return;
+
                 donationCenter = value;
+
                 OnPropertyChanged();
             }
         }
@@ -121,21 +263,101 @@
             get
             {
                 if (propertyName == nameof(ContainerType))
+
                     return GetErrorString(propertyName, DCPersonnelValidator.ContainerTypeValidation(ContainerType));
+
                 if (propertyName == nameof(ContainerCode))
-                    return GetErrorString(propertyName,DCPersonnelValidator.ContainerCodeValidation(containerCode));
+
+                    return GetErrorString(propertyName, DCPersonnelValidator.ContainerCodeValidation(containerCode));
+
                 if (propertyName == nameof(DonationCenter))
+
                     return GetErrorString(propertyName, DCPersonnelValidator.DonationCenterValidation(donationCenter));
+
                 return null;
             }
         }
         public IPage ParentPage { get; set; }
 
+        public List<BasicEntity<string>> ContainerTypes
+        {
+            get => containerTypes;
 
-        public ObservableCollection<RequestDetailsItem> RequestDetailsItems { get; }
-        public ObservableCollection<AllRequestsItem> AllRequestsItems { get; }
+            set
+            {
+                if (containerTypes == value)
+
+                    return;
+                containerTypes = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public List<BasicEntity<string>> ContainerCodes
+        {
+            get => containerCodes;
+
+            set
+            {
+                if (containerCodes == value)
+
+                    return;
+
+                containerCodes = value;
+
+                OnPropertyChanged();
+
+            }
+        }
+        public List<BasicEntity<string>> DonationCenters
+        {
+            get => donationCenters;
+
+            set
+            {
+                if (donationCenters == value)
+
+                    return;
+
+                donationCenters = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<RequestDetailsItem> RequestDetailsItems
+        {
+            get => requestDetailsItems;
+            set
+            {
+                if (requestDetailsItems == value)
+
+                    return;
+
+                requestDetailsItems = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<AllRequestsItem> AllRequestsItems
+        {
+            get => allRequestsItems;
+
+            set
+            {
+                if (allRequestsItems == value)
+
+                    return;
+
+                allRequestsItems= value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddCommand { get; }
+
         public ICommand RemoveCommand { get; }
+
         public ICommand RedirectCommand { get; }
 
         #endregion
@@ -198,7 +420,9 @@
             Popup("Successfull operation!", PopupType.Successful);
         }
         #endregion
+
     }
+
     public class RequestDetailsItem : BaseViewModel
     {
         #region Private members
@@ -287,6 +511,7 @@
         #region Private memebers
         private int id;
         private string doctor;
+
         private string priority;
         private int? thrombocytes;
         private int? redCells;
@@ -299,21 +524,29 @@
         public int Id
         {
             get => id;
+
             set
             {
                 if (value == id)
+
                     return;
+
                 id = value;
+
                 OnPropertyChanged();
             }
         }
-        public string Doctor {
+        public string Doctor
+        {
             get => doctor;
             set
             {
                 if (value == doctor)
+
                     return;
+
                 doctor = value;
+
                 OnPropertyChanged();
             }
         }
@@ -323,8 +556,11 @@
             set
             {
                 if (value == priority)
+
                     return;
+
                 priority = value;
+
                 OnPropertyChanged();
             }
         }
@@ -334,8 +570,11 @@
             set
             {
                 if (value == thrombocytes)
+
                     return;
+
                 thrombocytes = value;
+
                 OnPropertyChanged();
 
             }
@@ -347,8 +586,11 @@
             set
             {
                 if (value == plasma)
+
                     return;
+
                 plasma = value;
+
                 OnPropertyChanged();
 
             }
@@ -360,7 +602,9 @@
             {
                 if (value == redCells)
                     return;
+
                 redCells = value;
+
                 OnPropertyChanged();
 
             }
@@ -377,6 +621,7 @@
             set
             {
                 if (value == blood)
+
                     return;
 
                 blood = value;
@@ -391,8 +636,11 @@
             set
             {
                 if (value == bloodType)
+
                     return;
+
                 bloodType = value;
+
                 OnPropertyChanged();
             }
         }
@@ -413,8 +661,8 @@
             Blood = 13;
             BloodType = "rhneg";
         }
+       
         #endregion
-
     }
 
 }
