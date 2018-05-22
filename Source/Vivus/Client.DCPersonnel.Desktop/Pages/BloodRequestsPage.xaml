@@ -148,7 +148,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="280" ItemsSource="{Binding RequestDetailsItems}" >
+                <DataGrid Height="280" ItemsSource="{Binding RequestDetailsItems}" SelectedItem="{Binding SelectedRequestDetailsItem}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>
@@ -199,7 +199,7 @@
                 <!-- All requests -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All requests" />
                 <!-- Table -->
-                <DataGrid Height="420" ItemsSource="{Binding AllRequestsItems}" >
+                <DataGrid Height="420" ItemsSource="{Binding AllRequestsItems}" SelectedItem="{Binding SelectedAllRequestsItem}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>

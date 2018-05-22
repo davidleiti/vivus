@@ -136,7 +136,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Grid.Row="2" Height="420" ItemsSource="{Binding BloodDonationRequestItems}">
+                <DataGrid Grid.Row="2" Height="420" ItemsSource="{Binding BloodDonationRequestItems}" SelectedItem="{Binding SelectedBloodDonationRequestItem}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>

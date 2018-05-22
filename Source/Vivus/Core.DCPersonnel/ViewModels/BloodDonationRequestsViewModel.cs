@@ -28,6 +28,7 @@
         private string travelStatus;
         private string messages;
         private bool approved;
+        private BloodDonationRequestItem selectedBloodDonationRequestItem;
         private ObservableCollection<BloodDonationRequestItem> bloodDonationRequestItems;
 
         #endregion
@@ -222,6 +223,20 @@
                 OnPropertyChanged();
             }
         }
+        public BloodDonationRequestItem SelectedBloodDonationRequestItem
+        {
+            get => selectedBloodDonationRequestItem;
+            set
+            {
+                if (selectedBloodDonationRequestItem == value)
+
+                    return;
+
+                selectedBloodDonationRequestItem = value;
+
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<BloodDonationRequestItem> BloodDonationRequestItems
         {
             get => bloodDonationRequestItems;
@@ -238,6 +253,7 @@
             }
 
         }
+
         public override string this[string propertyName]
         {
             get
@@ -271,6 +287,7 @@
             approved=true;*/
             ApproveCommand = new RelayCommand(() => { approved = true; CheckMessages(); });
             DenyCommand = new RelayCommand(() => { approved = false; CheckMessages(); });
+            SelectedBloodDonationRequestItem = new BloodDonationRequestItem();
             BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
             BloodDonationRequestItems.Add(new BloodDonationRequestItem());
 
