@@ -99,32 +99,6 @@
         }
 
         /// <summary>
-        /// Validates the systolic blood pressure of the donor.
-        /// </summary>
-        /// <param name="systolicBP">The systolic blood pressure of the donor.</param>
-        /// <returns></returns>
-        public static List<string> SystolicBloodPressureValidation(int? systolicBP)
-        {
-            if (!systolicBP.HasValue)
-                return new List<string> { "Systolic blood pressure field is mandatory." };
-
-            return null;
-        }
-
-        /// <summary>
-        /// Validates the diastolic blood pressure of the donor.
-        /// </summary>
-        /// <param name="diastolicBP">The diastolic blood pressure of the donor.</param>
-        /// <returns></returns>
-        public static List<string> DiastolicBloodPressureValidation(int? diastolicBP)
-        {
-            if (!diastolicBP.HasValue)
-                return new List<string> { "Diastolic blood pressure field is mandatory." };
-
-            return null;
-        }
-
-        /// <summary>
         /// Validates the past surgeries of the donor.
         /// </summary>
         /// <param name="pastSurgeries">The past surgeries of the donor.</param>

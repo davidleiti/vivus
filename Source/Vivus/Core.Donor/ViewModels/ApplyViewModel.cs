@@ -293,12 +293,6 @@
                 if (propertyName == nameof(HeartRate))
                     return GetErrorString(propertyName, DonorValidator.HearRateValidation(HeartRate));
 
-                if (propertyName == nameof(SystolicBloodPressure))
-                    return GetErrorString(propertyName, DonorValidator.SystolicBloodPressureValidation(SystolicBloodPressure));
-
-                if (propertyName == nameof(DiastolicBloodPressure))
-                    return GetErrorString(propertyName, DonorValidator.DiastolicBloodPressureValidation(DiastolicBloodPressure));
-
                 if (propertyName == nameof(HadPastSurgeries))
                     return GetErrorString(propertyName, DonorValidator.PastSurgeriesValidation(HadPastSurgeries));
 
