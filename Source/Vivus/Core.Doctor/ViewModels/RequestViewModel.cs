@@ -23,6 +23,7 @@
         private int? requestThrombocytes;
         private int? requestRedCells;
         private int? requestPlasma;
+        private int? requestBlood;
 
         #endregion
 
@@ -141,6 +142,24 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the requested blood.
+        /// </summary>
+        public int? RequestBlood
+        {
+            get => requestBlood;
+
+            set
+            {
+                if (requestBlood == value)
+                    return;
+
+                requestBlood = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public override string this[string propertyName]
         {
             get
@@ -159,6 +178,9 @@
 
                 if (propertyName == nameof(RequestPlasma))
                     return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestPlasma, "Plasma"));
+
+                if (propertyName == nameof(RequestBlood))
+                    return GetErrorString(propertyName, DoctorValidator.NotNullIntegerFieldValidation(RequestPlasma, "Blood"));
 
                 return null;
             }

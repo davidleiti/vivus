@@ -24,6 +24,7 @@
             tbRequestPlasma.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbRequestRedCells.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbRequestThrombocytes.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            tbRequestBlood.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
         }
 
         public void DontAllowErrors()

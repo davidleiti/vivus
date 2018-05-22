@@ -18,7 +18,7 @@
         private int? thrombocytes;
         private int? plasma;
         private int? redCells;
-
+        private int? blood;
 
         private List<BasicEntity<string>> containerTypes;
         private List<BasicEntity<string>> containerCodes;
@@ -26,6 +26,7 @@
         private int? currentThrombocytes;
         private int? currentPlasma;
         private int? currentRedCells;
+        private int? currentBlood;
         private string priority;
         private string bloodType;
         private BasicEntity<string> containerType;
@@ -39,12 +40,47 @@
         public int? Plasma { get; }
         public int? RedCells { get; }
 
+        /// <summary>
+        /// Gets or sets the stored blood.
+        /// </summary>
+        public int? Blood
+        {
+            get => blood;
+
+            set
+            {
+                if (blood == value)
+                    return;
+
+                blood = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public List<BasicEntity<string>> ContainerTypes { get; }
         public List<BasicEntity<string>> ContainerCodes { get; }
         public List<BasicEntity<string>> DonationCenters { get; }
         public int? CurrentThrombocytes { get; }
         public int? CurrentPlasma { get; }
         public int? CurrentRedCells { get; }
+        /// <summary>
+        /// Gets or sets the current number of blood containers for the current request.
+        /// </summary>
+        public int? CurrentBlood
+        {
+            get => currentBlood;
+
+            set
+            {
+                if (currentBlood == value)
+                    return;
+
+                currentBlood = value;
+
+                OnPropertyChanged();
+            }
+        }
         public string Priority { get; }
         public string BloodType { get; }
         public BasicEntity<string> ContainerType
@@ -103,6 +139,7 @@
         public ICommand RedirectCommand { get; }
 
         #endregion
+
         #region Constructors
         public BloodRequestsViewModel()
         {
@@ -121,6 +158,7 @@
 
         }
         #endregion
+
         #region Public Methods
         public void addRequest()
         {
@@ -253,6 +291,7 @@
         private int? thrombocytes;
         private int? redCells;
         private int? plasma;
+        private int? blood;
         private string bloodType;
 
         #endregion
@@ -327,6 +366,25 @@
             }
 
         }
+
+        /// <summary>
+        /// Gets or sets the current blood containers number.
+        /// </summary>
+        public int? Blood
+        {
+            get => blood;
+
+            set
+            {
+                if (value == blood)
+                    return;
+
+                blood = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public string BloodType
         {
             get => bloodType;
@@ -352,6 +410,7 @@
             Priority = "high";
             redCells = 11;
             Plasma = 12;
+            Blood = 13;
             BloodType = "rhneg";
         }
         #endregion

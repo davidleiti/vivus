@@ -44,6 +44,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="31" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Thrombocytes -->
@@ -60,6 +62,11 @@
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <TextBox x:Name="tbRequestPlasma" Tag="Containers" Text="{Binding RequestPlasma, Converter={valueConverters:IntToStringConverter}, ValidatesOnDataErrors=True}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
+                    </StackPanel>
+                    <!-- Blood -->
+                    <StackPanel Grid.Column="6">
+                        <TextBlock Text="Blood" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox x:Name="tbRequestBlood" Tag="Containers" Text="{Binding RequestBlood, Converter={valueConverters:IntToStringConverter}, ValidatesOnDataErrors=True}" MaxLength="5" PreviewKeyDown="IntegerTextBox_PreviewKeyDown" PreviewTextInput="IntegerTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <!-- Add button -->

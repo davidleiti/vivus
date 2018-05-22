@@ -26,6 +26,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="31" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Thrombocytes -->
@@ -43,6 +45,11 @@
                         <TextBlock Text="Plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <TextBox Tag="Quantity"  IsReadOnly="True" Text="{Binding Plasma,ValidatesOnDataErrors=True,Mode=OneWay}"/>
                     </StackPanel>
+                    <!-- Blood -->
+                    <StackPanel Grid.Column="6">
+                        <TextBlock Text="Blood" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Quantity"  IsReadOnly="True" Text="{Binding Blood,ValidatesOnDataErrors=True,Mode=OneWay}"/>
+                    </StackPanel>
                 </Grid>
 
                 <!-- Separator -->
@@ -53,6 +60,8 @@
                 <!-- Current Request Details -->
                 <Grid Margin="0 0 0 20">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="31" />
                         <ColumnDefinition Width="*" />
@@ -81,6 +90,11 @@
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Current plasma" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentPlasma,ValidatesOnDataErrors=True,Mode=OneWay}" />
+                    </StackPanel>
+                    <!-- Current Blood -->
+                    <StackPanel Grid.Column="8">
+                        <TextBlock Text="Current blood" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="Containers" IsReadOnly="True" Text="{Binding CurrentBlood,ValidatesOnDataErrors=True,Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
 
@@ -200,6 +214,7 @@
                         <DataGridTextColumn Header="Thrombocytes" Width=".8*" Binding="{Binding Thrombocytes, ValidatesOnDataErrors=True}"/>
                         <DataGridTextColumn Header="Red cells" Width=".8*" Binding="{Binding RedCells, ValidatesOnDataErrors=True}" />
                         <DataGridTextColumn Header="Plasma" Width=".8*" Binding="{Binding Plasma, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Blood" Width=".8*" Binding="{Binding Blood, ValidatesOnDataErrors=True}"/>
                         <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodType, ValidatesOnDataErrors=True}"/>
                     </DataGrid.Columns>
                 </DataGrid>
