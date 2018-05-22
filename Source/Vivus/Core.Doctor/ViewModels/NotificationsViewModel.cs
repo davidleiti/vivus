@@ -96,7 +96,7 @@
         public NotificationsViewModel()
         {
             SelectedPersonType = new BasicEntity<string>(-1, "Select person type");
-            PersonTypes = new List<BasicEntity<string>> { SelectedPersonType };
+            PersonTypes = new List<BasicEntity<string>> { SelectedPersonType, new BasicEntity<string>(-1, "DC Personnel") };
             SelectedPersonName = new BasicEntity<string>(-1, "Select person name");
             PersonNames = new List<BasicEntity<string>> { SelectedPersonName };
 
