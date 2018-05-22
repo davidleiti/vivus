@@ -17,7 +17,12 @@
 
         private string popupMessage;
         private PopupType popupType;
-        private IDictionary<string, List<string>> errors;
+
+        #endregion
+
+        #region Protected Members
+
+        protected IDictionary<string, List<string>> errors;
 
         #endregion
 

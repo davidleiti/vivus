@@ -9,6 +9,7 @@
     using Vivus = Console;
     using Vivus.Core.DCPersonnel.Validators;
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Represents a view model for the manage blood page.
@@ -30,6 +31,20 @@
 
         private BasicEntity<string> addContainerRH;
         private BasicEntity<string> requestRH;
+
+        #endregion
+
+        #region Public Enums
+
+        /// <summary>
+        /// Represents an enumaration of possbile parts of the page that can be validated.
+        /// </summary>
+        public enum Validation
+        {
+            None,
+            ManageBlood,
+            RequestDonation
+        }
 
         #endregion
 
@@ -148,6 +163,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the which portion of the page should be validated.
+        /// </summary>
+        public Validation ToValidate { get; set; }
+
         public ICommand AddCommand { get; }
         public ICommand RequestCommand { get; }
 
@@ -212,9 +232,17 @@
         /// </summary>
         private void Add()
         {
+            int count;
+
+            ToValidate = Validation.ManageBlood;
             ParentPage.AllowErrors();
 
-            if (Errors > 0)
+            count = errors.Keys
+                        .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
+                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+                        .Count;
+
+            if (count > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
                 return;
@@ -229,9 +257,17 @@
         /// </summary>
         private void Request()
         {
+            int count;
+
+            ToValidate = Validation.RequestDonation;
             ParentPage.AllowErrors();
 
-            if (Errors > 0)
+            count = errors.Keys
+                        .Where(key => key == nameof(RequestBloodType) || key == nameof(RequestRH))
+                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+                        .Count;
+
+            if (count > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
                 return;

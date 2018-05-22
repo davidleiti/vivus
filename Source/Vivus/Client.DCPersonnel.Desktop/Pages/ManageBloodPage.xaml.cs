@@ -20,15 +20,23 @@
         public void AllowErrors()
         {
             // Adding new container details
-            cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            tbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
-            cbBloodTypeManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            cbRHManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            tbHarvestDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            if (ViewModel.ToValidate == ManageBloodViewModel.Validation.ManageBlood)
+            {
+                cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+                tbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+                cbBloodTypeManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+                cbRHManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+                tbHarvestDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            }
 
             // Request blood details
-            cbBloodTypeReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            cbRHReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            if (ViewModel.ToValidate == ManageBloodViewModel.Validation.RequestDonation)
+            {
+                cbBloodTypeReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+                cbRHReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            }
+
+            ViewModel.ToValidate = ManageBloodViewModel.Validation.None;
         }
 
         public void DontAllowErrors()
