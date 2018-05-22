@@ -69,6 +69,7 @@
           <Property Name="ThrombocytesQuantity" Type="int" Nullable="false" />
           <Property Name="RedCellsQuantity" Type="int" Nullable="false" />
           <Property Name="PlasmaQuantity" Type="int" Nullable="false" />
+          <Property Name="BloodQuantity" Type="int" Nullable="false" />
           <Property Name="RequestPriorityID" Type="int" Nullable="false" />
           <Property Name="PatientID" Type="int" Nullable="false" />
           <Property Name="DoctorID" Type="int" Nullable="false" />
@@ -853,6 +854,7 @@
           <Property Name="ThrombocytesQuantity" Type="Int32" Nullable="false" />
           <Property Name="RedCellsQuantity" Type="Int32" Nullable="false" />
           <Property Name="PlasmaQuantity" Type="Int32" Nullable="false" />
+          <Property Name="BloodQuantity" Type="Int32" Nullable="false" />
           <Property Name="RequestPriorityID" Type="Int32" Nullable="false" />
           <Property Name="PatientID" Type="Int32" Nullable="false" />
           <Property Name="DoctorID" Type="Int32" Nullable="false" />
@@ -1649,6 +1651,7 @@
                 <ScalarProperty Name="ThrombocytesQuantity" ColumnName="ThrombocytesQuantity" />
                 <ScalarProperty Name="RedCellsQuantity" ColumnName="RedCellsQuantity" />
                 <ScalarProperty Name="PlasmaQuantity" ColumnName="PlasmaQuantity" />
+                <ScalarProperty Name="BloodQuantity" ColumnName="BloodQuantity" />
                 <ScalarProperty Name="RequestPriorityID" ColumnName="RequestPriorityID" />
                 <ScalarProperty Name="PatientID" ColumnName="PatientID" />
                 <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />

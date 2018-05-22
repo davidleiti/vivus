@@ -102,6 +102,7 @@
             unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Thrombocytes" });
             unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Red cells" });
             unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Plasma" });
+            unitOfWork.BloodContainerTypes.Add(new BloodContainerType { Type = "Blood" });
 
             VivusConsole.WriteLine($"Blood container types: { unitOfWork.Complete() }");
         }
