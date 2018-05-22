@@ -22,7 +22,6 @@
         {
             cbPersonTypes.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             cbPersonNames.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            tbNin.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbMessage.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
 
         }

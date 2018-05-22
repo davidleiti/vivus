@@ -45,7 +45,7 @@
                         </StackPanel>
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                            <TextBox x:Name="tbNin" Tag="0000000000000"  IsReadOnly="True" Text="{Binding NationalIdentificationNumber, ValidatesOnDataErrors=True}" />
+                            <TextBox x:Name="tbNin" Tag="0000000000000"  IsReadOnly="True" Text="{Binding NationalIdentificationNumber}" />
                         </StackPanel>
                     </Grid>
 

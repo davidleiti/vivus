@@ -85,9 +85,6 @@
                 if (propertyName == nameof(SelectedPersonName))
                     return GetErrorString(propertyName, DoctorValidator.PersonNameValidation(SelectedPersonName));
 
-                if (propertyName == nameof(NationalIdentificationNumber))
-                    return GetErrorString(propertyName, DoctorValidator.NinValidation(NationalIdentificationNumber));
-
                 if (propertyName == nameof(Message))
                     return GetErrorString(propertyName, DoctorValidator.MessageValidation(Message));
 
