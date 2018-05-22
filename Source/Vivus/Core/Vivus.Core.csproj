@@ -146,10 +146,15 @@
       <DependentUpon>VivusModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\BloodContainerTypesRepository.cs" />
+    <Compile Include="Repository\BloodTypesRepository.cs" />
     <Compile Include="Repository\CountiesRepository.cs" />
     <Compile Include="Repository\GendersRepository.cs" />
     <Compile Include="Repository\Base\IRepository.cs" />
     <Compile Include="Repository\Base\Repository.cs" />
+    <Compile Include="Repository\PersonStatusesRepository.cs" />
+    <Compile Include="Repository\RequestPrioritiesRepository.cs" />
+    <Compile Include="Repository\RhsRepository.cs" />
     <Compile Include="Security\SecureStringHelpers.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
