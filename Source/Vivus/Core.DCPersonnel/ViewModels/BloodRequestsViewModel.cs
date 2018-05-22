@@ -164,12 +164,24 @@
     public class RequestDetailsItem : BaseViewModel
     {
         #region Private members
+        private int id;
         private string containerType;
         private string containerCode;
         private string bloodType;
         private DateTime harvestDate;
         #endregion
         #region Public Properties
+        public int Id
+        {
+            get => id;
+            set
+            {
+                if (value == id)
+                    return;
+                id = value;
+                OnPropertyChanged();
+            }
+        }
         public string ContainerType
         {
             get => containerType;
@@ -224,6 +236,7 @@
         #region Contrucors
         public RequestDetailsItem()
         {
+            Id = 11;
             ContainerCode = "lol";
             ContainerType = "typeee";
             bloodType = "rhpoz";
@@ -234,7 +247,9 @@
     public class AllRequestsItem : BaseViewModel
     {
         #region Private memebers
+        private int id;
         private string doctor;
+        private string priority;
         private int? thrombocytes;
         private int? redCells;
         private int? plasma;
@@ -242,6 +257,17 @@
 
         #endregion
         #region Public Properties
+        public int Id
+        {
+            get => id;
+            set
+            {
+                if (value == id)
+                    return;
+                id = value;
+                OnPropertyChanged();
+            }
+        }
         public string Doctor {
             get => doctor;
             set
@@ -249,6 +275,17 @@
                 if (value == doctor)
                     return;
                 doctor = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Priority
+        {
+            get => priority;
+            set
+            {
+                if (value == priority)
+                    return;
+                priority = value;
                 OnPropertyChanged();
             }
         }
@@ -309,8 +346,10 @@
         #region Constructors
         public AllRequestsItem()
         {
+            Id = 10;
             Doctor = "doc";
             Thrombocytes = 10;
+            Priority = "high";
             redCells = 11;
             Plasma = 12;
             BloodType = "rhneg";

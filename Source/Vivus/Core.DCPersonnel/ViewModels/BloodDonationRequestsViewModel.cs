@@ -96,6 +96,7 @@
             ApproveCommand = new RelayCommand(() => { approved = true; CheckMessages(); });
             DenyCommand = new RelayCommand(() => { approved = false; CheckMessages(); });
             BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
+            BloodDonationRequestItems.Add(new BloodDonationRequestItem());
 
 
         }
@@ -117,11 +118,25 @@
     }
     public class BloodDonationRequestItem : BaseViewModel
     {
+        #region Private members
+        private int id;
         private DateTime applyDate;
         private string nin;
         private string fullName;
         private int age;
-
+        #endregion
+        public int Id
+        {
+            get => id;
+            set
+            {
+                if (value == id)
+                    return;
+                id = value;
+                OnPropertyChanged();
+            }
+        }
+        #region Public Properties
         public string FullName
         {
             get => fullName;
@@ -162,9 +177,22 @@
                 OnPropertyChanged();
             }
         }
+        public override string this[string propertyName]
+        {
+            get
+            {
+                return null;
+            }
+        }
+        #endregion
 
         public BloodDonationRequestItem()
         {
+            Id = 10;
+            ApplyDate = new DateTime(2012, 11, 1);
+            Nin = "123";
+            FullName = "Sinklars Draptinen";
+            Age = 11;
 
         }
     }

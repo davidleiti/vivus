@@ -76,19 +76,21 @@ namespace Vivus.Core.DCPersonnel.Validators
         {
             //   Vivus.Console.WriteLine(messages);
             if (string.IsNullOrEmpty(messages))
-                return new List<string> { "Evaluation results field cannot be empty." };
+                return new List<string> { "Message field is mandatory." };
+            if (messages.Length < 6)
+                return new List<string> { "Please, be more explicit!" };
             return null;
         }
         public static List<string> ContainerTypeValidation(BasicEntity<string> selectedContainer)
         {
-            if (selectedContainer.Id < 0)
+            if (selectedContainer==null||selectedContainer.Id < 0)
                 return new List<string> { "Container type field is mandatory." };
             return null;
             //return new List<string> { "Container type is invalid." };
         }
         public static List<string> ContainerCodeValidation(BasicEntity<string> selectedContainer)
         {
-            if (selectedContainer.Id < 0)
+            if (selectedContainer==null||selectedContainer.Id < 0)
                 return new List<string> { "Container code field is mandatory." };
 
             return null;
