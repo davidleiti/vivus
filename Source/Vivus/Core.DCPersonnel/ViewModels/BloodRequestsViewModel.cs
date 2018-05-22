@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.DCPersonnel.Validators;
@@ -37,6 +38,20 @@
 
         private ObservableCollection<RequestDetailsItem> requestDetailsItems;
         private ObservableCollection<AllRequestsItem> allRequestsItems;
+        #endregion
+
+        #region Public Enums
+
+        /// <summary>
+        /// Represents an enumaration of possbile parts of the page that can be validated.
+        /// </summary>
+        public enum Validation
+        {
+            None,
+            ManageRequest,
+            DonationCenterRedirect
+        }
+
         #endregion
 
         #region Public properties
@@ -88,6 +103,7 @@
             }
 
         }
+
         /// <summary>
         /// Gets or sets the stored blood.
         /// </summary>
@@ -106,6 +122,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the which portion of the page should be validated.
+        /// </summary>
+        public Validation ToValidate { get; set; }
 
         public int? CurrentThrombocytes
         {
@@ -153,6 +173,7 @@
             }
 
         }
+
         /// <summary>
         /// Gets or sets the current number of blood containers for the current request.
         /// </summary>
@@ -384,8 +405,17 @@
         #region Public Methods
         public void addRequest()
         {
+            int count;
+
+            ToValidate = Validation.ManageRequest;
             ParentPage.AllowErrors();
-            if (Errors > 0)
+
+            count = errors.Keys
+                        .Where(key => key != nameof(DonationCenter))
+                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+                        .Count;
+
+            if (count > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
 
@@ -397,8 +427,17 @@
         }
         public void removeRequest()
         {
+            int count;
+
+            ToValidate = Validation.ManageRequest;
             ParentPage.AllowErrors();
-            if (Errors > 0)
+
+            count = errors.Keys
+                        .Where(key => key != nameof(DonationCenter))
+                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+                        .Count;
+
+            if (count > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
                 return;
@@ -409,8 +448,14 @@
         }
         public void redirectRequest()
         {
+            int count;
+
+            ToValidate = Validation.DonationCenterRedirect;
             ParentPage.AllowErrors();
-            if (Errors > 0)
+
+            count = errors[nameof(DonationCenter)].Count;
+
+            if (count > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");
                 return;

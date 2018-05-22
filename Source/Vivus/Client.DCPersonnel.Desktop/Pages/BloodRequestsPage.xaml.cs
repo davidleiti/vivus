@@ -15,14 +15,22 @@
             InitializeComponent();
             ViewModel.ParentPage = this;
         }
+
         public void AllowErrors()
         {
             //todo
             // cbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             //cbContainerType.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
-            cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            cbContainerCode.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
-            cbDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            if (ViewModel.ToValidate == BloodRequestsViewModel.Validation.ManageRequest)
+            {
+                cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+                cbContainerCode.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            }
+
+            if (ViewModel.ToValidate == BloodRequestsViewModel.Validation.DonationCenterRedirect)
+                cbDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+
+            ViewModel.ToValidate = BloodRequestsViewModel.Validation.None;
         }
 
         public void DontAllowErrors()
