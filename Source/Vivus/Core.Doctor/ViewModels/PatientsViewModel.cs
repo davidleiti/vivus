@@ -10,18 +10,36 @@
     /// <summary>
     /// Represents a view model for the patients page.
     /// </summary>
-
     public class PatientsViewModel : BaseViewModel
     {
 
         #region Private Members
 
+        private string filter;
         private PatientItemViewModel selectedPatient;
         private PatientItemViewModel mySelectedPatient;
 
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the filter applied over the all patients collection.
+        /// </summary>
+        public string Filter
+        {
+            get => filter;
+
+            set
+            {
+                if (filter == value)
+                    return;
+
+                filter = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets the collection of all the patients
