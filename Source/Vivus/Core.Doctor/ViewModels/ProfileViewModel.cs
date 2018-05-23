@@ -342,12 +342,12 @@
 
                         //PopulateFields();
 
-                        Popup("Update was successful!", PopupType.Successful);
-                        VivusConsole.WriteLine("Doctor: Update worked!");
+                        Popup("Profile update was successful!", PopupType.Successful);
+                        //VivusConsole.WriteLine("Doctor: Update worked!");
                     }
                     catch
                     {
-                        Popup("An error occured while updating.", PopupType.Warning);
+                        Popup("An error occured while updating the profile.", PopupType.Warning);
                     }
                 });
             });

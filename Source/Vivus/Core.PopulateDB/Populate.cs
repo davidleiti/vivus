@@ -230,7 +230,7 @@
                 unitOfWork.Doctors.Remove(doctor);
             });
 
-            // Add all the administrators
+            // Add all the doctors
             unitOfWork.Doctors.Add(new Doctor
             {
                 Person = new Person
