@@ -32,7 +32,7 @@
                             <StackPanel>
                                 <TextBox Tag="Email address" Text="{Binding Email}" Style="{StaticResource EmailTextBox}" KeyDown="TextBox_KeyDown" />
                                 <Rectangle Height="1" Fill="#f0f0f0" Margin="6 0 6 0" />
-                                <PasswordBox x:Name="pbPassword" Tag="Password" Style="{StaticResource PasswordTextBox}" KeyDown="TextBox_KeyDown" />
+                                <PasswordBox x:Name="pbPassword" Tag="Password" Password="nitu1234" Style="{StaticResource PasswordTextBox}" KeyDown="TextBox_KeyDown" />
                             </StackPanel>
                         </Border>
                         <Button Content="Sign in" Command="{Binding LoginCommand}" attachedProperties:IsBusyProperty.Value="{Binding LoginIsRunning}" Style="{StaticResource SignInButton}" Margin="2 36 2 0" />

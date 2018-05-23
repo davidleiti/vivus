@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using Vivus.Core.Model;
-    using Vivus.Core.Security;
     using Vivus.Core.UoW;
     using VivusConsole = Console.Console;
     using BCrypt.Net;
@@ -214,6 +213,60 @@
             });
 
             VivusConsole.WriteLine($"Admnistrators: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the administrators table.
+        /// </summary>
+        public static void Doctors()
+        {
+            // Delete all the administrators
+            unitOfWork.Doctors.Entities.ToList().ForEach(doctor =>
+            {
+                unitOfWork.Accounts.Remove(doctor.Account);
+                unitOfWork.Addresses.Remove(doctor.Person.Address);
+                unitOfWork.Addresses.Remove(doctor.Address);
+                unitOfWork.Persons.Remove(doctor.Person);
+                unitOfWork.Doctors.Remove(doctor);
+            });
+
+            // Add all the administrators
+            unitOfWork.Doctors.Add(new Doctor
+            {
+                Person = new Person
+                {
+                    FirstName = "Camelia",
+                    LastName = "Berea",
+                    BirthDate = new DateTime(1975, 2, 7),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "2750207421129",
+                    PhoneNo = "+(40) 767 139 215",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("București"),
+                        City = "București",
+                        Street = "Căminului",
+                        StreetNo = "26",
+                        ZipCode = "139423"
+                    },
+                },
+                Address = new Address
+                {
+                    County = (unitOfWork.Counties as CountiesRepository).County("București"),
+                    City = "București",
+                    Street = "Șoseaua Iancului",
+                    StreetNo = "10",
+                    ZipCode = "136920"
+                },
+                Account = new Account
+                {
+                    Email = "berea.camelia@yahoo.com",
+                    Password = BCrypt.HashPassword("berea123")
+                },
+                Active = true
+            });
+
+            VivusConsole.WriteLine($"Doctors: { unitOfWork.Complete() }");
         }
     }
 }

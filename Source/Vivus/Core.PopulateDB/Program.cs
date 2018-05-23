@@ -21,6 +21,7 @@
             //Populate.PersonStatuses();
             //Populate.RequestPriorities();
             //Populate.Administrators();
+            //Populate.Doctors();
             VivusConsole.WriteLine("Everything is already generated! Be careful if you wanna play with the fire. c;");
 
             VivusConsole.WriteLine("Press any key to continue...", false);
