@@ -331,22 +331,25 @@
                     return;
                 }
 
-                try
+                await Task.Run(() =>
                 {
-                    Doctor doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
+                    try
+                    {
+                        Doctor doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
 
-                    FillModelDoctor(ref doctor);
-                    unitOfWork.Complete();
+                        FillModelDoctor(ref doctor);
+                        unitOfWork.Complete();
 
-                    //PopulateFields();
+                        //PopulateFields();
 
-                    Popup("Update was successful!", PopupType.Successful);
-                    VivusConsole.WriteLine("Doctor: Update worked!");
-                }
-                catch
-                {
-                    Popup("An error occured while updating.", PopupType.Warning);
-                }
+                        Popup("Update was successful!", PopupType.Successful);
+                        VivusConsole.WriteLine("Doctor: Update worked!");
+                    }
+                    catch
+                    {
+                        Popup("An error occured while updating.", PopupType.Warning);
+                    }
+                });
             });
 
         }
