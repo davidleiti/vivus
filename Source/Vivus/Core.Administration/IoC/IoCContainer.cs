@@ -39,6 +39,18 @@
             BindViewModels();
         }
 
+        /// <summary>
+        /// Gets an instance of the specified service.
+        /// </summary>
+        /// <typeparam name="T">The type of the service.</typeparam>
+        /// <returns></returns>
         public static T Get<T>() => Kernel.Get<T>();
+
+        /// <summary>
+        /// Tries to get an instance of the specified service.
+        /// </summary>
+        /// <typeparam name="T">The type of the service.</typeparam>
+        /// <returns></returns>
+        public static T TryGet<T>() => Kernel.TryGet<T>();
     }
 }
