@@ -12,6 +12,7 @@
     using BCrypt.Net;
     using Vivus.Core.Security;
     using Vivus.Core.ViewModels.Base;
+    using System.Windows;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -34,7 +35,7 @@
         /// <summary>
         /// Gets or sets the email address of the user.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "nitu.mihai@gmail.com";
 
         /// <summary>
         /// Gets or sets the flag that indicates whether the login command is running or not.
@@ -70,7 +71,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> class with the default values.
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             LoginCommand = new RelayCommand(async () => await LoginAsync());
         }
@@ -110,7 +111,7 @@
                 {
                     try
                     {
-                        Administrator admin = IoCContainer.Get<IUnitOfWork>().Administrators.Find(a => a.Account.Email == Email && a.Active).Single();
+                        Administrator admin = IoCContainer.Get<IUnitOfWork>().Administrators.Entities.First(a => a.Account.Email == Email && a.Active);
 
                         if (!BCrypt.Verify(ParentPage.SecurePasword.Unsecure(), admin.Account.Password))
                         {

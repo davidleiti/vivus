@@ -1,11 +1,17 @@
 ﻿namespace Vivus.Core.Doctor.ViewModels
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.Doctor.IoC;
+    using Vivus.Core.Security;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
     using VivusConsole = Console.Console;
+    using BCrypt.Net;
+    using Vivus.Core.ViewModels.Base;
+    using System.Windows;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -28,7 +34,7 @@
         /// <summary>
         /// Gets or sets the email address of the user.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "berea.camelia@yahoo.com";
 
         /// <summary>
         /// Gets or sets the flag that indicates whether the login command is running or not.
@@ -64,7 +70,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> class with the default values.
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             LoginCommand = new RelayCommand(async () => await LoginAsync());
         }
@@ -100,13 +106,35 @@
                     return;
                 }
 
-                IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
-                IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Patients;
-                IoCContainer.Get<WindowViewModel>().ShowMenu();
-                
-                IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        Model.Doctor doctor = IoCContainer.Get<IUnitOfWork>().Doctors.Entities.First(d => d.Account.Email == Email && d.Active);
 
-                VivusConsole.WriteLine("Successfull login!");
+                        if (!BCrypt.Verify(ParentPage.SecurePasword.Unsecure(), doctor.Account.Password))
+                        {
+                            Popup("Invalid email or password.");
+                            VivusConsole.WriteLine("Invalid username of password.");
+                            return;
+                        }
+
+                        IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User = doctor;
+
+                        IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
+                        IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Patients;
+                        IoCContainer.Get<WindowViewModel>().ShowMenu();
+                        
+                        IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
+
+                        VivusConsole.WriteLine($"Welcome, { Email }!");
+                    }
+                    catch
+                    {
+                        Popup("Invalid email or password.");
+                        VivusConsole.WriteLine("No user found.");
+                    }
+                });
             });
         }
 

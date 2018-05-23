@@ -30,9 +30,9 @@
                         </StackPanel>
                         <Border Height="85" Background="#f9f9f9" CornerRadius="8" Margin="0 55 0 0">
                             <StackPanel>
-                                <TextBox Style="{StaticResource EmailTextBox}" Tag="Email address" Text="{Binding Email}" />
+                                <TextBox Tag="Email address" Style="{StaticResource EmailTextBox}" Text="{Binding Email}" />
                                 <Rectangle Height="1" Fill="#f0f0f0" Margin="6 0 6 0" />
-                                <PasswordBox x:Name="pbPassword" Style="{StaticResource PasswordTextBox}" Tag="Password" />
+                                <PasswordBox x:Name="pbPassword" Tag="Password" Password="berea123" Style="{StaticResource PasswordTextBox}" />
                             </StackPanel>
                         </Border>
                         <Button Content="Sign in" Command="{Binding LoginCommand}" attachedProperties:IsBusyProperty.Value="{Binding LoginIsRunning}" Style="{StaticResource SignInButton}" Margin="2 36 2 0" />

@@ -1,11 +1,17 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.Donor.IoC;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
     using VivusConsole = Console.Console;
+    using BCrypt.Net;
+    using System.Windows;
+    using Vivus.Core.Security;
+    using Vivus.Core.ViewModels.Base;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -29,7 +35,7 @@
         /// <summary>
         /// Gets or sets the email address of the user.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "hutanu.adina@hotmail.com";
 
         /// <summary>
         /// Gets or sets the flag that indicates whether the login command is running or not.
@@ -88,7 +94,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> class with the default values.
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             LoginCommand = new RelayCommand(async () => await LoginAsync());
             RegisterCommand = new RelayCommand(async () => await RegisterAsync());
@@ -125,16 +131,35 @@
                     return;
                 }
 
-                //var email = Email;
-                //var pass = ParentPage.SecurePasword.Unsecure();
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        Model.Donor donor = IoCContainer.Get<IUnitOfWork>().Donors.Entities.First(d => d.Account.Email == Email);
 
-                IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
-                IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Dashboard;
-                IoCContainer.Get<WindowViewModel>().ShowMenu();
-                //await Task.Delay(120);
-                IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
+                        if (!BCrypt.Verify(ParentPage.SecurePasword.Unsecure(), donor.Account.Password))
+                        {
+                            Popup("Invalid email or password.");
+                            VivusConsole.WriteLine("Invalid username of password.");
+                            return;
+                        }
 
-                VivusConsole.WriteLine("Successfull login!");
+                        IoCContainer.Get<IApllicationViewModel<Model.Donor>>().User = donor;
+
+                        IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
+                        IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Dashboard;
+                        IoCContainer.Get<WindowViewModel>().ShowMenu();
+
+                        IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;
+
+                        VivusConsole.WriteLine($"Welcome, { Email }!");
+                    }
+                    catch
+                    {
+                        Popup("Invalid email or password.");
+                        VivusConsole.WriteLine("No user found.");
+                    }
+                });
             });
         }
 
