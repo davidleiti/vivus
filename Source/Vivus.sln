@@ -29,6 +29,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.Administration.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.UnitTests", "Vivus.Core.UnitTests\Vivus.Core.UnitTests.csproj", "{C12305CC-032C-4ACC-AD20-F035625E9DC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.DCPersonnel.UnitTests", "Vivus.Core.DCPersonnel.UnitTests\Vivus.Core.DCPersonnel.UnitTests.csproj", "{2CDAB5FF-F5AB-48C0-BAF3-43ACEC885C08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.Doctor.UnitTests", "Vivus.Core.Doctor.UnitTests\Vivus.Core.Doctor.UnitTests.csproj", "{6212D4A9-F8BF-45D6-B049-35DFA4921D03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.Donor.UnitTests", "Vivus.Core.Donor.UnitTests\Vivus.Core.Donor.UnitTests.csproj", "{1BDA6D60-FB50-4A6A-8032-FE2B7F79E669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +93,18 @@ Global
 		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CDAB5FF-F5AB-48C0-BAF3-43ACEC885C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CDAB5FF-F5AB-48C0-BAF3-43ACEC885C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CDAB5FF-F5AB-48C0-BAF3-43ACEC885C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CDAB5FF-F5AB-48C0-BAF3-43ACEC885C08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6212D4A9-F8BF-45D6-B049-35DFA4921D03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6212D4A9-F8BF-45D6-B049-35DFA4921D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6212D4A9-F8BF-45D6-B049-35DFA4921D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6212D4A9-F8BF-45D6-B049-35DFA4921D03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BDA6D60-FB50-4A6A-8032-FE2B7F79E669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BDA6D60-FB50-4A6A-8032-FE2B7F79E669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BDA6D60-FB50-4A6A-8032-FE2B7F79E669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BDA6D60-FB50-4A6A-8032-FE2B7F79E669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
