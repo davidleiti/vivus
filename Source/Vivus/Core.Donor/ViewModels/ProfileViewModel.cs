@@ -1,11 +1,17 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Donor.IoC;
     using Vivus.Core.Donor.Validators;
+    using Vivus.Core.Security;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
     using VivusConsole = Console.Console;
 
     /// <summary>
@@ -18,6 +24,10 @@
         private string email;
         private object password;
         private bool updateIsRunning;
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<Model.Donor> appViewModel;
+        private ISecurity security;
+
 
         #endregion
 
@@ -137,12 +147,39 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ProfileViewModel"/> class with the default values.
         /// </summary>
-        public ProfileViewModel()
+        public ProfileViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();
             ResidenceAddress = new AddressViewModel(false);
             Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
+
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
+            security = IoCContainer.Get<ISecurity>();
+            LoadCountiesAsync();
+
+            UpdateCommand = new RelayCommand(UpdateAsync);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdministratorsViewModel"/> class with the given values.
+        /// </summary>
+        /// <param name="unitOfWork">The UoW used to access repositories.</param>
+        /// <param name="appViewModel">The viewmodel for the application.</param>
+        /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
+        /// <param name="security">The collection of security methods.</param>
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Model.Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        {
+            Person = new PersonViewModel();
+            IdentificationCardAddress = new AddressViewModel();
+            ResidenceAddress = new AddressViewModel(false);
+            Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
+
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.security = security;
+            LoadCountiesAsync();
 
             UpdateCommand = new RelayCommand(UpdateAsync);
         }
@@ -150,6 +187,23 @@
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Loads all the counties asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async void LoadCountiesAsync()
+        {
+            await Task.Run(() =>
+            {
+                Counties.Clear();
+                Counties.Add(new BasicEntity<string>(-1, "Select county"));
+                unitOfWork.Counties.Entities.ToList().ForEach(county =>
+                    dispatcherWrapper.InvokeAsync(() => Counties.Add(new BasicEntity<string>(county.CountyID, county.Name)))
+                );
+            });
+        }
+
 
         /// <summary>
         /// Registers a donor.
