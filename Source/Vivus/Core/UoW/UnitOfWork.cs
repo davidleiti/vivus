@@ -121,7 +121,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the given value.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The Unit of Work for the Entity Framework instance.</param>
         public UnitOfWork(DbContext context)
         {
             this.context = context;
