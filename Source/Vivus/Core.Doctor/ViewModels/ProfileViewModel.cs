@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Core.Doctor.ViewModels
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -128,13 +129,13 @@
             IdentificationCardAddress = new AddressViewModel();
             WorkAddress = new AddressViewModel();
             Counties = new List<BasicEntity<string>>();
-            UpdateCommand = new RelayCommand(Update);
+            UpdateCommand = new RelayCommand(async () => await Update());
 
             appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             security = IoCContainer.Get<ISecurity>();
 
-            LoadCountiesAsync();
+            PopulateFields();
             //ClearFields();
 
         }
@@ -153,14 +154,14 @@
             IdentificationCardAddress = new AddressViewModel();
             WorkAddress = new AddressViewModel();
             Counties = new List<BasicEntity<string>>();
-            UpdateCommand = new RelayCommand(Update);
+            UpdateCommand = new RelayCommand(async () => await Update());
 
             this.appViewModel = appViewModel;
             this.unitOfWork = unitOfWork;
             this.security = security;
             this.dispatcherWrapper = dispatcherWrapper;
 
-            LoadCountiesAsync();
+            //LoadCountiesAsync();
         }
 
         #endregion
@@ -171,7 +172,7 @@
         /// Loads all the counties asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadCountiesAsync()
+        private async Task LoadCountiesAsync()
         {
             await Task.Run(() =>
             {
@@ -188,7 +189,7 @@
         /// </summary>
         /// <param name="admin">The administrator instance.</param>
         /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
-        private void FillModelAdministrator(ref Doctor doctor, bool fillOptional = true)
+        private void FillModelDoctor(ref Doctor doctor, bool fillOptional = true)
         {
             IContainPassword parentPage;
             Model.Gender gender;
@@ -266,20 +267,72 @@
         }
 
         /// <summary>
+        /// Populates all the fields of the viewmodel.
+        /// </summary>
+        private async void PopulateFields()
+        {
+
+            Doctor doctor;
+            doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
+
+            Email = doctor.Account.Email;
+            Person.FirstName = doctor.Person.FirstName;
+            Person.LastName = doctor.Person.LastName;
+            Person.BirthDate = doctor.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            Person.NationalIdentificationNumber = doctor.Person.Nin;
+            Person.PhoneNumber = doctor.Person.PhoneNo;
+            Person.Gender = new BasicEntity<string>(doctor.Person.GenderID, doctor.Person.Gender.Type);
+            IdentificationCardAddress.StreetName = doctor.Person.Address.Street;
+            IdentificationCardAddress.StreetNumber = doctor.Person.Address.StreetNo;
+            IdentificationCardAddress.City = doctor.Person.Address.City;
+            IdentificationCardAddress.County = Counties.First(c => c.Value == doctor.Person.Address.County.Name);
+            //IdentificationCardAddress.County = new BasicEntity<string>(doctor.Person.Address.CountyID, doctor.Person.Address.County.Name);
+            IdentificationCardAddress.ZipCode = doctor.Person.Address.ZipCode;
+
+            WorkAddress.StreetName = doctor.Address.Street;
+            WorkAddress.StreetNumber = doctor.Address.StreetNo;
+            WorkAddress.City = doctor.Address.City;
+            WorkAddress.County = new BasicEntity<string>(doctor.Address.CountyID, doctor.Address.County.Name);
+            WorkAddress.ZipCode = doctor.Address.ZipCode;
+        }
+
+        /// <summary>
         /// Updates a doctor.
         /// </summary>
-        private void Update()
+        private async Task Update()
         {
-            ParentPage.AllowErrors();
-
-            if (Errors + Person.Errors + IdentificationCardAddress.Errors + WorkAddress.Errors > 0)
+            await Task.Run(async () =>
             {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-            VivusConsole.WriteLine("Doctor: Update worked!");
-            Popup("Successfull operation!", PopupType.Successful);
+                if (Errors + Person.Errors + IdentificationCardAddress.Errors + WorkAddress.Errors > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                try
+                {
+                    Doctor doctor;
+                    doctor = null;
+
+                    FillModelDoctor(ref doctor);
+                    //unitOfWork.Doctors.Add(doctor);
+
+                    //unitOfWork.Complete();
+                    LoadCountiesAsync().Wait();
+                    PopulateFields();
+
+                    Popup("Update was successful!", PopupType.Successful);
+                    VivusConsole.WriteLine("Doctor: Update worked!");
+                }
+                catch
+                {
+                    Popup("An error occured while updating.",PopupType.Warning);
+                }
+
+            });
+
         }
 
         #endregion
