@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCrypt.Net, Version=0.1.4141.31969, Culture=neutral, PublicKeyToken=f3bc8f8c31beeb49, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\BCrypt.Net.0.1.0\lib\net35\BCrypt.Net.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -63,8 +66,10 @@
     <Compile Include="DataModels\ArgbColor.cs" />
     <Compile Include="DataModels\BasicEntity.cs" />
     <Compile Include="DataModels\ButtonType.cs" />
+    <Compile Include="DataModels\DispatcherWrapper.cs" />
     <Compile Include="DataModels\Gender.cs" />
     <Compile Include="DataModels\Interfaces\IContainPassword.cs" />
+    <Compile Include="DataModels\Interfaces\IDispatcherWrapper.cs" />
     <Compile Include="DataModels\Interfaces\IPage.cs" />
     <Compile Include="DataModels\PopupType.cs" />
     <Compile Include="DataModels\Visibility.cs" />
@@ -155,13 +160,16 @@
     <Compile Include="Repository\PersonStatusesRepository.cs" />
     <Compile Include="Repository\RequestPrioritiesRepository.cs" />
     <Compile Include="Repository\RhsRepository.cs" />
+    <Compile Include="Security\Base\ISecurity.cs" />
     <Compile Include="Security\SecureStringHelpers.cs" />
+    <Compile Include="Security\Security.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
     <Compile Include="Validators\AddressValidator.cs" />
     <Compile Include="Validators\PersonValidator.cs" />
     <Compile Include="ViewModels\AddressViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
+    <Compile Include="ViewModels\Base\IApllicationViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsPanelViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />

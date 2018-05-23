@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Client.Core", "Vivus\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.PopulateDB", "Vivus\Vivus.Core.PopulateDB\Vivus.Core.PopulateDB.csproj", "{831E532A-3285-4B2C-82A3-B0D469B3DA8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.Administration.UnitTests", "..\Test\Vivus.Core.Administration.UnitTests\Vivus.Core.Administration.UnitTests.csproj", "{D6143943-689F-4CFB-94DF-933F1297CC3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.UnitTests", "Vivus.Core.UnitTests\Vivus.Core.UnitTests.csproj", "{C12305CC-032C-4ACC-AD20-F035625E9DC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{831E532A-3285-4B2C-82A3-B0D469B3DA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{831E532A-3285-4B2C-82A3-B0D469B3DA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{831E532A-3285-4B2C-82A3-B0D469B3DA8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6143943-689F-4CFB-94DF-933F1297CC3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6143943-689F-4CFB-94DF-933F1297CC3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6143943-689F-4CFB-94DF-933F1297CC3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6143943-689F-4CFB-94DF-933F1297CC3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12305CC-032C-4ACC-AD20-F035625E9DC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

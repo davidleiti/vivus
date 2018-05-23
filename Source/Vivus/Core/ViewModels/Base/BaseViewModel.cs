@@ -11,6 +11,9 @@
     using System.Windows;
     using System.Linq;
 
+    /// <summary>
+    /// Represents a viewmodel that implements the basic behaviour.
+    /// </summary>
     public class BaseViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         #region Private Members
@@ -23,6 +26,7 @@
         #region Protected Members
 
         protected IDictionary<string, List<string>> errors;
+        protected IDispatcherWrapper dispatcherWrapper;
 
         #endregion
 
@@ -97,9 +101,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseViewModel"/> class with the given values.
         /// </summary>
-        public BaseViewModel()
+        public BaseViewModel(IDispatcherWrapper dispatcherWrapper = null)
         {
             errors = new Dictionary<string, List<string>>();
+            this.dispatcherWrapper = dispatcherWrapper;
         }
 
         #endregion
@@ -132,7 +137,7 @@
         public void Popup(string message, PopupType popupType = PopupType.Error)
         {
             // Make sure this code is run on the ui thread
-            Application.Current.Dispatcher.Invoke(() =>
+            dispatcherWrapper.InvokeAsync(() =>
             {
                 PopupMessage = null;
                 PopupType = popupType;

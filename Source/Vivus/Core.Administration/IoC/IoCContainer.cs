@@ -3,7 +3,9 @@
     using Ninject;
     using Vivus.Core.Administration.ViewModels;
     using Vivus.Core.Model;
+    using Vivus.Core.Security;
     using Vivus.Core.UoW;
+    using Vivus.Core.ViewModels.Base;
 
     /// <summary>
     /// Represents the IoC container of the application.
@@ -24,7 +26,7 @@
             Kernel.Bind<WindowViewModel>().ToConstant(new WindowViewModel());
 
             // Bind to a single instance of the application viewmodel
-            Kernel.Bind<ApplicationViewModel>().ToConstant(new ApplicationViewModel());
+            Kernel.Bind<IApllicationViewModel<Administrator>>().ToConstant(new ApplicationViewModel());
         }
 
         /// <summary>
@@ -34,6 +36,9 @@
         {
             // Bind the unit of work
             Kernel.Bind<IUnitOfWork>().ToConstant(new UnitOfWork(new VivusEntities()));
+
+            // Bind the security instance
+            Kernel.Bind<ISecurity>().ToConstant(new Security());
 
             // Bind all required viewmodels
             BindViewModels();

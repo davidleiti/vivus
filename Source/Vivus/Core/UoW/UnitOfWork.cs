@@ -4,6 +4,9 @@
     using Vivus.Core.Model;
     using Vivus.Core.Repository;
 
+    /// <summary>
+    /// Represents the implementation of a unit of work.
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         #region Private Members
@@ -134,7 +137,6 @@
             BloodContainerTypes = new BloodContainerTypesRepository(this.context);
             BloodRequests = new Repository<BloodRequest>(this.context);
             BloodTypes = new BloodTypesRepository(this.context);
-            Counties = new Repository<County>(this.context);
             Counties = new CountiesRepository(this.context);
             DCPersonnel = new Repository<DCPersonnel>(this.context);
             Doctors = new Repository<Doctor>(this.context);

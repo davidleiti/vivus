@@ -13,8 +13,8 @@
     using Vivus.Core.Model;
     using Vivus.Core.Security;
     using System;
-    using Vivus.Core.Repository;
     using System.Globalization;
+    using Vivus.Core.ViewModels.Base;
 
     /// <summary>
     /// Represents a view model for the administrators page.
@@ -30,6 +30,9 @@
         private ButtonType buttonType;
         private bool optionalErrors;
         private bool actionIsRunning;
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<Administrator> appViewModel;
+        private ISecurity security;
 
         #endregion
 
@@ -172,7 +175,7 @@
                     ButtonType = ButtonType.Add;
                     optionalErrors = false;
 
-                    Application.Current.Dispatcher.Invoke(() => ParentPage.DontAllowErrors());
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
 
                     ClearFields();
                 }
@@ -181,7 +184,7 @@
                     ButtonType = ButtonType.Modify;
                     optionalErrors = true;
 
-                    Application.Current.Dispatcher.Invoke(() => ParentPage.AllowOptionalErrors());
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());
                     PopulateFields();
                 }
 
@@ -227,12 +230,15 @@
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignUpViewModel"/> class with the default values.
+        /// Initializes a new instance of the <see cref="AdministratorsViewModel"/> class with the default values.
         /// </summary>
-        public AdministratorsViewModel() {
+        public AdministratorsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher)) {
             IsActiveIsEnabled = true;
             ButtonType = ButtonType.Add;
             optionalErrors = false;
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Administrator>>();
+            security = IoCContainer.Get<ISecurity>();
 
             Person = new PersonViewModel();
             Counties = new ObservableCollection<BasicEntity<string>>();
@@ -242,17 +248,46 @@
             LoadCountiesAsync();
             LoadAdministratorsAsync();
 
-            AddCommand = new RelayCommand(AddModify);
-		}
+            AddCommand = new RelayCommand(async () => await AddModifyAsync());
+        }
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdministratorsViewModel"/> class with the given values.
+        /// </summary>
+        /// <param name="unitOfWork">The UoW used to access repositories.</param>
+        /// <param name="appViewModel">The viewmodel for the application.</param>
+        /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
+        /// <param name="security">The collection of security methods.</param>
+        public AdministratorsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        {
+            IsActiveIsEnabled = true;
+            ButtonType = ButtonType.Add;
+            optionalErrors = false;
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispatcherWrapper;
+            this.security = security;
 
-		#region Private Methods
+            Person = new PersonViewModel();
+            Counties = new ObservableCollection<BasicEntity<string>>();
+            Administrators = new ObservableCollection<AdministratorItemViewModel>();
+            Address = new AddressViewModel();
 
-		/// <summary>
-		/// Adds an adminstrator.
-		/// </summary>
-		private async void AddModify() {
+            LoadCountiesAsync();
+            LoadAdministratorsAsync();
+
+            AddCommand = new RelayCommand(async () => await AddModifyAsync());
+        }
+
+        #endregion
+
+        #region Public Methods
+        
+        /// <summary>
+        /// Adds an adminstrator.
+        /// </summary>
+        public async Task AddModifyAsync()
+        {
             await RunCommand(() => ActionIsRunning, async () =>
             {
                 if (ButtonType == ButtonType.Add)
@@ -261,6 +296,10 @@
                     await ModifyAdministratorAsync();
             });
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Loads all the counties asynchronously.
@@ -272,8 +311,8 @@
             {
                 Counties.Clear();
                 Counties.Add(new BasicEntity<string>(-1, "Select county"));
-                IoCContainer.Get<IUnitOfWork>().Counties.Entities.ToList().ForEach(county =>
-                    Application.Current.Dispatcher.Invoke(() => Counties.Add(new BasicEntity<string>(county.CountyID, county.Name)))
+                unitOfWork.Counties.Entities.ToList().ForEach(county =>
+                    dispatcherWrapper.InvokeAsync(() => Counties.Add(new BasicEntity<string>(county.CountyID, county.Name)))
                 );
             });
         }
@@ -285,39 +324,38 @@
         private async void LoadAdministratorsAsync()
         {
             await Task.Run(() =>
-                IoCContainer.Get<IUnitOfWork>()
-                    .Administrators
-                    .Entities
-                    .Where(admin => !admin.IsOwner || admin.IsOwner && IoCContainer.Get<ApplicationViewModel>().Administrator.IsOwner)
-                    .ToList()
-                    .ForEach(admin =>
-                        Application.Current.Dispatcher.Invoke(() =>
-                            Administrators.Add(new AdministratorItemViewModel
-                            {
-                                PersonID = admin.PersonID,
-                                Email = admin.Account.Email,
-                                IsActive = admin.Active,
-                                IsAdmininistrator = !admin.IsOwner,
-                                Person = new PersonViewModel
+                unitOfWork.Administrators
+                        .Entities
+                        .Where(admin => !admin.IsOwner || admin.IsOwner && appViewModel.User.IsOwner)
+                        .ToList()
+                        .ForEach(admin =>
+                            dispatcherWrapper.InvokeAsync(() =>
+                                Administrators.Add(new AdministratorItemViewModel
                                 {
-                                    FirstName = admin.Person.FirstName,
-                                    LastName = admin.Person.LastName,
-                                    BirthDate = admin.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                                    NationalIdentificationNumber = admin.Person.Nin,
-                                    PhoneNumber = admin.Person.PhoneNo,
-                                    Gender = new BasicEntity<string>(admin.Person.GenderID, admin.Person.Gender.Type)
-                                },
-                                Address = new AddressViewModel
-                                {
-                                    County = new BasicEntity<string>(admin.Person.Address.CountyID, admin.Person.Address.County.Name),
-                                    City = admin.Person.Address.City,
-                                    StreetName = admin.Person.Address.Street,
-                                    StreetNumber = admin.Person.Address.StreetNo,
-                                    ZipCode = admin.Person.Address.ZipCode
-                                }
-                            })
+                                    PersonID = admin.PersonID,
+                                    Email = admin.Account.Email,
+                                    IsActive = admin.Active,
+                                    IsAdmininistrator = !admin.IsOwner,
+                                    Person = new PersonViewModel
+                                    {
+                                        FirstName = admin.Person.FirstName,
+                                        LastName = admin.Person.LastName,
+                                        BirthDate = admin.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                                        NationalIdentificationNumber = admin.Person.Nin,
+                                        PhoneNumber = admin.Person.PhoneNo,
+                                        Gender = new BasicEntity<string>(admin.Person.GenderID, admin.Person.Gender.Type)
+                                    },
+                                    Address = new AddressViewModel
+                                    {
+                                        County = new BasicEntity<string>(admin.Person.Address.CountyID, admin.Person.Address.County.Name),
+                                        City = admin.Person.Address.City,
+                                        StreetName = admin.Person.Address.Street,
+                                        StreetNumber = admin.Person.Address.StreetNo,
+                                        ZipCode = admin.Person.Address.ZipCode
+                                    }
+                                })
+                            )
                         )
-                    )
             );
         }
 
@@ -371,7 +409,7 @@
         {
             await Task.Run(() =>
             {
-                Application.Current.Dispatcher.Invoke(() => ParentPage.AllowErrors());
+                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors + Address.Errors + Person.Errors > 0)
                 {
@@ -381,11 +419,9 @@
 
                 try
                 {
-                    IUnitOfWork unitOfWork;
                     Administrator admin;
                     AdministratorItemViewModel adminViewModel;
 
-                    unitOfWork = IoCContainer.Get<IUnitOfWork>();
                     admin = null;
                     adminViewModel = null;
 
@@ -398,7 +434,7 @@
                     FillViewModelAdministrator(ref adminViewModel);
                     adminViewModel.PersonID = admin.PersonID;
 
-                    Application.Current.Dispatcher.Invoke(() => Administrators.Add(adminViewModel));
+                    dispatcherWrapper.InvokeAsync(() => Administrators.Add(adminViewModel));
 
                     Popup($"Administrator added successfully!", PopupType.Successful);
                 }
@@ -428,11 +464,9 @@
 
                 try
                 {
-                    IUnitOfWork unitOfWork;
                     Administrator admin;
                     string role;
                     
-                    unitOfWork = IoCContainer.Get<IUnitOfWork>();
                     admin = unitOfWork.Persons[SelectedItem.PersonID].Administrator;
 
                     FillModelAdministrator(ref admin);
@@ -471,15 +505,13 @@
         /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
         private void FillModelAdministrator(ref Administrator admin, bool fillOptional = false)
         {
-            IUnitOfWork unitOfWork;
             IContainPassword parentPage;
             Model.Gender gender;
             County county;
-
-            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            
             parentPage = (ParentPage as IContainPassword);
-            gender = (unitOfWork.Genders as GendersRepository).Gender(Person.Gender.Value);
-            county = (unitOfWork.Counties as CountiesRepository).County(Address.County.Value);
+            gender = unitOfWork.Genders.Find(g => g.Type == Person.Gender.Value).Single();
+            county = unitOfWork.Counties.Find(c => c.Name == Address.County.Value).Single();
 
             // If the instance is null, initialize it
             if (admin is null)
@@ -499,7 +531,7 @@
             admin.Active = IsActive;
             //  Account properties
             admin.Account.Email = Email;
-            admin.Account.Password = parentPage.SecurePasword.Length == 0 && !fillOptional ? admin.Account.Password : BCrypt.Net.BCrypt.HashPassword(parentPage.SecurePasword.Unsecure());
+            admin.Account.Password = parentPage.SecurePasword.Length == 0 && !fillOptional ? admin.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
             //  Person properties
             admin.Person.FirstName = Person.FirstName;
             admin.Person.LastName = Person.LastName;
@@ -521,13 +553,11 @@
         /// <param name="admin">The administrator viewmodel instance.</param>
         private void FillViewModelAdministrator(ref AdministratorItemViewModel admin)
         {
-            IUnitOfWork unitOfWork;
             Model.Gender gender;
             County county;
 
-            unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            gender = (unitOfWork.Genders as GendersRepository).Gender(Person.Gender.Value);
-            county = (unitOfWork.Counties as CountiesRepository).County(Address.County.Value);
+            gender = unitOfWork.Genders.Find(g => g.Type == Person.Gender.Value).Single();
+            county = unitOfWork.Counties.Find(c => c.Name == Address.County.Value).Single();
 
             // If the instance is null, initialize it
             if (admin is null)

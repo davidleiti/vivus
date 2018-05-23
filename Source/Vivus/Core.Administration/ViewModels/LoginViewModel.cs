@@ -11,6 +11,7 @@
     using Vivus.Core.Model;
     using BCrypt.Net;
     using Vivus.Core.Security;
+    using Vivus.Core.ViewModels.Base;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -118,7 +119,7 @@
                             return;
                         }
 
-                        IoCContainer.Get<ApplicationViewModel>().Administrator = admin;
+                        IoCContainer.Get<IApllicationViewModel<Administrator>>().User = admin;
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
                         IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Doctors;
