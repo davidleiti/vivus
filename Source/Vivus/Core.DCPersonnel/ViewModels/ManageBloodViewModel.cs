@@ -213,9 +213,9 @@
 
         public ManageBloodViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
-            ContainerTypes = new List<BasicEntity<string>>();
-            BloodTypes = new List<BasicEntity<string>>();
-            RHTypes = new List<BasicEntity<string>>();
+            ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
+            BloodTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
+            RHTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select rh") };
             AddCommand = new RelayCommand(Add);
             RequestCommand = new RelayCommand(Request);
             Containers = new ObservableCollection<ContainersStorageItemViewModel>();
@@ -226,9 +226,12 @@
 
             Task.Run(async () =>
             {
-                await LoadContainerTypesAsync();
-                await LoadBloodTypesAsync();
-                await LoadRHTypesAsync();
+                await Task.Run(() =>
+                {
+                    LoadContainerTypesAsync();
+                    LoadBloodTypesAsync();
+                    LoadRHTypesAsync();
+                });
                 //PopulateFields();
             });
         }
@@ -262,7 +265,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async Task LoadContainerTypesAsync()
+        private async void LoadContainerTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -278,7 +281,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async Task LoadBloodTypesAsync()
+        private async void LoadBloodTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -294,14 +297,14 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async Task LoadRHTypesAsync()
+        private async void LoadRHTypesAsync()
         {
             await Task.Run(() =>
             {
                 RHTypes.Clear();
                 RHTypes.Add(new BasicEntity<string>(-1, "Select rh"));
                 unitOfWork.RHs.Entities.ToList().ForEach(rh =>
-                    dispatcherWrapper.InvokeAsync(() => BloodTypes.Add(new BasicEntity<string>(rh.RhID, rh.Type)))
+                    dispatcherWrapper.InvokeAsync(() => RHTypes.Add(new BasicEntity<string>(rh.RhID, rh.Type)))
                 );
             });
         }
