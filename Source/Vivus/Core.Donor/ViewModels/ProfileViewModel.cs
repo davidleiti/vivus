@@ -128,7 +128,7 @@
                     return GetErrorString(propertyName, DonorValidator.EmailValidation(Email));
 
                 if (propertyName == nameof(Password) && ParentPage != null)
-                    return GetErrorString(propertyName, DonorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
+                    return GetNotMandatoryErrorString(propertyName, DonorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
                 return null;
             }
@@ -160,12 +160,15 @@
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
             security = IoCContainer.Get<ISecurity>();
-            LoadCountiesAsync();
 
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
 
-            ClearFields();
-            //PopulateFields();
+            //ClearFields();
+            Task.Run(async () =>
+            {
+                await LoadCountiesAsync();
+                PopulateFields();
+            });
         }
 
         /// <summary>
@@ -198,7 +201,7 @@
         /// Loads all the counties asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadCountiesAsync()
+        private async Task LoadCountiesAsync()
         {
             await Task.Run(() =>
             {
@@ -240,8 +243,8 @@
         /// </summary>
         private void PopulateFields()
         {
-            Model.Donor donor;
-            Model.Donor donorResidence;
+            Donor donor;
+            Donor donorResidence;
 
             donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
             donorResidence = unitOfWork.Persons[appViewModel.User.ResidenceID].Donor;
@@ -271,7 +274,7 @@
         /// </summary>
         private async Task UpdateAsync()
         {
-            await RunCommand(() => updateIsRunning, async () =>
+            await RunCommand(() => UpdateIsRunning, async () =>
             {
                 await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
@@ -281,21 +284,24 @@
                     return;
                 }
 
-                try
+                await Task.Run(() =>
                 {
-                    Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
+                    try
+                    {
+                        Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
 
-                    FillModelAdministrator(ref donor, true);
-                    // Make changes persistent
-                    unitOfWork.Complete();
+                        FillModelAdministrator(ref donor, true);
+                        // Make changes persistent
+                        unitOfWork.Complete();
 
 
-                    Popup($"Donor updated successfully!", PopupType.Successful);
-                }
-                catch
-                {
-                    Popup($"An error occured while updating the donor.");
-                }
+                        Popup($"Donor updated successfully!", PopupType.Successful);
+                    }
+                    catch
+                    {
+                        Popup($"An error occured while updating the donor.");
+                    }
+                });
             });
         }
         /*
@@ -350,7 +356,7 @@
             // Update the database
             // Account properties
             donor.Account.Email = Email;
-            donor.Account.Password = parentPage.SecurePasword.Length == 0 && !fillOptional ? donor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
+            donor.Account.Password = parentPage.SecurePasword.Length == 0 ? donor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
             //  Person properties
             donor.Person.FirstName = Person.FirstName;
             donor.Person.LastName = Person.LastName;
