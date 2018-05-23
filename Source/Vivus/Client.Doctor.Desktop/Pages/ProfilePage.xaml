@@ -156,7 +156,7 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbIdentifCardCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbIdentifCardCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
                     <!-- Zip -->
