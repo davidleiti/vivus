@@ -26,6 +26,7 @@
 
         private string email;
         private object password;
+        private bool updateIsRunning;
         private IApllicationViewModel<Doctor> appViewModel;
         private IUnitOfWork unitOfWork;
         private ISecurity security;
@@ -35,6 +36,21 @@
         #region Public Properties
 
         public IPage ParentPage { get; set; }
+
+        public bool UpdateIsRunning
+        {
+            get => updateIsRunning;
+
+            set
+            {
+                if (updateIsRunning == value)
+                    return;
+
+                updateIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the email address of the doctor.
@@ -110,7 +126,7 @@
                     return GetErrorString(propertyName, DoctorValidator.EmailValidation(Email));
 
                 if (propertyName == nameof(Password) && ParentPage != null)
-                    return GetErrorString(propertyName, DoctorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
+                    return GetNotMandatoryErrorString(propertyName, DoctorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
                 return null;
             }
@@ -129,13 +145,18 @@
             IdentificationCardAddress = new AddressViewModel();
             WorkAddress = new AddressViewModel();
             Counties = new List<BasicEntity<string>>();
-            UpdateCommand = new RelayCommand(async () => await Update());
+            UpdateCommand = new RelayCommand(async () => await UpdateAsync());
 
             appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             security = IoCContainer.Get<ISecurity>();
 
-            PopulateFields();
+            Task.Run(async () =>
+            {
+                await LoadCountiesAsync();
+                PopulateFields();
+            });
+            //PopulateFields();
             //ClearFields();
 
         }
@@ -154,7 +175,7 @@
             IdentificationCardAddress = new AddressViewModel();
             WorkAddress = new AddressViewModel();
             Counties = new List<BasicEntity<string>>();
-            UpdateCommand = new RelayCommand(async () => await Update());
+            UpdateCommand = new RelayCommand(async () => await UpdateAsync());
 
             this.appViewModel = appViewModel;
             this.unitOfWork = unitOfWork;
@@ -189,7 +210,7 @@
         /// </summary>
         /// <param name="admin">The administrator instance.</param>
         /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
-        private void FillModelDoctor(ref Doctor doctor, bool fillOptional = true)
+        private void FillModelDoctor(ref Doctor doctor)
         {
             IContainPassword parentPage;
             Model.Gender gender;
@@ -220,7 +241,7 @@
             // Update the database
             //  Account properties
             doctor.Account.Email = Email;
-            doctor.Account.Password = parentPage.SecurePasword.Length == 0 && !fillOptional ? doctor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
+            doctor.Account.Password = parentPage.SecurePasword.Length == 0 ? doctor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
             //  Person properties
             doctor.Person.FirstName = Person.FirstName;
             doctor.Person.LastName = Person.LastName;
@@ -235,11 +256,11 @@
             doctor.Person.Address.County = idCardAddressCounty;
             doctor.Person.Address.ZipCode = IdentificationCardAddress.ZipCode;
             //  Work Address properties
-            doctor.Person.Address.Street = WorkAddress.StreetName;
-            doctor.Person.Address.StreetNo = WorkAddress.StreetNumber;
-            doctor.Person.Address.City = WorkAddress.City;
-            doctor.Person.Address.County = workAddressCounty;
-            doctor.Person.Address.ZipCode = WorkAddress.ZipCode;
+            doctor.Address.Street = WorkAddress.StreetName;
+            doctor.Address.StreetNo = WorkAddress.StreetNumber;
+            doctor.Address.City = WorkAddress.City;
+            doctor.Address.County = workAddressCounty;
+            doctor.Address.ZipCode = WorkAddress.ZipCode;
         }
 
         /// <summary>
@@ -269,9 +290,8 @@
         /// <summary>
         /// Populates all the fields of the viewmodel.
         /// </summary>
-        private async void PopulateFields()
+        private void PopulateFields()
         {
-
             Doctor doctor;
             doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
 
@@ -282,11 +302,11 @@
             Person.NationalIdentificationNumber = doctor.Person.Nin;
             Person.PhoneNumber = doctor.Person.PhoneNo;
             Person.Gender = new BasicEntity<string>(doctor.Person.GenderID, doctor.Person.Gender.Type);
+
             IdentificationCardAddress.StreetName = doctor.Person.Address.Street;
             IdentificationCardAddress.StreetNumber = doctor.Person.Address.StreetNo;
             IdentificationCardAddress.City = doctor.Person.Address.City;
-            IdentificationCardAddress.County = Counties.First(c => c.Value == doctor.Person.Address.County.Name);
-            //IdentificationCardAddress.County = new BasicEntity<string>(doctor.Person.Address.CountyID, doctor.Person.Address.County.Name);
+            IdentificationCardAddress.County = new BasicEntity<string>(doctor.Person.Address.CountyID, doctor.Person.Address.County.Name);
             IdentificationCardAddress.ZipCode = doctor.Person.Address.ZipCode;
 
             WorkAddress.StreetName = doctor.Address.Street;
@@ -299,11 +319,11 @@
         /// <summary>
         /// Updates a doctor.
         /// </summary>
-        private async Task Update()
+        private async Task UpdateAsync()
         {
-            await Task.Run(async () =>
+            await RunCommand(() => UpdateIsRunning, async () =>
             {
-                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());
 
                 if (Errors + Person.Errors + IdentificationCardAddress.Errors + WorkAddress.Errors > 0)
                 {
@@ -313,24 +333,20 @@
 
                 try
                 {
-                    Doctor doctor;
-                    doctor = null;
+                    Doctor doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
 
                     FillModelDoctor(ref doctor);
-                    //unitOfWork.Doctors.Add(doctor);
+                    unitOfWork.Complete();
 
-                    //unitOfWork.Complete();
-                    LoadCountiesAsync().Wait();
-                    PopulateFields();
+                    //PopulateFields();
 
                     Popup("Update was successful!", PopupType.Successful);
                     VivusConsole.WriteLine("Doctor: Update worked!");
                 }
                 catch
                 {
-                    Popup("An error occured while updating.",PopupType.Warning);
+                    Popup("An error occured while updating.", PopupType.Warning);
                 }
-
             });
 
         }
