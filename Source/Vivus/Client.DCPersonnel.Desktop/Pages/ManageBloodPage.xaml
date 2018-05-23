@@ -78,7 +78,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Containers}">
+                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Containers}" SelectedItem="{Binding SelectedContainer}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>

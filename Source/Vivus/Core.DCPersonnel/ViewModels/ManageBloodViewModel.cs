@@ -32,6 +32,8 @@
         private BasicEntity<string> addContainerRH;
         private BasicEntity<string> requestRH;
 
+        private ContainersStorageItemViewModel selectedContainer;
+
         #endregion
 
         #region Public Enums
@@ -158,6 +160,21 @@
                     return;
 
                 harvestDate = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public ContainersStorageItemViewModel SelectedContainer
+        {
+            get => selectedContainer;
+
+            set
+            {
+                if (selectedContainer == value)
+                    return;
+
+                selectedContainer = value;
 
                 OnPropertyChanged();
             }
