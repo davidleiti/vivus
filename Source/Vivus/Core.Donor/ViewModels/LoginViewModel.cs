@@ -35,7 +35,7 @@
         /// <summary>
         /// Gets or sets the email address of the user.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "hutanu.adina@hotmail.com";
 
         /// <summary>
         /// Gets or sets the flag that indicates whether the login command is running or not.
