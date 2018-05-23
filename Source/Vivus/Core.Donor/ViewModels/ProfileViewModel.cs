@@ -1,6 +1,8 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -8,6 +10,7 @@
     using Vivus.Core.DataModels;
     using Vivus.Core.Donor.IoC;
     using Vivus.Core.Donor.Validators;
+    using Vivus.Core.Model;
     using Vivus.Core.Security;
     using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
@@ -159,7 +162,10 @@
             security = IoCContainer.Get<ISecurity>();
             LoadCountiesAsync();
 
-            UpdateCommand = new RelayCommand(UpdateAsync);
+            UpdateCommand = new RelayCommand(async () => await UpdateAsync());
+
+            ClearFields();
+            //PopulateFields();
         }
 
         /// <summary>
@@ -181,7 +187,7 @@
             this.security = security;
             LoadCountiesAsync();
 
-            UpdateCommand = new RelayCommand(UpdateAsync);
+            UpdateCommand = new RelayCommand(async () => await UpdateAsync());
         }
 
         #endregion
@@ -204,15 +210,70 @@
             });
         }
 
+        /// <summary>
+        /// Clears all the fields of the viewmodel.
+        /// </summary>
+        private void ClearFields()
+        {
+            Email = string.Empty;
+            Person.FirstName = string.Empty;
+            Person.LastName = string.Empty;
+            Person.BirthDate = string.Empty;
+            Person.NationalIdentificationNumber = string.Empty;
+            Person.PhoneNumber = string.Empty;
+            Person.Gender = new BasicEntity<string>(-1, "Not specified");
+            IdentificationCardAddress.StreetName = string.Empty;
+            IdentificationCardAddress.StreetNumber = string.Empty;
+            IdentificationCardAddress.City = string.Empty;
+            IdentificationCardAddress.County = Counties[0];
+            IdentificationCardAddress.ZipCode = string.Empty;
+
+            ResidenceAddress.StreetName = string.Empty;
+            ResidenceAddress.StreetNumber = string.Empty;
+            ResidenceAddress.City = string.Empty;
+            ResidenceAddress.County = Counties[0];
+            ResidenceAddress.ZipCode = string.Empty;
+        }
+
+        /// <summary>
+        /// Populates all the fields of the viewmodel.
+        /// </summary>
+        private void PopulateFields()
+        {
+            Model.Donor donor;
+            Model.Donor donorResidence;
+
+            donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
+            donorResidence = unitOfWork.Persons[appViewModel.User.ResidenceID].Donor;
+
+            Email = donor.Account.Email;
+            Person.FirstName = donor.Person.FirstName;
+            Person.LastName = donor.Person.LastName;
+            Person.BirthDate = donor.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            Person.NationalIdentificationNumber = donor.Person.Nin;
+            Person.PhoneNumber = donor.Person.PhoneNo;
+            Person.Gender = new BasicEntity<string>(donor.Person.GenderID, donor.Person.Gender.Type);
+            IdentificationCardAddress.StreetName = donor.Address.Street;
+            IdentificationCardAddress.StreetNumber = donor.Address.StreetNo;
+            IdentificationCardAddress.City = donor.Address.City;
+            IdentificationCardAddress.County = new BasicEntity<string>(donor.Address.CountyID, donor.Address.County.Name);
+            IdentificationCardAddress.ZipCode = donor.Address.ZipCode;
+
+            ResidenceAddress.StreetName = donor.Person.Address.Street;
+            ResidenceAddress.StreetNumber = donor.Person.Address.StreetNo;
+            ResidenceAddress.City = donor.Person.Address.City;
+            ResidenceAddress.County =  new BasicEntity<string>(donor.Person.Address.CountyID, donor.Person.Address.County.Name);
+            ResidenceAddress.ZipCode = donor.Person.Address.ZipCode;
+        }
 
         /// <summary>
         /// Registers a donor.
         /// </summary>
-        private async void UpdateAsync()
+        private async Task UpdateAsync()
         {
-            await RunCommand(() => UpdateIsRunning, async () =>
+            await RunCommand(() => updateIsRunning, async () =>
             {
-                ParentPage.AllowErrors();
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors + Person.Errors + IdentificationCardAddress.Errors + ResidenceAddress.Errors > 0)
                 {
@@ -220,13 +281,99 @@
                     return;
                 }
 
-                await Task.Delay(3000);
+                try
+                {
+                    Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
 
-                VivusConsole.WriteLine("Profile update done!");
-                Popup("Successfull operation!", PopupType.Successful);
+                    FillModelAdministrator(ref donor, true);
+                    // Make changes persistent
+                    unitOfWork.Complete();
+
+
+                    Popup($"Donor updated successfully!", PopupType.Successful);
+                }
+                catch
+                {
+                    Popup($"An error occured while updating the donor.");
+                }
             });
+        }
+        /*
+        await RunCommand(() => UpdateIsRunning, async () =>
+        {
+            ParentPage.AllowErrors();
+
+            if (Errors + Person.Errors + IdentificationCardAddress.Errors + ResidenceAddress.Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
+
+            await Task.Delay(3000);
+
+            VivusConsole.WriteLine("Profile update done!");
+            Popup("Successfull operation!", PopupType.Successful);
+        });
+        */
+
+        /// <summary>
+        /// Fills the fields of an administrator.
+        /// </summary>
+        /// <param name="donor">The administrator instance.</param>
+        /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
+        private void FillModelAdministrator(ref Model.Donor donor, bool fillOptional = false)
+        {
+            IContainPassword parentPage;
+            Model.Gender gender;
+            County idCardAddressCounty;
+            County residenceAddressCounty;
+
+            parentPage = (ParentPage as IContainPassword);
+            gender = unitOfWork.Genders.Find(g => g.Type == Person.Gender.Value).Single();
+            idCardAddressCounty = unitOfWork.Counties.Find(c => c.Name == IdentificationCardAddress.County.Value).Single();
+            residenceAddressCounty = unitOfWork.Counties.Find(c => c.Name == ResidenceAddress.County.Value).Single();
+
+
+            // If the instance is null, initialize it
+            if (donor is null)
+                donor = new Donor();
+            // If the person instance is null, initialize it
+            if (donor.Person is null)
+                donor.Person = new Person();
+            // If the person's address instance is null, initialize it
+            if (donor.Person.Address is null)
+                donor.Person.Address = new Address();
+            // If the account instance is null, initialize it
+            if (donor.Account is null)
+                donor.Account = new Account();
+
+            // Update the database
+            // Account properties
+            donor.Account.Email = Email;
+            donor.Account.Password = parentPage.SecurePasword.Length == 0 && !fillOptional ? donor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
+            //  Person properties
+            donor.Person.FirstName = Person.FirstName;
+            donor.Person.LastName = Person.LastName;
+            donor.Person.BirthDate = DateTime.Parse(Person.BirthDate);
+            donor.Person.Nin = Person.NationalIdentificationNumber;
+            donor.Person.PhoneNo = Person.PhoneNumber;
+            donor.Person.Gender = gender;
+            //  Identification card address properties
+            donor.Address.Street = IdentificationCardAddress.StreetName;
+            donor.Address.StreetNo = IdentificationCardAddress.StreetNumber;
+            donor.Address.City = IdentificationCardAddress.City;
+            donor.Address.County = idCardAddressCounty;
+            donor.Address.ZipCode = IdentificationCardAddress.ZipCode;
+            //  Residence address properties
+            donor.Person.Address.Street = ResidenceAddress.StreetName;
+            donor.Person.Address.StreetNo = ResidenceAddress.StreetNumber;
+            donor.Person.Address.City = ResidenceAddress.City;
+            donor.Person.Address.County = residenceAddressCounty;
+            donor.Person.Address.ZipCode = ResidenceAddress.ZipCode;
         }
 
         #endregion
+
+       
     }
 }
