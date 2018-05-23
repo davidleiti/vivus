@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ContainerInfoValidator.cs" />
     <Compile Include="Validators\DCPersonnelValidator.cs" />
+    <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\BloodDonationRequestsViewModel.cs" />
     <Compile Include="ViewModels\BloodRequestsViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
