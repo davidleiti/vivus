@@ -216,7 +216,7 @@
         }
 
         /// <summary>
-        /// Populates the administrators table.
+        /// Populates the doctors table.
         /// </summary>
         public static void Doctors()
         {
@@ -264,6 +264,51 @@
                     Password = BCrypt.HashPassword("berea123")
                 },
                 Active = true
+            });
+
+            VivusConsole.WriteLine($"Doctors: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the donors table.
+        /// </summary>
+        public static void Donors()
+        {
+            // Delete all the administrators
+            unitOfWork.Donors.Entities.ToList().ForEach(donor =>
+            {
+                unitOfWork.Accounts.Remove(donor.Account);
+                unitOfWork.Addresses.Remove(donor.Person.Address);
+                unitOfWork.Addresses.Remove(donor.Address);
+                unitOfWork.Persons.Remove(donor.Person);
+                unitOfWork.Donors.Remove(donor);
+            });
+
+            // Add all the administrators
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Adina",
+                    LastName = "Huțanu",
+                    BirthDate = new DateTime(1995, 9, 10),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "2950910121090",
+                    PhoneNo = "+(40) 766 218 996",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Cluj"),
+                        City = "Cluj-Napoca",
+                        Street = "Colibița",
+                        StreetNo = "10",
+                        ZipCode = "4000000"
+                    },
+                },
+                Account = new Account
+                {
+                    Email = "hutanu.adina@hotmail.com",
+                    Password = BCrypt.HashPassword("hutanu12")
+                }
             });
 
             VivusConsole.WriteLine($"Doctors: { unitOfWork.Complete() }");

@@ -110,7 +110,7 @@
                 {
                     try
                     {
-                        Model.Doctor doctor = IoCContainer.Get<IUnitOfWork>().Doctors.Find(d => d.Account.Email == Email && d.Active).Single();
+                        Model.Doctor doctor = IoCContainer.Get<IUnitOfWork>().Doctors.Entities.First(d => d.Account.Email == Email && d.Active);
 
                         if (!BCrypt.Verify(ParentPage.SecurePasword.Unsecure(), doctor.Account.Password))
                         {
