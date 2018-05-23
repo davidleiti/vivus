@@ -60,7 +60,11 @@
 
         public void AllowOptionalErrors()
         {
-            throw new System.NotImplementedException();
+            pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
+            if (SecurePasword.Length == 0)
+                pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, false);
+            else
+                pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
         }
     }
 }

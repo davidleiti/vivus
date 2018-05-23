@@ -8,6 +8,7 @@
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -228,7 +229,7 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Update" Command="{Binding UpdateCommand}" />
+                    <Button Grid.Column="2" FontSize="16" Margin="10 0" Content="Update" Command="{Binding UpdateCommand}" attachedProperties:IsBusyProperty.Value="{Binding UpdateIsRunning}" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>
