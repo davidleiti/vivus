@@ -69,10 +69,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\Vivus.Core.UnitTests\Vivus.Core.UnitTests.csproj">
-      <Project>{c12305cc-032c-4acc-ad20-f035625e9dc4}</Project>
-      <Name>Vivus.Core.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Source\Vivus\Core.Administration\Vivus.Core.Administration.csproj">
       <Project>{fa135821-1a81-40b4-959e-3a3f0795b992}</Project>
       <Name>Vivus.Core.Administration</Name>
@@ -80,6 +76,10 @@
     <ProjectReference Include="..\..\Source\Vivus\Core\Vivus.Core.csproj">
       <Project>{23ee977c-4348-4f29-a974-0ccfeb189d95}</Project>
       <Name>Vivus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vivus.Core.UnitTests\Vivus.Core.UnitTests.csproj">
+      <Project>{c427de44-82be-4376-bcdf-ba7d001ef9cc}</Project>
+      <Name>Vivus.Core.UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
