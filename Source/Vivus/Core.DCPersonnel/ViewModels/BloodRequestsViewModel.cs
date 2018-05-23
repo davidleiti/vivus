@@ -27,15 +27,18 @@
         private int? currentBlood;
         private string priority;
         private string bloodType;
+        private DateTime harvestDate;
+
         private BasicEntity<string> containerType;
         private BasicEntity<string> containerCode;
-        private DateTime harvestDate;
         private BasicEntity<string> donationCenter;
 
         private List<BasicEntity<string>> containerTypes;
         private List<BasicEntity<string>> containerCodes;
         private List<BasicEntity<string>> donationCenters;
 
+        private RequestDetailsItem selectedRequestDetailsItem;
+        private AllRequestsItem selectedAllRequestsItem;
         private ObservableCollection<RequestDetailsItem> requestDetailsItems;
         private ObservableCollection<AllRequestsItem> allRequestsItems;
         #endregion
@@ -374,7 +377,37 @@
                 OnPropertyChanged();
             }
         }
+    
+        public RequestDetailsItem SelectedRequestDetailsItem
+        {
+            get => selectedRequestDetailsItem;
 
+            set
+            {
+                if (selectedRequestDetailsItem == value)
+
+                    return;
+
+                selectedRequestDetailsItem = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public AllRequestsItem SelectedAllRequestsItem
+        {
+            get => selectedAllRequestsItem;
+            set
+            {
+                if (selectedAllRequestsItem == value)
+
+                    return;
+
+                selectedAllRequestsItem = value;
+
+                OnPropertyChanged();
+            }
+
+        }
         public ICommand AddCommand { get; }
 
         public ICommand RemoveCommand { get; }
@@ -392,9 +425,9 @@
             ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             DonationCenters = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
-            AddCommand = new RelayCommand(addRequest);
-            RemoveCommand = new RelayCommand(removeRequest);
-            RedirectCommand = new RelayCommand(redirectRequest);
+            AddCommand = new RelayCommand(AddRequest);
+            RemoveCommand = new RelayCommand(RemoveRequest);
+            RedirectCommand = new RelayCommand(RedirectRequest);
             RequestDetailsItems = new ObservableCollection<RequestDetailsItem> { new RequestDetailsItem() };
             AllRequestsItems = new ObservableCollection<AllRequestsItem> { new AllRequestsItem() };
 
@@ -402,8 +435,8 @@
         }
         #endregion
 
-        #region Public Methods
-        public void addRequest()
+        #region Private Methods
+        public void AddRequest()
         {
             int count;
 
@@ -425,7 +458,7 @@
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request added!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-        public void removeRequest()
+        public void RemoveRequest()
         {
             int count;
 
@@ -446,7 +479,7 @@
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request removed!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-        public void redirectRequest()
+        public void RedirectRequest()
         {
             int count;
 
