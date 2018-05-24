@@ -287,14 +287,10 @@
 
             Task.Run(async () =>
             {
-                await Task.Run(() =>
-                {
-                    LoadContainerTypesAsync();
-                    LoadBloodTypesAsync();
-                    LoadRHTypesAsync();
-                    LoadContainersAsync();
-                });
-                //PopulateFields();
+                await LoadContainerTypesAsync();
+                await LoadBloodTypesAsync();
+                await LoadRHTypesAsync();
+                LoadContainersAsync();
             });
         }
 
@@ -309,15 +305,15 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
-                ToValidate = Validation.ManageBlood;
-                if (ButtonType == ButtonType.Add)
-                    await AddBloodContainerAsync();
-                else
-                    await ModifyBloodContainerAsync();
+                //ToValidate = Validation.ManageBlood;
+                //if (ButtonType == ButtonType.Add)
+                //    await AddBloodContainerAsync();
+                //else
+                //    await ModifyBloodContainerAsync();
 
-                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-                ClearFieldsAddAndModify();
-                ToValidate = Validation.None;
+                //await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                //ClearFieldsAddAndModify();
+                //ToValidate = Validation.None;
             });
         }
 
@@ -328,11 +324,21 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
+                Task<bool> task;
+
+                task = SendRequestAsync();
                 ToValidate = Validation.RequestDonation;
 
-                await SendRequestAsync();
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-                //ClearFieldsAddAndModify();
+                task.Wait();
+
+                if (task.Result)
+                {
+                    await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                    ClearFieldsAddAndModify();
+                }
+
                 ToValidate = Validation.None;
             });
         }
@@ -357,7 +363,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadContainerTypesAsync()
+        private async Task LoadContainerTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -373,7 +379,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadBloodTypesAsync()
+        private async Task LoadBloodTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -389,7 +395,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadRHTypesAsync()
+        private async Task LoadRHTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -536,15 +542,11 @@
         /// <summary>
         /// Request blood.
         /// </summary>
-        private async Task SendRequestAsync()
+        private async Task<bool> SendRequestAsync()
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
-                int count;
-
-                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
-
-                count = errors.Keys
+                int count = errors.Keys
                             .Where(key => key == nameof(RequestBloodType) || key == nameof(RequestRH))
                             .ToList()
                             .Count;
@@ -552,13 +554,13 @@
                 if (count > 0)
                 {
                     Popup("Some errors were found. Fix them before going forward.");
-                    return;
+                    return false;
                 }
 
                 Vivus.Console.WriteLine("DC Personnel: Blood requested!");
                 Popup("Successfull operation!", PopupType.Successful);
+                return true;
             });
-
         }
 
         /// <summary>
