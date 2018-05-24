@@ -10,6 +10,12 @@
     using Vivus.Core.DCPersonnel.Validators;
     using System;
     using System.Linq;
+    using System.Globalization;
+    using Vivus.Core.UoW;
+    using Vivus.Core.ViewModels.Base;
+    using Vivus.Core.Security;
+    using Vivus.Core.DCPersonnel.IoC;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a view model for the manage blood page.
@@ -18,9 +24,9 @@
     {
         #region Private fields
 
-        private List<BasicEntity<string>> containerTypes;
-        private List<BasicEntity<string>> bloodTypes;
-        private List<BasicEntity<string>> rhTypes;
+        //private List<BasicEntity<string>> containerTypes;
+        //private List<BasicEntity<string>> bloodTypes;
+        //private List<BasicEntity<string>> rhTypes;
 
         private string containerCode;
         private string harvestDate;
@@ -31,6 +37,10 @@
 
         private BasicEntity<string> addContainerRH;
         private BasicEntity<string> requestRH;
+
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<Model.DCPersonnel> appViewModel;
+        private ISecurity security;
 
         #endregion
 
@@ -57,6 +67,8 @@
         public List<BasicEntity<string>> ContainerTypes { get; }
         public List<BasicEntity<string>> BloodTypes { get; }
         public List<BasicEntity<string>> RHTypes { get; }
+
+        public ContainersStorageItemViewModel SelectedItem { get; set; }
 
         public BasicEntity<string> ContainerType
         {
@@ -199,7 +211,7 @@
 
         #region Constructors
 
-        public ManageBloodViewModel()
+        public ManageBloodViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             BloodTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
@@ -208,24 +220,103 @@
             RequestCommand = new RelayCommand(Request);
             Containers = new ObservableCollection<ContainersStorageItemViewModel>();
 
-            // Test whether the table binding is correct or not
-            Application.Current.Dispatcher.Invoke(() =>
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.DCPersonnel>>();
+            security = IoCContainer.Get<ISecurity>();
+
+            Task.Run(async () =>
             {
-                Containers.Add(new ContainersStorageItemViewModel
+                await Task.Run(() =>
                 {
-                    Id = 39,
-                    ContainerCode = "1234",
-                    ContainerType = "Plasma",
-                    BloodType = "0",
-                    HarvestDate = new DateTime(2018, 2, 17),
-                    Expired = false
+                    LoadContainerTypesAsync();
+                    LoadBloodTypesAsync();
+                    LoadRHTypesAsync();
                 });
+                //PopulateFields();
             });
         }
 
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Clears all the fields of the viewmodel.
+        /// </summary>
+        //private void ClearFields()
+        //{
+        //    Email = string.Empty;
+        //    IsActive = true;
+        //    IsActiveIsEnabled = true;
+        //    Person.FirstName = string.Empty;
+        //    Person.LastName = string.Empty;
+        //    Person.BirthDate = string.Empty;
+        //    Person.NationalIdentificationNumber = string.Empty;
+        //    Person.PhoneNumber = string.Empty;
+        //    Person.Gender = new BasicEntity<string>(-1, "Not specified");
+        //    Address.StreetName = string.Empty;
+        //    Address.StreetNumber = string.Empty;
+        //    Address.City = string.Empty;
+        //    Address.County = Counties[0];
+        //    Address.ZipCode = string.Empty;
+        //}
+
+        /// <summary>
+        /// Loads all the ContainerTypes asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async void LoadContainerTypesAsync()
+        {
+            await Task.Run(() =>
+            {
+                ContainerTypes.Clear();
+                ContainerTypes.Add(new BasicEntity<string>(-1, "Select container type"));
+                unitOfWork.BloodContainerTypes.Entities.ToList().ForEach(c =>
+                    dispatcherWrapper.InvokeAsync(() => ContainerTypes.Add(new BasicEntity<string>(c.ContainerTypeID, c.Type)))
+                );
+            });
+        }
+
+        /// <summary>
+        /// Loads all the ContainerTypes asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async void LoadBloodTypesAsync()
+        {
+            await Task.Run(() =>
+            {
+                BloodTypes.Clear();
+                BloodTypes.Add(new BasicEntity<string>(-1, "Select blood type"));
+                unitOfWork.BloodTypes.Entities.ToList().ForEach(b =>
+                    dispatcherWrapper.InvokeAsync(() => BloodTypes.Add(new BasicEntity<string>(b.BloodTypeID, b.Type)))
+                );
+            });
+        }
+
+        /// <summary>
+        /// Loads all the ContainerTypes asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async void LoadRHTypesAsync()
+        {
+            await Task.Run(() =>
+            {
+                RHTypes.Clear();
+                RHTypes.Add(new BasicEntity<string>(-1, "Select rh"));
+                unitOfWork.RHs.Entities.ToList().ForEach(rh =>
+                    dispatcherWrapper.InvokeAsync(() => RHTypes.Add(new BasicEntity<string>(rh.RhID, rh.Type)))
+                );
+            });
+        }
+
+        /// <summary>
+        /// Populates all the fields of the viewmodel.
+        /// </summary>
+        private void PopulateFields()
+        {
+            unitOfWork.BloodContainerTypes.Entities.ToList()
+                .ForEach(c =>dispatcherWrapper.InvokeAsync(() => ContainerTypes.Add(new BasicEntity<string>(c.ContainerTypeID, c.Type))));
+        }
 
         /// <summary>
         /// Adds a new blood container
@@ -237,16 +328,18 @@
             ToValidate = Validation.ManageBlood;
             ParentPage.AllowErrors();
 
-            count = errors.Keys
-                        .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
-                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
-                        .Count;
+            //count = errors.Keys
+            //            .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
+            //            .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+            //            .Count;
 
-            if (count > 0)
-            {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
+            //if (count > 0)
+            //{
+            //    Popup("Some errors were found. Fix them before going forward.");
+            //    return;
+            //}
+
+            Vivus.Console.WriteLine(SelectedItem.ContainerType);
 
             Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
             Popup("Successfull operation!", PopupType.Successful);

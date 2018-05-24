@@ -29,7 +29,7 @@
                     <!-- Container type -->
                     <StackPanel>
                         <TextBlock Text="Container type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, Mode=OneWayToSource, ValidatesOnDataErrors=True}"/>
+                        <ComboBox x:Name="cbContainerType" ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding ContainerType, ValidatesOnDataErrors=True}"/>
 
                     </StackPanel>
                     <!-- Container code -->
@@ -51,12 +51,12 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbBloodTypeManage" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding AddContainerBloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbBloodTypeManage" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding AddContainerBloodType, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbRHManage" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding AddContainerRH, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbRHManage" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding AddContainerRH, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="4">
@@ -78,7 +78,7 @@
                 </Grid>
 
                 <!-- Table -->
-                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Containers}">
+                <DataGrid Height="540" MinWidth="50" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Containers}" SelectedItem ="{Binding SelectedItem}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}">
                             <DataGridTextColumn.HeaderStyle>
@@ -113,12 +113,12 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbBloodTypeReq" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding RequestBloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbBloodTypeReq" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding RequestBloodType, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbRHReq" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding RequestRH, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbRHReq" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding RequestRH, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Request button -->
                     <Button Grid.Column="4" VerticalAlignment="Bottom" MaxHeight="148" Width="Auto" Content="Request" Command="{Binding RequestCommand}" />

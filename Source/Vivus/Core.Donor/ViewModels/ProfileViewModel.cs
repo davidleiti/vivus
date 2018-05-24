@@ -304,23 +304,7 @@
                 });
             });
         }
-        /*
-        await RunCommand(() => UpdateIsRunning, async () =>
-        {
-            ParentPage.AllowErrors();
-
-            if (Errors + Person.Errors + IdentificationCardAddress.Errors + ResidenceAddress.Errors > 0)
-            {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
-
-            await Task.Delay(3000);
-
-            VivusConsole.WriteLine("Profile update done!");
-            Popup("Successfull operation!", PopupType.Successful);
-        });
-        */
+       
 
         /// <summary>
         /// Fills the fields of an administrator.

@@ -24,6 +24,7 @@
         {
             // Bind to a single instance of the window viewmodel
             Kernel.Bind<WindowViewModel>().ToConstant(new WindowViewModel());
+            // Bind to a single instance of the UnitOfWork
 
             // Bind to a single instance of the application viewmodel
             Kernel.Bind<IApllicationViewModel<DCPersonnel>>().ToConstant(new ApplicationViewModel());
