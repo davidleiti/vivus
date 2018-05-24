@@ -846,7 +846,7 @@
           <Property Name="ContainerCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ContainerTypeID" Type="Int32" Nullable="false" />
           <Property Name="DonationCenterID" Type="Int32" Nullable="false" />
-          <Property Name="BloodRequestID" Type="Int32" Nullable="false" />
+          <Property Name="BloodRequestID" Type="Int32" Nullable="true" />
           <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="BloodType" Relationship="Self.FK_BloodContainerBloodType" FromRole="BloodContainers" ToRole="BloodTypes" />
           <NavigationProperty Name="RH" Relationship="Self.FK_BloodContainerRH" FromRole="BloodContainers" ToRole="RHs" />

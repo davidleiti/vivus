@@ -75,66 +75,6 @@
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
     <Compile Include="Helpers\AddressHelpers.cs" />
-    <Compile Include="Model\Account.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Address.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Administrator.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\BloodContainer.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\BloodContainerType.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\BloodRequest.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\BloodType.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\County.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DCPersonnel.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Doctor.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DonationCenter.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DonationForm.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Donor.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Gender.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Message.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Patient.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Person.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\PersonStatus.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\RequestPriority.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\RH.cs">
-      <DependentUpon>VivusModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\VivusModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
