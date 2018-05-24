@@ -191,12 +191,12 @@
                     FirstName = "Mihai",
                     LastName = "Nitu",
                     BirthDate = new DateTime(1979, 7, 20),
-                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Gender = unitOfWork.Genders.Entities.First(g => g.Type == "Male"),
                     Nin = "1790720425218",
                     PhoneNo = "+(40) 727 109 531",
                     Address = new Address
                     {
-                        County = (unitOfWork.Counties as CountiesRepository).County("București"),
+                        County = unitOfWork.Counties.Entities.First(c => c.Name == "București"),
                         City = "București",
                         Street = "Remus",
                         StreetNo = "7",
@@ -216,11 +216,85 @@
         }
 
         /// <summary>
+        /// Populates the dontaion centers table.
+        /// </summary>
+        public static void DonationCenters()
+        {
+            // Delete all the donation centers
+            unitOfWork.DonationCenters.Entities.ToList().ForEach(dc =>
+            {
+                unitOfWork.Addresses.Remove(dc.Address);
+                unitOfWork.DonationCenters.Remove(dc);
+            });
+
+            // Add all the donation centers
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Clinic Județean de Urgență Cluj-Napoca",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Cluj"),
+                    City = "Cluj-Napoca",
+                    Street = "Clinicilor",
+                    StreetNo = "3-5",
+                    ZipCode = "400000"
+                }
+            });
+
+            VivusConsole.WriteLine($"Donation centers: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
+        /// Populates the donation centers personnel table.
+        /// </summary>
+        public static void DonationCentersPersonnel()
+        {
+            // Delete all the donation centers personnel
+            unitOfWork.DCPersonnel.Entities.ToList().ForEach(personnel =>
+            {
+                unitOfWork.Accounts.Remove(personnel.Account);
+                unitOfWork.Addresses.Remove(personnel.Person.Address);
+                unitOfWork.Persons.Remove(personnel.Person);
+                unitOfWork.DCPersonnel.Remove(personnel);
+            });
+
+            // Add all the donation centers personnel
+            unitOfWork.DCPersonnel.Add(new DCPersonnel
+            {
+                Person = new Person
+                {
+                    FirstName = "Daniel",
+                    LastName = "Moldovan",
+                    BirthDate = new DateTime(1980, 11, 4),
+                    Gender = unitOfWork.Genders.Entities.First(g => g.Type == "Male"),
+                    Nin = "1801104123318",
+                    PhoneNo = "+(40) 722 129 315",
+                    Address = new Address
+                    {
+                        County = unitOfWork.Counties.Entities.First(c => c.Name == "Cluj"),
+                        City = "Cluj-Napoca",
+                        Street = "Slatina",
+                        StreetNo = "2",
+                        ZipCode = "400000"
+                    },
+                },
+                Account = new Account
+                {
+                    Email = "moldovan.dani@yahoo.com",
+                    Password = BCrypt.HashPassword("moldovan")
+                },
+                Active = true
+            });
+
+            VivusConsole.WriteLine($"Donation Centers Personnel: { unitOfWork.Complete() }");
+        }
+
+        /// <summary>
         /// Populates the doctors table.
         /// </summary>
         public static void Doctors()
         {
-            // Delete all the administrators
+            // Delete all the doctors
             unitOfWork.Doctors.Entities.ToList().ForEach(doctor =>
             {
                 unitOfWork.Accounts.Remove(doctor.Account);
@@ -274,7 +348,7 @@
         /// </summary>
         public static void Donors()
         {
-            // Delete all the administrators
+            // Delete all the donors
             unitOfWork.Donors.Entities.ToList().ForEach(donor =>
             {
                 unitOfWork.Accounts.Remove(donor.Account);
@@ -284,7 +358,7 @@
                 unitOfWork.Donors.Remove(donor);
             });
 
-            // Add all the administrators
+            // Add all the donors
             unitOfWork.Donors.Add(new Donor
             {
                 Person = new Person

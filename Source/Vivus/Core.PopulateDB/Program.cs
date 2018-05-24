@@ -21,6 +21,8 @@
             //Populate.PersonStatuses();
             //Populate.RequestPriorities();
             //Populate.Administrators();
+            //Populate.DonationCenters();
+            //Populate.DonationCentersPersonnel();
             //Populate.Doctors();
             //Populate.Donors();
             VivusConsole.WriteLine("Everything is already generated! Be careful if you wanna play with the fire. c;");

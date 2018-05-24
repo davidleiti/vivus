@@ -37,6 +37,12 @@
         /// </summary>
         public static void Setup()
         {
+            // Bind the unit of work
+            Kernel.Bind<IUnitOfWork>().ToConstant(new UnitOfWork(new VivusEntities()));
+
+            // Bind the security instance
+            Kernel.Bind<ISecurity>().ToConstant(new Security());
+
             // Bind all required viewmodels
             BindViewModels();
         }
