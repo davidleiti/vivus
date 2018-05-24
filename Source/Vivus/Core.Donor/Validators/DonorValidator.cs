@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Security;
+    using Vivus.Core.DataModels;
 
     /// <summary>
     /// Represents a validator for the donor application.
@@ -120,6 +121,19 @@
         {
             if (!string.IsNullOrEmpty(travelStatus) && travelStatus.Length < 5)
                 return new List<string> { "Please be more specific." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the favourite donation center of the donor.
+        /// </summary>
+        /// <param name="donationCenter">The favourite donation center of the donor.</param>
+        /// <returns></returns>
+        public static List<string> FavouriteDonationCenterValidation(BasicEntity<string> donationCenter)
+        {
+            if (donationCenter.Id < 0)
+                return new List<string> { "Favourite donation center is mandatory." };
 
             return null;
         }

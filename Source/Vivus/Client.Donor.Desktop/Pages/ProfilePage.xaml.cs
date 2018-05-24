@@ -50,6 +50,8 @@
             tbEmail.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             pbPassword.GetBindingExpression(CacheModeProperty).UpdateTarget();
             pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
+            tbEmail.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            cbFavourieDonationCenter.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
 
             // Person details
             tbFirstName.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);

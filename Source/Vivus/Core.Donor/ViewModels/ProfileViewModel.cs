@@ -1,7 +1,7 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -28,9 +28,9 @@
         private object password;
         private bool updateIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Donor> appViewModel;
+        private IApllicationViewModel<Donor> appViewModel;
         private ISecurity security;
-
+        BasicEntity<string> selectedDonationCenter;
 
         #endregion
 
@@ -93,9 +93,32 @@
         public AddressViewModel ResidenceAddress { get; }
 
         /// <summary>
-        /// Gets the list of counties.
+        /// Gets or sets the selected favourite donation center.
         /// </summary>
-        public List<BasicEntity<string>> Counties { get; }
+        public BasicEntity<string> SelectedDonationCenter
+        {
+            get => selectedDonationCenter;
+
+            set
+            {
+                if (selectedDonationCenter == value)
+                    return;
+
+                selectedDonationCenter = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection of donation centers.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> DonationCenters { get; }
+
+        /// <summary>
+        /// Gets the collection of counties.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> Counties { get; }
 
         /// <summary>
         /// Gets or sets the flag that indicates whether the upadte command is running or not.
@@ -130,6 +153,9 @@
                 if (propertyName == nameof(Password) && ParentPage != null)
                     return GetNotMandatoryErrorString(propertyName, DonorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
+                if (propertyName == nameof(SelectedDonationCenter))
+                    return GetErrorString(propertyName, DonorValidator.FavouriteDonationCenterValidation(SelectedDonationCenter));
+
                 return null;
             }
         }
@@ -155,10 +181,11 @@
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();
             ResidenceAddress = new AddressViewModel(false);
-            Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
+            DonationCenters = new ObservableCollection<BasicEntity<string>>();
+            Counties = new ObservableCollection<BasicEntity<string>>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Donor>>();
             security = IoCContainer.Get<ISecurity>();
 
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
@@ -166,6 +193,7 @@
             //ClearFields();
             Task.Run(async () =>
             {
+                await LoadDonationCentersAsync();
                 await LoadCountiesAsync();
                 PopulateFields();
             });
@@ -178,17 +206,23 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Model.Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();
             ResidenceAddress = new AddressViewModel(false);
-            Counties = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
+            Counties = new ObservableCollection<BasicEntity<string>>();
 
             this.unitOfWork = unitOfWork;
             this.appViewModel = appViewModel;
             this.security = security;
-            LoadCountiesAsync();
+
+            Task.Run(async () =>
+            {
+                await LoadDonationCentersAsync();
+                await LoadCountiesAsync();
+                PopulateFields();
+            });
 
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
         }
@@ -196,6 +230,22 @@
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Loads all the counties asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadDonationCentersAsync()
+        {
+            await Task.Run(() =>
+            {
+                DonationCenters.Clear();
+                DonationCenters.Add(new BasicEntity<string>(-1, "Select favourite donation center"));
+                unitOfWork.DonationCenters.Entities.ToList().ForEach(dc =>
+                    dispatcherWrapper.InvokeAsync(() => DonationCenters.Add(new BasicEntity<string>(dc.DonationCenterID, dc.Name)))
+                );
+            });
+        }
 
         /// <summary>
         /// Loads all the counties asynchronously.
@@ -219,6 +269,7 @@
         private void ClearFields()
         {
             Email = string.Empty;
+            SelectedDonationCenter = new BasicEntity<string>(-1, "Select favourite donation center");
             Person.FirstName = string.Empty;
             Person.LastName = string.Empty;
             Person.BirthDate = string.Empty;
@@ -250,6 +301,7 @@
             donorResidence = unitOfWork.Persons[appViewModel.User.ResidenceID].Donor;
 
             Email = donor.Account.Email;
+            SelectedDonationCenter = new BasicEntity<string>(donor.DonationCenterID.Value, donor.DonationCenter.Name);
             Person.FirstName = donor.Person.FirstName;
             Person.LastName = donor.Person.LastName;
             Person.BirthDate = donor.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -293,9 +345,8 @@
 
                         FillModelAdministrator(ref donor, true);
                         // Make changes persistent
-                        unitOfWork.Complete();
-
-
+                        //unitOfWork.Complete();
+                        
                         Popup($"Donor updated successfully!", PopupType.Successful);
                     }
                     catch
@@ -306,13 +357,12 @@
             });
         }
        
-
         /// <summary>
         /// Fills the fields of an administrator.
         /// </summary>
         /// <param name="donor">The administrator instance.</param>
         /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
-        private void FillModelAdministrator(ref Model.Donor donor, bool fillOptional = false)
+        private void FillModelAdministrator(ref Donor donor, bool fillOptional = false)
         {
             IContainPassword parentPage;
             Model.Gender gender;
@@ -342,6 +392,7 @@
             // Account properties
             donor.Account.Email = Email;
             donor.Account.Password = parentPage.SecurePasword.Length == 0 ? donor.Account.Password : security.HashPassword(parentPage.SecurePasword.Unsecure());
+            donor.DonationCenterID = SelectedDonationCenter.Id;
             //  Person properties
             donor.Person.FirstName = Person.FirstName;
             donor.Person.LastName = Person.LastName;
@@ -364,7 +415,5 @@
         }
 
         #endregion
-
-       
     }
 }

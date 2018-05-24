@@ -20,7 +20,7 @@
                 <TextBlock Text="Profile settings" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
 
                 <!-- Account settings -->
-                <Grid>
+                <Grid Margin="0 0 0 20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="31" />
@@ -36,6 +36,20 @@
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Password" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <PasswordBox x:Name="pbPassword" Tag="Password" CacheMode="{Binding Password, Mode=OneWayToSource, ValidatesOnDataErrors=True}" MaxLength="32" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Donation center -->
+                    <StackPanel>
+                        <TextBlock Text="Favourite donation center" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox x:Name="cbFavourieDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding SelectedDonationCenter, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                 </Grid>
 
