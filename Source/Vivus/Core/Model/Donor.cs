@@ -26,10 +26,10 @@ namespace Vivus.Core.Model
         public Nullable<int> DonationCenterID { get; set; }
     
         public virtual Account Account { get; set; }
-        public virtual Address Residence { get; set; }
+        public virtual Address ResidenceAddress { get; set; }
+        public virtual DonationCenter DonationCenter { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationForm> DonationForms { get; set; }
         public virtual Person Person { get; set; }
-        public virtual DonationCenter DonationCenter { get; set; }
     }
 }
