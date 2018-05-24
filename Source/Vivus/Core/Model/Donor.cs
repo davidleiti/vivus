@@ -23,11 +23,13 @@ namespace Vivus.Core.Model
         public int PersonID { get; set; }
         public int AccountID { get; set; }
         public int ResidenceID { get; set; }
+        public Nullable<int> DonationCenterID { get; set; }
     
         public virtual Account Account { get; set; }
-        public virtual Address Address { get; set; }
+        public virtual Address Residence { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationForm> DonationForms { get; set; }
         public virtual Person Person { get; set; }
+        public virtual DonationCenter DonationCenter { get; set; }
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Accounts">
           <Key>
             <PropertyRef Name="AccountID" />
@@ -137,6 +137,7 @@
           <Property Name="PersonID" Type="int" Nullable="false" />
           <Property Name="AccountID" Type="int" Nullable="false" />
           <Property Name="ResidenceID" Type="int" Nullable="false" />
+          <Property Name="DonationCenterID" Type="int" />
         </EntityType>
         <EntityType Name="Genders">
           <Key>
@@ -531,6 +532,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DonorDonationCenter">
+          <End Role="DonationCenters" Type="Self.DonationCenters" Multiplicity="0..1" />
+          <End Role="Donors" Type="Self.Donors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonationCenters">
+              <PropertyRef Name="DonationCenterID" />
+            </Principal>
+            <Dependent Role="Donors">
+              <PropertyRef Name="DonationCenterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GenderPerson">
           <End Role="Genders" Type="Self.Genders" Multiplicity="1" />
           <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
@@ -747,6 +760,10 @@
             <End Role="Addresses" EntitySet="Addresses" />
             <End Role="Donors" EntitySet="Donors" />
           </AssociationSet>
+          <AssociationSet Name="FK_DonorDonationCenter" Association="Self.FK_DonorDonationCenter">
+            <End Role="DonationCenters" EntitySet="DonationCenters" />
+            <End Role="Donors" EntitySet="Donors" />
+          </AssociationSet>
           <AssociationSet Name="FK_GenderPerson" Association="Self.FK_GenderPerson">
             <End Role="Genders" EntitySet="Genders" />
             <End Role="Persons" EntitySet="Persons" />
@@ -776,8 +793,7 @@
             <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -903,7 +919,7 @@
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <Property Name="WorkAddressID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Account" Relationship="Self.FK_DoctorAccount" FromRole="Doctors" ToRole="Accounts" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_DoctorAddress" FromRole="Doctors" ToRole="Addresses" />
+          <NavigationProperty Name="WorkAddress" Relationship="Self.FK_DoctorAddress" FromRole="Doctors" ToRole="Addresses" />
           <NavigationProperty Name="BloodRequests" Relationship="Self.FK_BloodRequestDoctor" FromRole="Doctors" ToRole="BloodRequests" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Doctor_inherits_Person" FromRole="Doctors" ToRole="Persons" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_DoctorPatient" FromRole="Doctors" ToRole="Patients" />
@@ -919,6 +935,7 @@
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_DonationCenterBloodContainer" FromRole="DonationCenters" ToRole="BloodContainers" />
           <NavigationProperty Name="DCPersonnels" Relationship="Self.FK_DCPersonnelDonationCenter" FromRole="DonationCenters" ToRole="DCPersonnel" />
           <NavigationProperty Name="BloodRequests" Relationship="Self.BloodRequestDonationCenter" FromRole="DonationCenters" ToRole="BloodRequests" />
+          <NavigationProperty Name="Donors" Relationship="Model.FK_DonorDonationCenter" FromRole="DonationCenter" ToRole="Donor" />
         </EntityType>
         <EntityType Name="DonationForm">
           <Key>
@@ -946,9 +963,11 @@
           <Property Name="AccountID" Type="Int32" Nullable="false" />
           <Property Name="ResidenceID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Account" Relationship="Self.FK_DonorAccount" FromRole="Donors" ToRole="Accounts" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_DonorAddress" FromRole="Donors" ToRole="Addresses" />
+          <NavigationProperty Name="Residence" Relationship="Self.FK_DonorAddress" FromRole="Donors" ToRole="Addresses" />
           <NavigationProperty Name="DonationForms" Relationship="Self.FK_DonationFormDonor" FromRole="Donors" ToRole="DonationForms" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Donor_inherits_Person" FromRole="Donors" ToRole="Persons" />
+          <Property Name="DonationCenterID" Type="Int32" />
+          <NavigationProperty Name="DonationCenter" Relationship="Model.FK_DonorDonationCenter" FromRole="Donor" ToRole="DonationCenter" />
         </EntityType>
         <EntityType Name="Gender">
           <Key>
@@ -967,8 +986,8 @@
           <Property Name="RecieverID" Type="Int32" Nullable="false" />
           <Property Name="SendDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_PersonMessage" FromRole="Messages" ToRole="Persons" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_PersonMessage1" FromRole="Messages" ToRole="Persons" />
+          <NavigationProperty Name="Sender" Relationship="Self.FK_PersonMessage" FromRole="Messages" ToRole="Persons" />
+          <NavigationProperty Name="Receiver" Relationship="Self.FK_PersonMessage1" FromRole="Messages" ToRole="Persons" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -1004,8 +1023,8 @@
           <NavigationProperty Name="Doctor" Relationship="Self.FK_Doctor_inherits_Person" FromRole="Persons" ToRole="Doctors" />
           <NavigationProperty Name="Donor" Relationship="Self.FK_Donor_inherits_Person" FromRole="Persons" ToRole="Donors" />
           <NavigationProperty Name="Gender" Relationship="Self.FK_GenderPerson" FromRole="Persons" ToRole="Genders" />
-          <NavigationProperty Name="Messages" Relationship="Self.FK_PersonMessage" FromRole="Persons" ToRole="Messages" />
-          <NavigationProperty Name="Messages1" Relationship="Self.FK_PersonMessage1" FromRole="Persons" ToRole="Messages" />
+          <NavigationProperty Name="SentMessages" Relationship="Self.FK_PersonMessage" FromRole="Persons" ToRole="Messages" />
+          <NavigationProperty Name="ReceivedMessages" Relationship="Self.FK_PersonMessage1" FromRole="Persons" ToRole="Messages" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Patient_inherits_Person" FromRole="Persons" ToRole="Patients" />
         </EntityType>
         <EntityType Name="PersonStatus">
@@ -1584,7 +1603,23 @@
             <End Role="BloodRequests" EntitySet="BloodRequests" />
             <End Role="DonationCenters" EntitySet="DonationCenters" />
           </AssociationSet>
+          <AssociationSet Name="FK_DonorDonationCenter" Association="Model.FK_DonorDonationCenter">
+            <End Role="DonationCenter" EntitySet="DonationCenters" />
+            <End Role="Donor" EntitySet="Donors" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_DonorDonationCenter">
+          <End Type="Model.DonationCenter" Role="DonationCenter" Multiplicity="0..1" />
+          <End Type="Model.Donor" Role="Donor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonationCenter">
+              <PropertyRef Name="DonationCenterID" />
+            </Principal>
+            <Dependent Role="Donor">
+              <PropertyRef Name="DonationCenterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1723,6 +1758,7 @@
           <EntitySetMapping Name="Donors">
             <EntityTypeMapping TypeName="Model.Donor">
               <MappingFragment StoreEntitySet="Donors">
+                <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="AccountID" ColumnName="AccountID" />
                 <ScalarProperty Name="ResidenceID" ColumnName="ResidenceID" />

@@ -27,7 +27,7 @@ namespace Vivus.Core.Model
         public int WorkAddressID { get; set; }
     
         public virtual Account Account { get; set; }
-        public virtual Address Address { get; set; }
+        public virtual Address WorkAddress { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodRequest> BloodRequests { get; set; }
         public virtual Person Person { get; set; }

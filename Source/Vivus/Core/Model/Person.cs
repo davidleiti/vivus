@@ -17,8 +17,8 @@ namespace Vivus.Core.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
         {
-            this.Messages = new HashSet<Message>();
-            this.Messages1 = new HashSet<Message>();
+            this.SentMessages = new HashSet<Message>();
+            this.ReceivedMessages = new HashSet<Message>();
         }
     
         public int PersonID { get; set; }
@@ -37,9 +37,9 @@ namespace Vivus.Core.Model
         public virtual Donor Donor { get; set; }
         public virtual Gender Gender { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> SentMessages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Messages1 { get; set; }
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
         public virtual Patient Patient { get; set; }
     }
 }

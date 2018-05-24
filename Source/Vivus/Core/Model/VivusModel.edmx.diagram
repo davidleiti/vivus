@@ -58,6 +58,7 @@
         <AssociationConnector Association="Model.FK_PatientPersonStatus" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_RHPatient" ManuallyRouted="false" />
         <AssociationConnector Association="Model.BloodRequestDonationCenter" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonorDonationCenter" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
