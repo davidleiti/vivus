@@ -153,7 +153,7 @@
                 if (propertyName == nameof(Password) && ParentPage != null)
                     return GetNotMandatoryErrorString(propertyName, DonorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
-                if (propertyName == nameof(SelectedDonationCenter))
+                if (propertyName == nameof(SelectedDonationCenter) && SelectedDonationCenter != null)
                     return GetErrorString(propertyName, DonorValidator.FavouriteDonationCenterValidation(SelectedDonationCenter));
 
                 return null;
