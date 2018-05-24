@@ -4,27 +4,27 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ee9a3685ff934b7a80e23a3dba974ad6" Name="Diagram1">
-        <EntityTypeShape EntityType="Model.Account" Width="1.5" PointX="5.25" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Address" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Administrator" Width="1.5" PointX="7.5" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.BloodContainer" Width="1.5" PointX="12.75" PointY="11.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.BloodContainerType" Width="1.5" PointX="10.5" PointY="16.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.BloodRequest" Width="1.5" PointX="10.5" PointY="11.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.BloodType" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.County" Width="1.5" PointX="0.75" PointY="12.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.DCPersonnel" Width="1.5" PointX="18" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Doctor" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.DonationCenter" Width="1.5" PointX="15.75" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.DonationForm" Width="1.5" PointX="20.25" PointY="9.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Donor" Width="1.5" PointX="8.25" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Gender" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="7.5" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Patient" Width="1.5" PointX="10.5" PointY="6.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Person" Width="1.5" PointX="5.25" PointY="5.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.PersonStatus" Width="1.5" PointX="8.25" PointY="16.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.RequestPriority" Width="1.5" PointX="8.25" PointY="21.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.RH" Width="1.5" PointX="8.25" PointY="18.625" IsExpanded="true" />
+      <Diagram DiagramId="352bb0a259314c6b9ac9092b1a950a9b" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.Account" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Address" Width="1.5" PointX="3" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Administrator" Width="1.5" PointX="13.5" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodContainer" Width="1.5" PointX="15.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodContainerType" Width="1.5" PointX="13.5" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodRequest" Width="1.5" PointX="10.5" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.BloodType" Width="1.5" PointX="11.25" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.County" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DCPersonnel" Width="1.5" PointX="18" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Doctor" Width="1.5" PointX="5.25" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DonationCenter" Width="1.5" PointX="15.75" PointY="14.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DonationForm" Width="1.5" PointX="23.25" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Donor" Width="1.5" PointX="21" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Gender" Width="1.5" PointX="6" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="10.5" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Patient" Width="1.5" PointX="13.5" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Person" Width="1.5" PointX="8.25" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PersonStatus" Width="1.5" PointX="11.25" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.RequestPriority" Width="1.5" PointX="8.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.RH" Width="1.5" PointX="11.25" PointY="20" IsExpanded="true" />
         <AssociationConnector Association="Model.FK_AdministratorAccount" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_DCPersonnelAccount" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_DoctorAccount" ManuallyRouted="false" />
@@ -49,6 +49,7 @@
         <AssociationConnector Association="Model.FK_DonationFormDCPersonnel" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Doctor_inherits_Person" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_DoctorPatient" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DonorDonationCenter" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_DonationFormDonor" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Donor_inherits_Person" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_GenderPerson" ManuallyRouted="false" />
@@ -58,7 +59,6 @@
         <AssociationConnector Association="Model.FK_PatientPersonStatus" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_RHPatient" ManuallyRouted="false" />
         <AssociationConnector Association="Model.BloodRequestDonationCenter" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.FK_DonorDonationCenter" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

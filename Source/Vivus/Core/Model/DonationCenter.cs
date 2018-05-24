@@ -19,8 +19,8 @@ namespace Vivus.Core.Model
         {
             this.BloodContainers = new HashSet<BloodContainer>();
             this.DCPersonnels = new HashSet<DCPersonnel>();
-            this.BloodRequests = new HashSet<BloodRequest>();
             this.Donors = new HashSet<Donor>();
+            this.BloodRequests = new HashSet<BloodRequest>();
         }
     
         public int DonationCenterID { get; set; }
@@ -33,8 +33,8 @@ namespace Vivus.Core.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DCPersonnel> DCPersonnels { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BloodRequest> BloodRequests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Donor> Donors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BloodRequest> BloodRequests { get; set; }
     }
 }

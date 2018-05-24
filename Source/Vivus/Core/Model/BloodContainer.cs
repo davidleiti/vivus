@@ -20,7 +20,7 @@ namespace Vivus.Core.Model
         public string ContainerCode { get; set; }
         public int ContainerTypeID { get; set; }
         public int DonationCenterID { get; set; }
-        public int BloodRequestID { get; set; }
+        public Nullable<int> BloodRequestID { get; set; }
         public int BloodTypeID { get; set; }
     
         public virtual BloodType BloodType { get; set; }
