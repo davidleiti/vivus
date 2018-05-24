@@ -41,7 +41,23 @@
 
         public void DontAllowErrors()
         {
-            throw new System.NotImplementedException();
+            if (ViewModel.ToValidate == ManageBloodViewModel.Validation.ManageBlood)
+            {
+                cbContainerType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+                tbContainerCode.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+                cbBloodTypeManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+                cbRHManage.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+                tbHarvestDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            }
+
+            // Request blood details
+            if (ViewModel.ToValidate == ManageBloodViewModel.Validation.RequestDonation)
+            {
+                cbBloodTypeReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+                cbRHReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+            }
+
+            ViewModel.ToValidate = ManageBloodViewModel.Validation.None;
         }
 
         public void AllowOptionalErrors()

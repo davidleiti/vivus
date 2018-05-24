@@ -24,10 +24,6 @@
     {
         #region Private fields
 
-        //private List<BasicEntity<string>> containerTypes;
-        //private List<BasicEntity<string>> bloodTypes;
-        //private List<BasicEntity<string>> rhTypes;
-
         private string containerCode;
         private string harvestDate;
         private BasicEntity<string> containerType;
@@ -37,6 +33,10 @@
 
         private BasicEntity<string> addContainerRH;
         private BasicEntity<string> requestRH;
+
+        private ButtonType buttonType;
+        private bool actionIsRunning;
+        private ContainersStorageItemViewModel selectedItem;
 
         private IUnitOfWork unitOfWork;
         private IApllicationViewModel<Model.DCPersonnel> appViewModel;
@@ -68,7 +68,72 @@
         public List<BasicEntity<string>> BloodTypes { get; }
         public List<BasicEntity<string>> RHTypes { get; }
 
-        public ContainersStorageItemViewModel SelectedItem { get; set; }
+        public ContainersStorageItemViewModel SelectedItem
+        {
+            get => selectedItem;
+
+            set
+            {
+                if (value == selectedItem)
+                    return;
+
+                selectedItem = value;
+
+                if (selectedItem is null)
+                {
+                    ButtonType = ButtonType.Add;
+
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+
+                    //ClearFieldsAddAndModify();
+                }
+                else
+                {
+                    ButtonType = ButtonType.Modify;
+
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                    PopulateFields();
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the type of the table button.
+        /// </summary>
+        public ButtonType ButtonType
+        {
+            get => buttonType;
+
+            set
+            {
+                if (buttonType == value)
+                    return;
+
+                buttonType = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag that indicates whether an action is running or not.
+        /// </summary>
+        public bool ActionIsRunning
+        {
+            get => actionIsRunning;
+
+            set
+            {
+                if (actionIsRunning == value)
+                    return;
+
+                actionIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public BasicEntity<string> ContainerType
         {
@@ -216,7 +281,7 @@
             ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             BloodTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
             RHTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select rh") };
-            AddCommand = new RelayCommand(Add);
+            AddCommand = new RelayCommand(async () => await AddModifyAsync());
             RequestCommand = new RelayCommand(Request);
             Containers = new ObservableCollection<ContainersStorageItemViewModel>();
 
@@ -231,8 +296,29 @@
                     LoadContainerTypesAsync();
                     LoadBloodTypesAsync();
                     LoadRHTypesAsync();
+                    LoadContainersAsync();
                 });
                 //PopulateFields();
+            });
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Adds an Blood container.
+        /// </summary>
+        public async Task AddModifyAsync()
+        {
+            await RunCommand(() => ActionIsRunning, async () =>
+            {
+                if (ButtonType == ButtonType.Add)
+                    await AddBloodContainerAsync();
+                //else
+                //    await ModifyAdministratorAsync();
+
+                ClearFieldsAddAndModify();
             });
         }
 
@@ -243,23 +329,14 @@
         /// <summary>
         /// Clears all the fields of the viewmodel.
         /// </summary>
-        //private void ClearFields()
-        //{
-        //    Email = string.Empty;
-        //    IsActive = true;
-        //    IsActiveIsEnabled = true;
-        //    Person.FirstName = string.Empty;
-        //    Person.LastName = string.Empty;
-        //    Person.BirthDate = string.Empty;
-        //    Person.NationalIdentificationNumber = string.Empty;
-        //    Person.PhoneNumber = string.Empty;
-        //    Person.Gender = new BasicEntity<string>(-1, "Not specified");
-        //    Address.StreetName = string.Empty;
-        //    Address.StreetNumber = string.Empty;
-        //    Address.City = string.Empty;
-        //    Address.County = Counties[0];
-        //    Address.ZipCode = string.Empty;
-        //}
+        private void ClearFieldsAddAndModify()
+        {
+            ContainerType = new BasicEntity<string>(-1, "Select container type");
+            ContainerCode = String.Empty;
+            AddContainerBloodType = new BasicEntity<string>(-1, "Select blood type");
+            AddContainerRH = new BasicEntity<string>(-1, "Select rh");
+            HarvestDate = String.Empty;
+        }
 
         /// <summary>
         /// Loads all the ContainerTypes asynchronously.
@@ -310,39 +387,90 @@
         }
 
         /// <summary>
+        /// Loads all the Containers asynchronously.
+        /// </summary>
+        private async void LoadContainersAsync()
+        {
+            await Task.Run(() =>
+            {
+                Containers.Clear();
+                unitOfWork.BloodContainers
+                .Entities
+                .ToList()
+                .ForEach(bloodContainer =>
+                    dispatcherWrapper.InvokeAsync(() => 
+                        Containers.Add(new ContainersStorageItemViewModel
+                        {
+                            ContainerType = bloodContainer.BloodContainerType.Type,
+                            ContainerCode = bloodContainer.ContainerCode,
+                            BloodType = bloodContainer.BloodType.Type,
+                            HarvestDate = bloodContainer.HarvestDate,
+                            Id = bloodContainer.BloodContainerID
+                })));
+
+            });
+        }
+
+        /// <summary>
         /// Populates all the fields of the viewmodel.
         /// </summary>
         private void PopulateFields()
         {
-            unitOfWork.BloodContainerTypes.Entities.ToList()
-                .ForEach(c =>dispatcherWrapper.InvokeAsync(() => ContainerTypes.Add(new BasicEntity<string>(c.ContainerTypeID, c.Type))));
+            ContainerType = new BasicEntity<string>(1, selectedItem.ContainerType);
+            ContainerCode = selectedItem.ContainerCode;
+            AddContainerBloodType = new BasicEntity<string>(1, selectedItem.BloodType);
+            AddContainerRH = new BasicEntity<string>(1, "nada");
+            HarvestDate = selectedItem.HarvestDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Adds a new blood container
         /// </summary>
-        private void Add()
+        private async Task AddBloodContainerAsync()
         {
-            int count;
+            await Task.Run(() =>
+            {
+                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-            ToValidate = Validation.ManageBlood;
-            ParentPage.AllowErrors();
+                int count = errors.Keys
+                        .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
+                        .ToList()
+                        .Count;
 
-            //count = errors.Keys
-            //            .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
-            //            .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
-            //            .Count;
+                if (count > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
 
-            //if (count > 0)
-            //{
-            //    Popup("Some errors were found. Fix them before going forward.");
-            //    return;
-            //}
+                try
+                {
+                    Model.BloodContainer bloodContainer;
+                    bloodContainer = null;
 
-            Vivus.Console.WriteLine(SelectedItem.ContainerType);
+                    ContainersStorageItemViewModel storageItemViewModel;
+                    storageItemViewModel = null;
 
-            Vivus.Console.WriteLine("DCPersonnel Manage Blood: Container added!");
-            Popup("Successfull operation!", PopupType.Successful);
+                    FillModelBloodContainer(ref bloodContainer);
+                    unitOfWork.BloodContainers.Add(bloodContainer);
+                    // Make changes persistent
+                    //unitOfWork.Complete();
+
+                    //Update the table
+                    FillContainersStorageItemViewModel(ref storageItemViewModel);
+                    storageItemViewModel.Id = bloodContainer.BloodContainerID;
+
+                    dispatcherWrapper.InvokeAsync(() => Containers.Add(storageItemViewModel));
+
+                    Popup($"Blood container added successfully!", PopupType.Successful);
+                }
+                catch
+                {
+                    
+                    Popup($"An error occured while adding the blood container.");
+                }
+            });
+
         }
 
         /// <summary>
@@ -370,6 +498,41 @@
             Popup("Successfull operation!", PopupType.Successful);
         }
 
+        /// <summary>
+        /// Fills the fields of a BloodContainer
+        /// </summary>
+        /// <param name="bloodContainer"></param>
+        private void FillModelBloodContainer(ref Model.BloodContainer bloodContainer)
+        {
+
+            if (bloodContainer is null)
+                bloodContainer = new Model.BloodContainer();
+
+            //update BloodContainer
+            bloodContainer.BloodContainerType = unitOfWork.BloodContainerTypes[ContainerType.Id];
+            bloodContainer.ContainerCode = ContainerCode;
+            bloodContainer.BloodType = unitOfWork.BloodTypes[AddContainerBloodType.Id];
+            bloodContainer.RH = unitOfWork.RHs[AddContainerRH.Id];
+            bloodContainer.HarvestDate = DateTime.Parse(HarvestDate);
+        }
+
+        /// <summary>
+        /// Fills the fields of a ContainersStorageItemViewModel
+        /// </summary>
+        /// <param name="storageItemViewModel"></param>
+        private void FillContainersStorageItemViewModel(ref ContainersStorageItemViewModel storageItemViewModel)
+        {
+            if (storageItemViewModel is null)
+                storageItemViewModel = new ContainersStorageItemViewModel();
+
+            storageItemViewModel.ContainerType = unitOfWork.BloodContainerTypes[ContainerType.Id].Type;
+            storageItemViewModel.ContainerCode = ContainerCode;
+            storageItemViewModel.BloodType = unitOfWork.BloodTypes[AddContainerBloodType.Id].Type;
+            storageItemViewModel.HarvestDate = DateTime.Parse(HarvestDate);
+        }
+
+        
+
         #endregion
     }
 
@@ -382,7 +545,6 @@
         private string containerType;
         private string bloodType;
         private DateTime harvestDate;
-        private bool expired;
 
         #endregion
 
@@ -465,19 +627,21 @@
 
         public bool Expired
         {
-            get => expired;
-
-            set
+            get
             {
-                if (expired == value)
-                    return;
-
-                expired = value;
-
-                OnPropertyChanged();
+                
+                    if (ContainerType.Equals("Thrombocytes"))
+                        return HarvestDate.AddDays(6) <= DateTime.Now;
+                    if (ContainerType.Equals("Red cells"))
+                        return HarvestDate.AddDays(43) <= DateTime.Now;
+                    if (ContainerType.Equals("Plasma"))
+                        return HarvestDate.AddMonths(12).AddDays(1) <= DateTime.Now;
+                    return HarvestDate.AddDays(43) <= DateTime.Now;
             }
+
         }
 
         #endregion
     }
+
 }
