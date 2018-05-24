@@ -263,11 +263,11 @@
             IdentificationCardAddress.County = new BasicEntity<string>(donor.Person.Address.CountyID, donor.Person.Address.County.Name);
             IdentificationCardAddress.ZipCode = donor.Person.Address.ZipCode;
 
-            ResidenceAddress.StreetName = donor.Residence.Street;
-            ResidenceAddress.StreetNumber = donor.Residence.StreetNo;
-            ResidenceAddress.City = donor.Residence.City;
-            ResidenceAddress.County =  new BasicEntity<string>(donor.Residence.CountyID, donor.Residence.County.Name);
-            ResidenceAddress.ZipCode = donor.Residence.ZipCode;
+            ResidenceAddress.StreetName = donor.ResidenceAddress.Street;
+            ResidenceAddress.StreetNumber = donor.ResidenceAddress.StreetNo;
+            ResidenceAddress.City = donor.ResidenceAddress.City;
+            ResidenceAddress.County =  new BasicEntity<string>(donor.ResidenceAddress.CountyID, donor.ResidenceAddress.County.Name);
+            ResidenceAddress.ZipCode = donor.ResidenceAddress.ZipCode;
         }
 
         /// <summary>
@@ -356,11 +356,11 @@
             donor.Person.Address.County = idCardAddressCounty;
             donor.Person.Address.ZipCode = IdentificationCardAddress.ZipCode;
             //  Residence address properties
-            donor.Residence.Street = ResidenceAddress.StreetName;
-            donor.Residence.StreetNo = ResidenceAddress.StreetNumber;
-            donor.Residence.City = ResidenceAddress.City;
-            donor.Residence.County = residenceAddressCounty;
-            donor.Residence.ZipCode = ResidenceAddress.ZipCode;
+            donor.ResidenceAddress.Street = ResidenceAddress.StreetName;
+            donor.ResidenceAddress.StreetNo = ResidenceAddress.StreetNumber;
+            donor.ResidenceAddress.City = ResidenceAddress.City;
+            donor.ResidenceAddress.County = residenceAddressCounty;
+            donor.ResidenceAddress.ZipCode = ResidenceAddress.ZipCode;
         }
 
         #endregion

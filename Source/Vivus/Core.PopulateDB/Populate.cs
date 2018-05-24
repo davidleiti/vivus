@@ -353,7 +353,7 @@
             {
                 unitOfWork.Accounts.Remove(donor.Account);
                 unitOfWork.Addresses.Remove(donor.Person.Address);
-                unitOfWork.Addresses.Remove(donor.Address);
+                unitOfWork.Addresses.Remove(donor.ResidenceAddress);
                 unitOfWork.Persons.Remove(donor.Person);
                 unitOfWork.Donors.Remove(donor);
             });
