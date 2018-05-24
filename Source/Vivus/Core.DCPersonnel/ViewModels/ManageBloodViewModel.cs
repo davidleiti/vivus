@@ -82,10 +82,6 @@
                 if (selectedItem is null)
                 {
                     ButtonType = ButtonType.Add;
-
-                    dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-
-                    //ClearFieldsAddAndModify();
                 }
                 else
                 {
@@ -313,12 +309,15 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
+                ToValidate = Validation.ManageBlood;
                 if (ButtonType == ButtonType.Add)
                     await AddBloodContainerAsync();
-                //else
-                //    await ModifyAdministratorAsync();
+                else
+                    await ModifyBloodContainerAsync();
 
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
                 ClearFieldsAddAndModify();
+                ToValidate = Validation.None;
             });
         }
 
@@ -401,10 +400,11 @@
                     dispatcherWrapper.InvokeAsync(() => 
                         Containers.Add(new ContainersStorageItemViewModel
                         {
-                            ContainerType = bloodContainer.BloodContainerType.Type,
+                            ContainerType = new BasicEntity<string>(bloodContainer.BloodContainerType.ContainerTypeID, bloodContainer.BloodContainerType.Type),
                             ContainerCode = bloodContainer.ContainerCode,
-                            BloodType = bloodContainer.BloodType.Type,
+                            BloodType = new BasicEntity<string>(bloodContainer.BloodType.BloodTypeID, bloodContainer.BloodType.Type),
                             HarvestDate = bloodContainer.HarvestDate,
+                            Rh = new BasicEntity<string>(bloodContainer.RH.RhID, bloodContainer.RH.Type),
                             Id = bloodContainer.BloodContainerID
                 })));
 
@@ -416,10 +416,10 @@
         /// </summary>
         private void PopulateFields()
         {
-            ContainerType = new BasicEntity<string>(1, selectedItem.ContainerType);
+            ContainerType = selectedItem.ContainerType;
             ContainerCode = selectedItem.ContainerCode;
-            AddContainerBloodType = new BasicEntity<string>(1, selectedItem.BloodType);
-            AddContainerRH = new BasicEntity<string>(1, "nada");
+            AddContainerBloodType = selectedItem.BloodType;
+            AddContainerRH = selectedItem.Rh;
             HarvestDate = selectedItem.HarvestDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
 
@@ -471,6 +471,50 @@
                 }
             });
 
+        }
+
+
+        private async Task ModifyBloodContainerAsync()
+        {
+            await Task.Run(() =>
+            {
+                if (selectedItem is null)
+                    return;
+
+                int count = errors.Keys
+                        .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
+                        .ToList()
+                        .Count;
+
+                if (count > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                try
+                {
+                    Model.BloodContainer bloodContainer;
+
+                    bloodContainer = unitOfWork.BloodContainers[SelectedItem.Id];
+
+                    FillModelBloodContainer(ref bloodContainer);
+                    // Make changes persistent
+                    unitOfWork.Complete();
+
+                    FillContainersStorageItemViewModel(ref selectedItem);
+
+                    Popup("Blood container modified successfully!", PopupType.Successful);
+
+                }
+                catch
+                {
+                    Popup("An error occured while modifing the blood container.");
+                }
+
+                ButtonType = ButtonType.Add;
+                SelectedItem = null;
+            });
         }
 
         /// <summary>
@@ -525,9 +569,16 @@
             if (storageItemViewModel is null)
                 storageItemViewModel = new ContainersStorageItemViewModel();
 
-            storageItemViewModel.ContainerType = unitOfWork.BloodContainerTypes[ContainerType.Id].Type;
+            storageItemViewModel.ContainerType =
+                new BasicEntity<string>(unitOfWork.BloodContainerTypes[ContainerType.Id].ContainerTypeID,
+                unitOfWork.BloodContainerTypes[ContainerType.Id].Type);
             storageItemViewModel.ContainerCode = ContainerCode;
-            storageItemViewModel.BloodType = unitOfWork.BloodTypes[AddContainerBloodType.Id].Type;
+            storageItemViewModel.BloodType =
+                new BasicEntity<string>(unitOfWork.BloodTypes[AddContainerBloodType.Id].BloodTypeID,
+                unitOfWork.BloodTypes[AddContainerBloodType.Id].Type);
+            storageItemViewModel.Rh =
+                new BasicEntity<string>(unitOfWork.RHs[AddContainerRH.Id].RhID,
+                unitOfWork.RHs[AddContainerRH.Id].Type);
             storageItemViewModel.HarvestDate = DateTime.Parse(HarvestDate);
         }
 
@@ -542,13 +593,29 @@
 
         private int id;
         private string containerCode;
-        private string containerType;
-        private string bloodType;
+        private BasicEntity<string> containerType;
+        private BasicEntity<string> bloodType;
+        private BasicEntity<string> rh;
         private DateTime harvestDate;
 
         #endregion
 
         #region Public properties
+
+        public BasicEntity<string> Rh
+        {
+            get => rh;
+
+            set
+            {
+                if (rh == value)
+                    return;
+
+                rh = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public int Id
         {
@@ -580,7 +647,7 @@
             }
         }
 
-        public string ContainerType
+        public BasicEntity<string> ContainerType
         {
             get => containerType;
 
@@ -595,7 +662,7 @@
             }
         }
 
-        public string BloodType
+        public BasicEntity<string> BloodType
         {
             get => bloodType;
 
@@ -622,6 +689,7 @@
                 harvestDate = value;
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Expired));
             }
         }
 

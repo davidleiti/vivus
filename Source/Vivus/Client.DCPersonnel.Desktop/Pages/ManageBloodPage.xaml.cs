@@ -35,8 +35,6 @@
                 cbBloodTypeReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
                 cbRHReq.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             }
-
-            ViewModel.ToValidate = ManageBloodViewModel.Validation.None;
         }
 
         public void DontAllowErrors()
