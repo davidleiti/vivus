@@ -278,7 +278,7 @@
             BloodTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
             RHTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select rh") };
             AddCommand = new RelayCommand(async () => await AddModifyAsync());
-            RequestCommand = new RelayCommand(Request);
+            RequestCommand = new RelayCommand(async () => await SendReqAsync());
             Containers = new ObservableCollection<ContainersStorageItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
@@ -317,6 +317,22 @@
 
                 await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
                 ClearFieldsAddAndModify();
+                ToValidate = Validation.None;
+            });
+        }
+
+        /// <summary>
+        /// Sends a request.
+        /// </summary>
+        public async Task SendReqAsync()
+        {
+            await RunCommand(() => ActionIsRunning, async () =>
+            {
+                ToValidate = Validation.RequestDonation;
+
+                await SendRequestAsync();
+
+                //ClearFieldsAddAndModify();
                 ToValidate = Validation.None;
             });
         }
@@ -392,7 +408,7 @@
         {
             await Task.Run(() =>
             {
-                Containers.Clear();
+                dispatcherWrapper.InvokeAsync(() => Containers.Clear());
                 unitOfWork.BloodContainers
                 .Entities
                 .ToList()
@@ -500,7 +516,7 @@
 
                     FillModelBloodContainer(ref bloodContainer);
                     // Make changes persistent
-                    unitOfWork.Complete();
+                    //unitOfWork.Complete();
 
                     FillContainersStorageItemViewModel(ref selectedItem);
 
@@ -520,26 +536,29 @@
         /// <summary>
         /// Request blood.
         /// </summary>
-        private void Request()
+        private async Task SendRequestAsync()
         {
-            int count;
-
-            ToValidate = Validation.RequestDonation;
-            ParentPage.AllowErrors();
-
-            count = errors.Keys
-                        .Where(key => key == nameof(RequestBloodType) || key == nameof(RequestRH))
-                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
-                        .Count;
-
-            if (count > 0)
+            await Task.Run(() =>
             {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
+                int count;
 
-            Vivus.Console.WriteLine("DC Personnel: Blood requested!");
-            Popup("Successfull operation!", PopupType.Successful);
+                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+
+                count = errors.Keys
+                            .Where(key => key == nameof(RequestBloodType) || key == nameof(RequestRH))
+                            .ToList()
+                            .Count;
+
+                if (count > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                Vivus.Console.WriteLine("DC Personnel: Blood requested!");
+                Popup("Successfull operation!", PopupType.Successful);
+            });
+
         }
 
         /// <summary>
