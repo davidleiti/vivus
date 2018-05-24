@@ -305,15 +305,15 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
-                //ToValidate = Validation.ManageBlood;
-                //if (ButtonType == ButtonType.Add)
-                //    await AddBloodContainerAsync();
-                //else
-                //    await ModifyBloodContainerAsync();
+                ToValidate = Validation.ManageBlood;
+                if (ButtonType == ButtonType.Add)
+                    await AddBloodContainerAsync();
+                else
+                    await ModifyBloodContainerAsync();
 
-                //await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-                //ClearFieldsAddAndModify();
-                //ToValidate = Validation.None;
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                ClearFieldsAddAndModify();
+                ToValidate = Validation.None;
             });
         }
 
@@ -336,7 +336,7 @@
                 if (task.Result)
                 {
                     await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-                    ClearFieldsAddAndModify();
+                    // Add clear function
                 }
 
                 ToValidate = Validation.None;
@@ -494,8 +494,7 @@
             });
 
         }
-
-
+        
         private async Task ModifyBloodContainerAsync()
         {
             await Task.Run(() =>
@@ -602,9 +601,7 @@
                 unitOfWork.RHs[AddContainerRH.Id].Type);
             storageItemViewModel.HarvestDate = DateTime.Parse(HarvestDate);
         }
-
         
-
         #endregion
     }
 
