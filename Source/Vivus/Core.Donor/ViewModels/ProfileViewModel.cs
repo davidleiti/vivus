@@ -256,17 +256,18 @@
             Person.NationalIdentificationNumber = donor.Person.Nin;
             Person.PhoneNumber = donor.Person.PhoneNo;
             Person.Gender = new BasicEntity<string>(donor.Person.GenderID, donor.Person.Gender.Type);
-            IdentificationCardAddress.StreetName = donor.Address.Street;
-            IdentificationCardAddress.StreetNumber = donor.Address.StreetNo;
-            IdentificationCardAddress.City = donor.Address.City;
-            IdentificationCardAddress.County = new BasicEntity<string>(donor.Address.CountyID, donor.Address.County.Name);
-            IdentificationCardAddress.ZipCode = donor.Address.ZipCode;
 
-            ResidenceAddress.StreetName = donor.Person.Address.Street;
-            ResidenceAddress.StreetNumber = donor.Person.Address.StreetNo;
-            ResidenceAddress.City = donor.Person.Address.City;
-            ResidenceAddress.County =  new BasicEntity<string>(donor.Person.Address.CountyID, donor.Person.Address.County.Name);
-            ResidenceAddress.ZipCode = donor.Person.Address.ZipCode;
+            IdentificationCardAddress.StreetName = donor.Person.Address.Street;
+            IdentificationCardAddress.StreetNumber = donor.Person.Address.StreetNo;
+            IdentificationCardAddress.City = donor.Person.Address.City;
+            IdentificationCardAddress.County = new BasicEntity<string>(donor.Person.Address.CountyID, donor.Person.Address.County.Name);
+            IdentificationCardAddress.ZipCode = donor.Person.Address.ZipCode;
+
+            ResidenceAddress.StreetName = donor.Residence.Street;
+            ResidenceAddress.StreetNumber = donor.Residence.StreetNo;
+            ResidenceAddress.City = donor.Residence.City;
+            ResidenceAddress.County =  new BasicEntity<string>(donor.Residence.CountyID, donor.Residence.County.Name);
+            ResidenceAddress.ZipCode = donor.Residence.ZipCode;
         }
 
         /// <summary>
@@ -349,17 +350,17 @@
             donor.Person.PhoneNo = Person.PhoneNumber;
             donor.Person.Gender = gender;
             //  Identification card address properties
-            donor.Address.Street = IdentificationCardAddress.StreetName;
-            donor.Address.StreetNo = IdentificationCardAddress.StreetNumber;
-            donor.Address.City = IdentificationCardAddress.City;
-            donor.Address.County = idCardAddressCounty;
-            donor.Address.ZipCode = IdentificationCardAddress.ZipCode;
+            donor.Person.Address.Street = IdentificationCardAddress.StreetName;
+            donor.Person.Address.StreetNo = IdentificationCardAddress.StreetNumber;
+            donor.Person.Address.City = IdentificationCardAddress.City;
+            donor.Person.Address.County = idCardAddressCounty;
+            donor.Person.Address.ZipCode = IdentificationCardAddress.ZipCode;
             //  Residence address properties
-            donor.Person.Address.Street = ResidenceAddress.StreetName;
-            donor.Person.Address.StreetNo = ResidenceAddress.StreetNumber;
-            donor.Person.Address.City = ResidenceAddress.City;
-            donor.Person.Address.County = residenceAddressCounty;
-            donor.Person.Address.ZipCode = ResidenceAddress.ZipCode;
+            donor.Residence.Street = ResidenceAddress.StreetName;
+            donor.Residence.StreetNo = ResidenceAddress.StreetNumber;
+            donor.Residence.City = ResidenceAddress.City;
+            donor.Residence.County = residenceAddressCounty;
+            donor.Residence.ZipCode = ResidenceAddress.ZipCode;
         }
 
         #endregion
