@@ -74,6 +74,9 @@
     <Compile Include="DataModels\PopupType.cs" />
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
+    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrix.cs" />
+    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoute.cs" />
+    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoutes.cs" />
     <Compile Include="Helpers\AddressHelpers.cs" />
     <Compile Include="Http\Requests.cs" />
     <Compile Include="Model\Account.cs">
