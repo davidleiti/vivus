@@ -2,10 +2,13 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.DCPersonnel.Validators;
     using Vivus.Core.ViewModels;
+    using VivusConsole = Core.Console.Console;
 
     /// <summary>
     /// Represents a view model for the donation results page.
@@ -24,6 +27,11 @@
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the parent page.
+        /// </summary>
+        public IPage ParentPage { get; set; }
 
         /// <summary>
         /// Gets or sets the full name of the donor.
@@ -91,6 +99,8 @@
                 if (donationResults == value)
                     return;
 
+                donationResults = value;
+
                 OnPropertyChanged();
             }
         }
@@ -136,6 +146,25 @@
         /// </summary>
         public ObservableCollection<DonationFormItemViewModel> DonationForms { get; }
 
+        /// <summary>
+        /// Gets the error string of a property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns></returns>
+        public override string this[string propertyName]
+        {
+            get
+            {
+                if (propertyName == nameof(DonationDate))
+                    return GetErrorString(propertyName, DCPersonnelValidator.DonationDateValidation(DonationDate));
+
+                if (propertyName == nameof(DonationResults))
+                    return GetErrorString(propertyName, DCPersonnelValidator.DonationResultsValidation(DonationResults));
+
+                return null;
+            }
+        }
+
         #endregion
 
         #region Public Commands
@@ -164,6 +193,29 @@
                 NationalIdentificationNumber = "2840812094291",
                 BloodType = "O-"
             }));
+
+            SendCommand = new RelayCommand(async () => await SendResults());
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task SendResults()
+        {
+            await Task.Run(() =>
+            {
+                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                
+                if (Errors > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                VivusConsole.WriteLine("Dontaion results sent successfully!");
+                Popup("Successfull operation!", PopupType.Successful);
+            });
         }
 
         #endregion

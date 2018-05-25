@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Client.DCPersonnel.Desktop.Pages
 {
     using System;
+    using Vivus.Client.Core.AttachedProperties;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
     using Vivus.Core.DCPersonnel.ViewModels;
@@ -13,6 +14,8 @@
         public DonationsResultsPage()
         {
             InitializeComponent();
+
+            ViewModel.ParentPage = this;
         }
 
         /// <summary>
@@ -20,7 +23,8 @@
         /// </summary>
         public void AllowErrors()
         {
-            throw new NotImplementedException();
+            tbDonationDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
+            tbDonationResults.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
         }
 
         /// <summary>
