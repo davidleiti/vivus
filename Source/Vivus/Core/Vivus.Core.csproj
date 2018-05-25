@@ -78,6 +78,7 @@
     <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoute.cs" />
     <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoutes.cs" />
     <Compile Include="Helpers\AddressHelpers.cs" />
+    <Compile Include="Helpers\DistanceMatrixApiHelpers.cs" />
     <Compile Include="Http\Requests.cs" />
     <Compile Include="Model\Account.cs">
       <DependentUpon>VivusModel.tt</DependentUpon>
