@@ -359,6 +359,12 @@
             HarvestDate = String.Empty;
         }
 
+        private void ClearFieldsRequest()
+        {
+            RequestBloodType = new BasicEntity<string>(-1, "Select container type");
+            RequestRH = new BasicEntity<string>(-1, "Select rh");
+        }
+
         /// <summary>
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>

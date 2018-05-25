@@ -17,7 +17,7 @@
     {
         #region Private Members
         private string fullName;
-        private string nin;
+        private string nationalIdentificationNumber;
         private int? age;
         private int? weight;
         private int? heartRate;
@@ -50,16 +50,16 @@
             }
 
         }
-        public string Nin
+        public string NationalIdentificationNumber
         {
-            get => nin;
+            get => nationalIdentificationNumber;
             set
             {
-                if (nin == value)
+                if (nationalIdentificationNumber == value)
 
                     return;
 
-                nin = value;
+                nationalIdentificationNumber = value;
 
                 OnPropertyChanged();
 
@@ -314,7 +314,7 @@
         #region Private members
         private int id;
         private DateTime applyDate;
-        private string nin;
+        private string nationalIdentificationNumber;
         private string fullName;
         private int age;
         #endregion
@@ -345,16 +345,16 @@
                 OnPropertyChanged();
             }
         }
-        public string Nin
+        public string NationalIdentificationNumber
         {
-            get => nin;
+            get => nationalIdentificationNumber;
 
             set
             {
-                if (nin == value)
+                if (nationalIdentificationNumber == value)
                     return;
 
-                nin = value;
+                nationalIdentificationNumber = value;
 
                 OnPropertyChanged();
             }
@@ -400,7 +400,7 @@
         {
             Id = 10;
             ApplyDate = new DateTime(2012, 11, 1);
-            Nin = "123";
+            NationalIdentificationNumber = "123";
             FullName = "Sinklars Draptinen";
             Age = 11;
 
