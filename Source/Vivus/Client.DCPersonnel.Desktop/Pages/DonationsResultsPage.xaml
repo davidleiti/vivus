@@ -82,5 +82,6 @@
                 </DataGrid>
             </StackPanel>
         </ScrollViewer>
+        <TextBox Style="{StaticResource PagePopup}" Text="{Binding PopupMessage}" />
     </Grid>
 </pages:BasePage>
