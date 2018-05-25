@@ -38,7 +38,7 @@
         /// <param name="originAddress">The origin address.</param>
         /// <param name="destinationAddresses">A collection of destination addresses.</param>
         /// <returns></returns>
-        public static IEnumerable<object> GetDistances(this Address originAddress, IEnumerable<Address> destinationAddresses)
+        public static IEnumerable<RouteDetails> GetDistances(this Address originAddress, IEnumerable<Address> destinationAddresses)
         {
             string apiResponse, orgAddress, destAddresses;
             Task<string> getAsync;
@@ -62,13 +62,39 @@
             // Add to the results the routes with their distance and duration
             for (int i = 0; i < destAddressesList.Count; i++)
                 if (routes[i].Status == "OK")
-                    yield return new
+                    yield return new RouteDetails
                     {
-                        OriginAddress = orgAddress,
+                        OriginAddress = originAddress,
                         DestinationAddress = destAddressesList[i],
                         Distance = routes[i].Distance.Value,
                         Duration = routes[i].Duration.Value
                     };
+        }
+
+        /// <summary>
+        /// Represents an entity returned by the <see cref="GetDistances(Address, IEnumerable{Address})"/> method.
+        /// </summary>
+        public class RouteDetails
+        {
+            /// <summary>
+            /// Gets or sets the origin address.
+            /// </summary>
+            public Address OriginAddress { get; set; }
+
+            /// <summary>
+            /// Gets or sets the destination address.
+            /// </summary>
+            public Address DestinationAddress { get; set; }
+
+            /// <summary>
+            /// Gets or sets the distance of the route.
+            /// </summary>
+            public int Distance { get; set; }
+
+            /// <summary>
+            /// Gets or sets the duration of the route.
+            /// </summary>
+            public int Duration { get; set; }
         }
     }
 }

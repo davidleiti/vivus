@@ -144,7 +144,13 @@
                             return;
                         }
 
-                        IoCContainer.Get<IApllicationViewModel<Model.Donor>>().User = donor;
+                        IoCContainer.Get<IApllicationViewModel<Model.Donor>>().User = new Model.Donor
+                        {
+                            PersonID = donor.PersonID,
+                            AccountID = donor.AccountID,
+                            DonationCenterID = donor.DonationCenterID,
+                            ResidenceID = donor.ResidenceID
+                        };
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
                         IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Dashboard;

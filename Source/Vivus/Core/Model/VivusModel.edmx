@@ -136,7 +136,7 @@
           </Key>
           <Property Name="PersonID" Type="int" Nullable="false" />
           <Property Name="AccountID" Type="int" Nullable="false" />
-          <Property Name="ResidenceID" Type="int" Nullable="false" />
+          <Property Name="ResidenceID" Type="int" />
           <Property Name="DonationCenterID" Type="int" />
         </EntityType>
         <EntityType Name="Genders">
@@ -521,7 +521,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonorAddress">
-          <End Role="Addresses" Type="Self.Addresses" Multiplicity="1" />
+          <End Role="Addresses" Type="Self.Addresses" Multiplicity="0..1" />
           <End Role="Donors" Type="Self.Donors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Addresses">
@@ -962,7 +962,7 @@
           </Key>
           <Property Name="PersonID" Type="Int32" Nullable="false" />
           <Property Name="AccountID" Type="Int32" Nullable="false" />
-          <Property Name="ResidenceID" Type="Int32" Nullable="false" />
+          <Property Name="ResidenceID" Type="Int32" />
           <Property Name="DonationCenterID" Type="Int32" />
           <NavigationProperty Name="Account" Relationship="Self.FK_DonorAccount" FromRole="Donors" ToRole="Accounts" />
           <NavigationProperty Name="ResidenceAddress" Relationship="Self.FK_DonorAddress" FromRole="Donors" ToRole="Addresses" />
@@ -1138,7 +1138,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonorAddress">
-          <End Role="Addresses" Type="Self.Address" Multiplicity="1" />
+          <End Role="Addresses" Type="Self.Address" Multiplicity="0..1" />
           <End Role="Donors" Type="Self.Donor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Addresses">
