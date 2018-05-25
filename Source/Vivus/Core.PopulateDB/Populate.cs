@@ -240,6 +240,18 @@
                     ZipCode = "400000"
                 }
             });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Universitar de Urgență București",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "București"),
+                    City = "București",
+                    Street = "Splaiul Independenței",
+                    StreetNo = "169",
+                    ZipCode = "050098"
+                }
+            });
 
             VivusConsole.WriteLine($"Donation centers: { unitOfWork.Complete() }");
         }
