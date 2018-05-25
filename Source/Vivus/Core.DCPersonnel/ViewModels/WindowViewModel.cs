@@ -85,6 +85,10 @@
                         new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.BloodDonationRequests)
                         {
                             Title = "Donation requests"
+                        },
+                        new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.DonationResults)
+                        {
+                            Title = "Donations results"
                         }
                     }
                 },

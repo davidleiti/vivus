@@ -31,6 +31,11 @@
         BloodDonationRequests,
 
         /// <summary>
+        /// The donation results page.
+        /// </summary>
+        DonationResults,
+
+        /// <summary>
         /// The profile page.
         /// </summary>
         Profile,

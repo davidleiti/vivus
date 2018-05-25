@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Security;
 using Vivus.Core.DataModels;
 
@@ -102,6 +104,38 @@ namespace Vivus.Core.DCPersonnel.Validators
             {
                 return new List<string> { "Donation center field cannot be empty." };
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the donation date of the donor.
+        /// </summary>
+        /// <param name="donationDate">The donation date of the person.</param>
+        /// <returns></returns>
+        public static List<string> DonationDateValidation(string donationDate)
+        {
+            if (string.IsNullOrEmpty(donationDate))
+                return new List<string> { "Donation date field is mandatory." };
+
+            if (!DateTime.TryParse(donationDate, new CultureInfo("ro-RO"), DateTimeStyles.AdjustToUniversal, out DateTime date))
+                return new List<string> { "Donation date is not valid. Use dd/mm/yyyy format." };
+
+            return null;
+        }
+
+        /// <summary>
+        /// Validates the donation results.
+        /// </summary>
+        /// <param name="donationResults">The donation results.</param>
+        /// <returns></returns>
+        public static List<string> DonationResultsValidation(string donationResults)
+        {
+            if (string.IsNullOrEmpty(donationResults))
+                return new List<string> { "Message field is mandatory." };
+
+            if (donationResults.Length < 38)
+                return new List<string> { "Please be more specific." };
+
             return null;
         }
     }

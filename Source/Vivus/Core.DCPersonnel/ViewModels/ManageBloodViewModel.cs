@@ -287,14 +287,10 @@
 
             Task.Run(async () =>
             {
-                await Task.Run(() =>
-                {
-                    LoadContainerTypesAsync();
-                    LoadBloodTypesAsync();
-                    LoadRHTypesAsync();
-                    LoadContainersAsync();
-                });
-                //PopulateFields();
+                await LoadContainerTypesAsync();
+                await LoadBloodTypesAsync();
+                await LoadRHTypesAsync();
+                LoadContainersAsync();
             });
         }
 
@@ -328,12 +324,21 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
+                Task<bool> task;
+
+                task = SendRequestAsync();
                 ToValidate = Validation.RequestDonation;
 
-                await SendRequestAsync();
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-                ClearFieldsRequest();
+                task.Wait();
+
+                if (task.Result)
+                {
+                    await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                    // Add clear function
+                }
+
                 ToValidate = Validation.None;
             });
         }
@@ -354,17 +359,11 @@
             HarvestDate = String.Empty;
         }
 
-        private void ClearFieldsRequest()
-        {
-            RequestBloodType = new BasicEntity<string>(-1, "Select container type");
-            RequestRH = new BasicEntity<string>(-1, "Select rh");
-        }
-
         /// <summary>
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadContainerTypesAsync()
+        private async Task LoadContainerTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -380,7 +379,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadBloodTypesAsync()
+        private async Task LoadBloodTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -396,7 +395,7 @@
         /// Loads all the ContainerTypes asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async void LoadRHTypesAsync()
+        private async Task LoadRHTypesAsync()
         {
             await Task.Run(() =>
             {
@@ -495,8 +494,7 @@
             });
 
         }
-
-
+        
         private async Task ModifyBloodContainerAsync()
         {
             await Task.Run(() =>
@@ -543,15 +541,11 @@
         /// <summary>
         /// Request blood.
         /// </summary>
-        private async Task SendRequestAsync()
+        private async Task<bool> SendRequestAsync()
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
-                int count;
-
-                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
-
-                count = errors.Keys
+                int count = errors.Keys
                             .Where(key => key == nameof(RequestBloodType) || key == nameof(RequestRH))
                             .ToList()
                             .Count;
@@ -559,13 +553,13 @@
                 if (count > 0)
                 {
                     Popup("Some errors were found. Fix them before going forward.");
-                    return;
+                    return false;
                 }
 
                 Vivus.Console.WriteLine("DC Personnel: Blood requested!");
                 Popup("Successfull operation!", PopupType.Successful);
+                return true;
             });
-
         }
 
         /// <summary>
@@ -607,9 +601,7 @@
                 unitOfWork.RHs[AddContainerRH.Id].Type);
             storageItemViewModel.HarvestDate = DateTime.Parse(HarvestDate);
         }
-
         
-
         #endregion
     }
 

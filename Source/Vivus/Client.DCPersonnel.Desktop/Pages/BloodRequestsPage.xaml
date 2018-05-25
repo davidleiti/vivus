@@ -209,13 +209,13 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Doctor" Width="*" Binding="{Binding Doctor, ValidatesOnDataErrors=True}" />
-                        <DataGridTextColumn Header="Priority" Width=".8*" Binding="{Binding Priority, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Thrombocytes" Width=".8*" Binding="{Binding Thrombocytes, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Red cells" Width=".8*" Binding="{Binding RedCells, ValidatesOnDataErrors=True}" />
-                        <DataGridTextColumn Header="Plasma" Width=".8*" Binding="{Binding Plasma, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Blood" Width=".8*" Binding="{Binding Blood, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodType, ValidatesOnDataErrors=True}"/>
+                        <DataGridTextColumn Header="Doctor" Width="*" Binding="{Binding Doctor}" />
+                        <DataGridTextColumn Header="Priority" Width=".8*" Binding="{Binding Priority}"/>
+                        <DataGridTextColumn Header="Thrombocytes" Width=".8*" Binding="{Binding Thrombocytes}"/>
+                        <DataGridTextColumn Header="Red cells" Width=".8*" Binding="{Binding RedCells}" />
+                        <DataGridTextColumn Header="Plasma" Width=".8*" Binding="{Binding Plasma}"/>
+                        <DataGridTextColumn Header="Blood" Width=".8*" Binding="{Binding Blood}"/>
+                        <DataGridTextColumn Header="Blood type" Width=".8*" Binding="{Binding BloodType}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

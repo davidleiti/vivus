@@ -15,7 +15,6 @@
     using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
     using Vivus.Core.ViewModels.Base;
-    using VivusConsole = Console.Console;
 
     /// <summary>
     /// Represents a view model for the profile page.
@@ -153,7 +152,7 @@
                 if (propertyName == nameof(Password) && ParentPage != null)
                     return GetNotMandatoryErrorString(propertyName, DonorValidator.PasswordValidation((ParentPage as IContainPassword).SecurePasword));
 
-                if (propertyName == nameof(SelectedDonationCenter) && SelectedDonationCenter != null)
+                if (propertyName == nameof(SelectedDonationCenter))
                     return GetErrorString(propertyName, DonorValidator.FavouriteDonationCenterValidation(SelectedDonationCenter));
 
                 return null;
@@ -239,8 +238,11 @@
         {
             await Task.Run(() =>
             {
-                DonationCenters.Clear();
-                DonationCenters.Add(new BasicEntity<string>(-1, "Select favourite donation center"));
+                dispatcherWrapper.InvokeAsync(() =>
+                {
+                    DonationCenters.Clear();
+                    DonationCenters.Add(new BasicEntity<string>(-1, "Select favourite donation center"));
+                }).Wait();
                 unitOfWork.DonationCenters.Entities.ToList().ForEach(dc =>
                     dispatcherWrapper.InvokeAsync(() => DonationCenters.Add(new BasicEntity<string>(dc.DonationCenterID, dc.Name)))
                 );
@@ -255,8 +257,11 @@
         {
             await Task.Run(() =>
             {
-                Counties.Clear();
-                Counties.Add(new BasicEntity<string>(-1, "Select county"));
+                dispatcherWrapper.InvokeAsync(() =>
+                {
+                    Counties.Clear();
+                    Counties.Add(new BasicEntity<string>(-1, "Select county"));
+                }).Wait();
                 unitOfWork.Counties.Entities.ToList().ForEach(county =>
                     dispatcherWrapper.InvokeAsync(() => Counties.Add(new BasicEntity<string>(county.CountyID, county.Name)))
                 );
@@ -295,13 +300,11 @@
         private void PopulateFields()
         {
             Donor donor;
-            Donor donorResidence;
 
             donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
-            donorResidence = unitOfWork.Persons[appViewModel.User.ResidenceID].Donor;
 
             Email = donor.Account.Email;
-            SelectedDonationCenter = new BasicEntity<string>(donor.DonationCenterID.Value, donor.DonationCenter.Name);
+            //SelectedDonationCenter = new BasicEntity<string>(donor.DonationCenterID.Value, donor.DonationCenter.Name);
             Person.FirstName = donor.Person.FirstName;
             Person.LastName = donor.Person.LastName;
             Person.BirthDate = donor.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -345,7 +348,7 @@
 
                         FillModelAdministrator(ref donor, true);
                         // Make changes persistent
-                        //unitOfWork.Complete();
+                        unitOfWork.Complete();
                         
                         Popup($"Donor updated successfully!", PopupType.Successful);
                     }
