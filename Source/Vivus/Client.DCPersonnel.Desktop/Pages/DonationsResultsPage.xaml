@@ -46,7 +46,7 @@
                 <!-- Message -->
                 <StackPanel Margin="0 0 0 20">
                     <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                    <TextBox x:Name="tbDonationResults" Tag="Donation results" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Text="{Binding DonationResults, ValidatesOnDataErrors=True}" />
+                    <TextBox x:Name="tbDonationResults" Tag="Donation results" Text="{Binding DonationResults, ValidatesOnDataErrors=True}" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
 
                 <!-- Send Button -->
@@ -66,7 +66,7 @@
                 <!-- Table -->
                 <DataGrid MinHeight="550" ItemsSource="{Binding DonationForms}" SelectedItem="{Binding SelectedDonationForm}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding DonorId}">
+                        <DataGridTextColumn Header="#" Binding="{Binding PersonId}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -74,7 +74,7 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Apply date" Width=".8*" Binding="{Binding ApplyDate}"/>
+                        <DataGridTextColumn Header="Apply date" Width=".8*" Binding="{Binding ApplyDate, StringFormat='dd/MM/yyyy'}"/>
                         <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding Donor}" />
                         <DataGridTextColumn Header="NIN" Width="1.2*" Binding="{Binding NationalIdentificationNumber}" />
                         <DataGridTextColumn Header="Blood type" Width=".7*" Binding="{Binding BloodType}" />
