@@ -75,6 +75,7 @@
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
     <Compile Include="Helpers\AddressHelpers.cs" />
+    <Compile Include="Http\Requests.cs" />
     <Compile Include="Model\Account.cs">
       <DependentUpon>VivusModel.tt</DependentUpon>
     </Compile>
