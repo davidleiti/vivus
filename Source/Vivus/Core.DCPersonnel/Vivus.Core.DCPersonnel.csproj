@@ -64,6 +64,7 @@
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\BloodDonationRequestsViewModel.cs" />
     <Compile Include="ViewModels\BloodRequestsViewModel.cs" />
+    <Compile Include="ViewModels\DonationsResultsViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ManageBloodViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />

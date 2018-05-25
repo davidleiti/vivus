@@ -30,6 +30,9 @@
                 case ApplicationPage.BloodDonationRequests:
                     return new BloodDonationRequestsPage();
 
+                case ApplicationPage.DonationResults:
+                    return new DonationsResultsPage();
+
                 case ApplicationPage.Profile:
                     return new ProfilePage();
 

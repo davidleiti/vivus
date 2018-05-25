@@ -1,0 +1,86 @@
+﻿<pages:BasePage x:Class="Vivus.Client.DCPersonnel.Desktop.Pages.DonationsResultsPage"
+      x:TypeArguments="viewModel:DonationsResultsViewModel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Vivus.Client.DCPersonnel.Desktop.Pages"
+      xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
+      xmlns:viewModel="clr-namespace:Vivus.Core.DCPersonnel.ViewModels;assembly=Vivus.Core.DCPersonnel"
+      mc:Ignorable="d" 
+      SnapsToDevicePixels="True"
+      Background="#fafafa"
+      Title="DonationResultsPage">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="75 40" MinWidth="612">
+                <TextBlock Text="Donations results" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
+
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Donor -->
+                    <StackPanel>
+                        <TextBlock Text="Donor" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="John Doe" IsReadOnly="True" Text="{Binding Donor, ValidatesOnDataErrors=True, Mode=OneWay}" />
+                    </StackPanel>
+                    <!-- National identification number -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox Tag="0000000000000" IsReadOnly="True" Text="{Binding NationalIdentificationNumber, ValidatesOnDataErrors=True, Mode=OneWay}"/>
+                    </StackPanel>
+                    <!-- Donation date -->
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="Donation date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <TextBox x:Name="tbDonationDate" Tag="dd/mm/yyyy" Text="{Binding DonationDate, ValidatesOnDataErrors=True}" PreviewKeyDown="DateTextBox_PreviewKeyDown" PreviewTextInput="DateTextBox_PreviewTextInput" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Message -->
+                <StackPanel Margin="0 0 0 20">
+                    <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                    <TextBox x:Name="tbDonationResults" Tag="Donation results" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="256" Height="76" VerticalContentAlignment="Top" Padding="8 9" VerticalScrollBarVisibility="Auto" Text="{Binding DonationResults, ValidatesOnDataErrors=True}" />
+                </StackPanel>
+
+                <!-- Send Button -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.55*" />
+                        <ColumnDefinition Width="62" />
+                        <ColumnDefinition Width=".55*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="4" Content="Send" Command="{Binding SendCommand}" />
+                </Grid>
+
+                <!-- Filter all donations -->
+                <TextBox Tag="Filter donation forms" Text="{Binding Filter, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" MaxLength="256" Margin="0 0 0 20" />
+
+                <!-- Table -->
+                <DataGrid MinHeight="550" ItemsSource="{Binding DonationForms}" SelectedItem="{Binding SelectedDonationForm}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding DonorId}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Apply date" Width=".8*" Binding="{Binding ApplyDate}"/>
+                        <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding Donor}" />
+                        <DataGridTextColumn Header="NIN" Width="1.2*" Binding="{Binding NationalIdentificationNumber}" />
+                        <DataGridTextColumn Header="Blood type" Width=".7*" Binding="{Binding BloodType}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</pages:BasePage>
