@@ -332,7 +332,8 @@
 
                 await SendRequestAsync();
 
-                //ClearFieldsAddAndModify();
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                ClearFieldsRequest();
                 ToValidate = Validation.None;
             });
         }
@@ -351,6 +352,12 @@
             AddContainerBloodType = new BasicEntity<string>(-1, "Select blood type");
             AddContainerRH = new BasicEntity<string>(-1, "Select rh");
             HarvestDate = String.Empty;
+        }
+
+        private void ClearFieldsRequest()
+        {
+            RequestBloodType = new BasicEntity<string>(-1, "Select container type");
+            RequestRH = new BasicEntity<string>(-1, "Select rh");
         }
 
         /// <summary>
