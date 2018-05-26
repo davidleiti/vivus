@@ -22,7 +22,7 @@
           <Property Name="StreetNo" Type="nvarchar(max)" Nullable="false" />
           <Property Name="City" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CountyID" Type="int" Nullable="false" />
-          <Property Name="ZipCode" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Administrators">
           <Key>
@@ -136,7 +136,7 @@
           </Key>
           <Property Name="PersonID" Type="int" Nullable="false" />
           <Property Name="AccountID" Type="int" Nullable="false" />
-          <Property Name="ResidenceID" Type="int" Nullable="false" />
+          <Property Name="ResidenceID" Type="int" />
           <Property Name="DonationCenterID" Type="int" />
         </EntityType>
         <EntityType Name="Genders">
@@ -164,7 +164,7 @@
           <Property Name="PersonStatusID" Type="int" Nullable="false" />
           <Property Name="RhID" Type="int" Nullable="false" />
           <Property Name="BloodTypeID" Type="int" Nullable="false" />
-          <Property Name="DoctorID" Type="int" Nullable="false" />
+          <Property Name="DoctorID" Type="int" />
         </EntityType>
         <EntityType Name="Persons">
           <Key>
@@ -435,7 +435,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DoctorPatient">
-          <End Role="Doctors" Type="Self.Doctors" Multiplicity="1" />
+          <End Role="Doctors" Type="Self.Doctors" Multiplicity="0..1" />
           <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Doctors">
@@ -521,7 +521,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonorAddress">
-          <End Role="Addresses" Type="Self.Addresses" Multiplicity="1" />
+          <End Role="Addresses" Type="Self.Addresses" Multiplicity="0..1" />
           <End Role="Donors" Type="Self.Donors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Addresses">
@@ -819,7 +819,7 @@
           <Property Name="StreetNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CountyID" Type="Int32" Nullable="false" />
-          <Property Name="ZipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="County" Relationship="Self.FK_AddressCounty" FromRole="Addresses" ToRole="Counties" />
           <NavigationProperty Name="Doctors" Relationship="Self.FK_DoctorAddress" FromRole="Addresses" ToRole="Doctors" />
           <NavigationProperty Name="DonationCenters" Relationship="Self.FK_DonationCenterAddress" FromRole="Addresses" ToRole="DonationCenters" />
@@ -962,7 +962,7 @@
           </Key>
           <Property Name="PersonID" Type="Int32" Nullable="false" />
           <Property Name="AccountID" Type="Int32" Nullable="false" />
-          <Property Name="ResidenceID" Type="Int32" Nullable="false" />
+          <Property Name="ResidenceID" Type="Int32" />
           <Property Name="DonationCenterID" Type="Int32" />
           <NavigationProperty Name="Account" Relationship="Self.FK_DonorAccount" FromRole="Donors" ToRole="Accounts" />
           <NavigationProperty Name="ResidenceAddress" Relationship="Self.FK_DonorAddress" FromRole="Donors" ToRole="Addresses" />
@@ -998,7 +998,7 @@
           <Property Name="PersonStatusID" Type="Int32" Nullable="false" />
           <Property Name="RhID" Type="Int32" Nullable="false" />
           <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
-          <Property Name="DoctorID" Type="Int32" Nullable="false" />
+          <Property Name="DoctorID" Type="Int32" />
           <NavigationProperty Name="BloodRequests" Relationship="Self.FK_BloodRequestPatient" FromRole="Patients" ToRole="BloodRequests" />
           <NavigationProperty Name="BloodType" Relationship="Self.FK_BloodTypePatient" FromRole="Patients" ToRole="BloodTypes" />
           <NavigationProperty Name="Doctor" Relationship="Self.FK_DoctorPatient" FromRole="Patients" ToRole="Doctors" />
@@ -1138,7 +1138,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonorAddress">
-          <End Role="Addresses" Type="Self.Address" Multiplicity="1" />
+          <End Role="Addresses" Type="Self.Address" Multiplicity="0..1" />
           <End Role="Donors" Type="Self.Donor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Addresses">
@@ -1336,7 +1336,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DoctorPatient">
-          <End Role="Doctors" Type="Self.Doctor" Multiplicity="1" />
+          <End Role="Doctors" Type="Self.Doctor" Multiplicity="0..1" />
           <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Doctors">

@@ -22,7 +22,7 @@ namespace Vivus.Core.Model
     
         public int PersonID { get; set; }
         public int AccountID { get; set; }
-        public int ResidenceID { get; set; }
+        public Nullable<int> ResidenceID { get; set; }
         public Nullable<int> DonationCenterID { get; set; }
     
         public virtual Account Account { get; set; }

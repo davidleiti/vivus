@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
@@ -10,6 +11,7 @@
     using Vivus.Core.DataModels;
     using Vivus.Core.Donor.IoC;
     using Vivus.Core.Donor.Validators;
+    using Vivus.Core.Helpers;
     using Vivus.Core.Model;
     using Vivus.Core.Security;
     using Vivus.Core.UoW;
@@ -231,21 +233,61 @@
         #region Private Methods
 
         /// <summary>
-        /// Loads all the counties asynchronously.
+        /// Loads all the donation centers asynchronously sorted by their location.
         /// </summary>
         /// <returns></returns>
         private async Task LoadDonationCentersAsync()
         {
             await Task.Run(() =>
             {
+                Donor donor;
+                Address originAddress;
+                List<DistanceMatrixApiHelpers.RouteDetails> routes;
+
+                // Clear the donation centers collection and add the default one
                 dispatcherWrapper.InvokeAsync(() =>
                 {
                     DonationCenters.Clear();
                     DonationCenters.Add(new BasicEntity<string>(-1, "Select favourite donation center"));
                 }).Wait();
-                unitOfWork.DonationCenters.Entities.ToList().ForEach(dc =>
-                    dispatcherWrapper.InvokeAsync(() => DonationCenters.Add(new BasicEntity<string>(dc.DonationCenterID, dc.Name)))
-                );
+                
+                // Get the donor
+                donor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Donor>>().User.PersonID].Donor;
+                // Get donor's address from the national identification card
+                originAddress = donor.Person.Address;
+                // If th donor has a residence address
+                if (donor.ResidenceID.HasValue)
+                    // Use residence address
+                    originAddress = donor.ResidenceAddress;
+                // Clear the donor
+                donor = null;
+                // Get the routes
+                routes = DistanceMatrixApiHelpers.GetDistances(originAddress, unitOfWork.DonationCenters.Entities.Select(dc => dc.Address)).ToList();
+                // Sort them by the distance ascending
+                routes.Sort((r1, r2) =>
+                 {
+                     if (r1.Distance < r2.Distance)
+                         return -1;
+
+                     if (r1.Distance > r2.Distance)
+                         return 1;
+
+                     if (r1.Duration < r2.Duration)
+                         return -1;
+
+                     if (r1.Duration > r2.Duration)
+                         return 1;
+
+                     return 0;
+                 });
+                // Foreach route
+                routes.ForEach(r =>
+                {
+                    // Get the donation center
+                    DonationCenter dc = r.DestinationAddress.DonationCenters.ToList()[0];
+                    // Add the donation center to the collection
+                    dispatcherWrapper.InvokeAsync(() => DonationCenters.Add(new BasicEntity<string>(dc.DonationCenterID, dc.Name))).Wait();
+                });
             });
         }
 

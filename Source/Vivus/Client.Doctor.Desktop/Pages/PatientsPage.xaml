@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.Doctor.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -49,9 +50,9 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Add -->
-                    <Button Grid.Column="1" Width="Auto" Content="New patient" Command="{Binding NewPatientCommand}"/>
+                    <Button Grid.Column="1" Width="Auto" Content="New patient" Command="{Binding NewPatientCommand}" attachedProperties:IsBusyProperty.Value="{Binding NewPatientIsRunning}"/>
                     <!-- Remove -->
-                    <Button Grid.Column="3" Width="Auto" Content="Choose" Command="{Binding ChooseCommand}"/>
+                    <Button Grid.Column="3" Width="Auto" Content="Choose" Command="{Binding ChooseCommand}" attachedProperties:IsBusyProperty.Value="{Binding ChoosePatientIsRunning}"/>
                 </Grid>
 
                 <!-- Separator -->
@@ -84,7 +85,7 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Dismiss" Command="{Binding DismissCommand}"/>
+                    <Button Grid.Column="1" Content="Dismiss" Command="{Binding DismissCommand}" attachedProperties:IsBusyProperty.Value="{Binding DismissPatientIsRunning}"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>
