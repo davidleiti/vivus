@@ -119,7 +119,7 @@
             <PropertyRef Name="DonationFormID" />
           </Key>
           <Property Name="DonationFormID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DCPersonnelID" Type="int" Nullable="false" />
+          <Property Name="DCPersonnelID" Type="int" />
           <Property Name="DonorID" Type="int" Nullable="false" />
           <Property Name="Weight" Type="int" Nullable="false" />
           <Property Name="HeartRate" Type="int" Nullable="false" />
@@ -129,6 +129,7 @@
           <Property Name="TravelStatus" Type="nvarchar(max)" />
           <Property Name="ApplyDate" Type="datetime" Nullable="false" />
           <Property Name="DonationDate" Type="datetime" />
+          <Property Name="DonationStatus" Type="bit" />
         </EntityType>
         <EntityType Name="Donors">
           <Key>
@@ -471,7 +472,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonationFormDCPersonnel">
-          <End Role="DCPersonnel" Type="Self.DCPersonnel" Multiplicity="1" />
+          <End Role="DCPersonnel" Type="Self.DCPersonnel" Multiplicity="0..1" />
           <End Role="DonationForms" Type="Self.DonationForms" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DCPersonnel">
@@ -943,7 +944,7 @@
             <PropertyRef Name="DonationFormID" />
           </Key>
           <Property Name="DonationFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DCPersonnelID" Type="Int32" Nullable="false" />
+          <Property Name="DCPersonnelID" Type="Int32" />
           <Property Name="DonorID" Type="Int32" Nullable="false" />
           <Property Name="Weight" Type="Int32" Nullable="false" />
           <Property Name="HeartRate" Type="Int32" Nullable="false" />
@@ -953,6 +954,7 @@
           <Property Name="TravelStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ApplyDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DonationDate" Type="DateTime" Precision="3" />
+          <Property Name="DonationStatus" Type="Boolean" />
           <NavigationProperty Name="DCPersonnel" Relationship="Self.FK_DonationFormDCPersonnel" FromRole="DonationForms" ToRole="DCPersonnel" />
           <NavigationProperty Name="Donor" Relationship="Self.FK_DonationFormDonor" FromRole="DonationForms" ToRole="Donors" />
         </EntityType>
@@ -1310,7 +1312,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DonationFormDCPersonnel">
-          <End Role="DCPersonnel" Type="Self.DCPersonnel" Multiplicity="1" />
+          <End Role="DCPersonnel" Type="Self.DCPersonnel" Multiplicity="0..1" />
           <End Role="DonationForms" Type="Self.DonationForm" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DCPersonnel">
@@ -1753,6 +1755,7 @@
                 <ScalarProperty Name="TravelStatus" ColumnName="TravelStatus" />
                 <ScalarProperty Name="ApplyDate" ColumnName="ApplyDate" />
                 <ScalarProperty Name="DonationDate" ColumnName="DonationDate" />
+                <ScalarProperty Name="DonationStatus" ColumnName="DonationStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
