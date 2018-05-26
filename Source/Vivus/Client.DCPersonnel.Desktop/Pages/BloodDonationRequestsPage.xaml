@@ -148,7 +148,7 @@
                         </DataGridTextColumn>
                         <DataGridTextColumn Header="Apply date" Width=".8*" Binding="{Binding ApplyDate}"/>
                         <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding FullName}" />
-                        <DataGridTextColumn Header="NIN" Width="1.2*" Binding="{Binding Nin}" />
+                        <DataGridTextColumn Header="NIN" Width="1.2*" Binding="{Binding NationalIdentificationNumber}" />
                         <DataGridTextColumn Header="Age" Width=".4*" Binding="{Binding Age}" />
                     </DataGrid.Columns>
                 </DataGrid>

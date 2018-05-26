@@ -5,7 +5,7 @@
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
     using Vivus.Core.DCPersonnel.ViewModels;
-
+    using Vivus.Core.Console;
 
     /// <summary>
     /// Interaction logic for BloodDonationRequestsPage.xaml
@@ -25,12 +25,14 @@
 
         public void DontAllowErrors()
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("IMPLEMENT DON'T ALLOW ERRORS!");
+            //throw new System.NotImplementedException();
         }
 
         public void AllowOptionalErrors()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            Console.WriteLine("IMPLEMENT ALLOW OPTIONAL ERRORS!");
         }
     }
 }

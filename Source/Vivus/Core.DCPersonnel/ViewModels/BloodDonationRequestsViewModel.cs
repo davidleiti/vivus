@@ -8,6 +8,14 @@
     using System.Collections.ObjectModel;
     using Vivus = Console;
     using Vivus.Core.DCPersonnel.Validators;
+    using Vivus.Core.UoW;
+    using Vivus.Core.ViewModels.Base;
+    using Vivus.Core.Security;
+    using Vivus.Core.Model;
+    using System.Windows;
+    using Vivus.Core.DCPersonnel.IoC;
+    using System.Threading.Tasks;
+    using System.Linq;
 
     /// <summary>
     /// Represents a view model for the blood donation requests page.
@@ -27,11 +35,17 @@
         private string pastSurgeries;
         private string travelStatus;
         private string messages;
-        private bool approved;
         private BloodDonationRequestItem selectedBloodDonationRequestItem;
         private ObservableCollection<BloodDonationRequestItem> bloodDonationRequestItems;
+        private bool optionalErrors;
+        //Remove if not needed!!!
+        private bool actionIsRunning;
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private ISecurity security;
 
         #endregion
+
         #region Public Properties
         public IPage Parentpage { get; set; }
         public string FullName
@@ -208,21 +222,21 @@
                 OnPropertyChanged();
             }
         }
-        public bool Approved
-        {
-            get => approved;
+        //public bool Approved
+        //{
+        //    get => approved;
 
-            set
-            {
-                if (approved == value)
+        //    set
+        //    {
+        //        if (approved == value)
 
-                    return;
+        //            return;
 
-                approved = value;
+        //        approved = value;
 
-                OnPropertyChanged();
-            }
-        }
+        //        OnPropertyChanged();
+        //    }
+        //}
         public BloodDonationRequestItem SelectedBloodDonationRequestItem
         {
             get => selectedBloodDonationRequestItem;
@@ -233,6 +247,23 @@
                     return;
 
                 selectedBloodDonationRequestItem = value;
+
+                if (selectedBloodDonationRequestItem is null)
+                {
+                    optionalErrors = false;
+
+                    dispatcherWrapper.InvokeAsync(() => Parentpage.DontAllowErrors());
+
+                    ClearFields();
+                }
+                else
+                {
+                    optionalErrors = true;
+
+                    dispatcherWrapper.InvokeAsync(() => Parentpage.AllowOptionalErrors());
+
+                    PopulateFields();
+                }
 
                 OnPropertyChanged();
             }
@@ -263,37 +294,47 @@
                 return null;
             }
         }
-
-
-
-
-
+        
         public ICommand ApproveCommand { get; }
         public ICommand DenyCommand { get; }
         #endregion
+
         #region Constructors
-        public BloodDonationRequestsViewModel()
+        public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
-            /*fullName = "yay";
-            nin="yoooooooooo";
-            age=10;
-            weight=10;
-            heartRate=10;
-            systolicBP=10;
-            diastolicBP=10;
-            applyDate=new DateTime(2018,11,11);
-            pastSurgeries="none";
-            messages="noooo";
-            approved=true;*/
-            ApproveCommand = new RelayCommand(() => { approved = true; CheckMessages(); });
-            DenyCommand = new RelayCommand(() => { approved = false; CheckMessages(); });
-            SelectedBloodDonationRequestItem = new BloodDonationRequestItem();
+            optionalErrors = false;
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            security = IoCContainer.Get<ISecurity>();
+
+            ApproveCommand = new RelayCommand(() => ApproveDonation());
+            DenyCommand = new RelayCommand(() => RejectDonation());
             BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
-            BloodDonationRequestItems.Add(new BloodDonationRequestItem());
+            LoadRequestsAsync();
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BloodDonationRequestsViewModel"/> class with the given values.
+        /// </summary>
+        /// <param name="unitOfWork">The UoW used to access repositories.</param>
+        /// <param name="appViewModel">The viewmodel for the application.</param>
+        /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
+        /// <param name="security">The collection of security methods.</param>
+        public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        {
+            optionalErrors = false;
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispatcherWrapper;
+            this.security = security;
 
+            LoadRequestsAsync();
+
+            ApproveCommand = new RelayCommand(() => ApproveDonation());
+            DenyCommand = new RelayCommand(() => RejectDonation());
         }
         #endregion
+
         #region Private Methods
         private void CheckMessages()
         {
@@ -305,9 +346,121 @@
             }
             Vivus.Console.WriteLine("DCPersonnel approval/denial successful");
             Popup("Successfull operation!", PopupType.Successful);
+        }
+
+        private async void ApproveDonation()
+        {
+            await Task.Run(() =>
+            {
+                dispatcherWrapper.InvokeAsync(() => Parentpage.AllowErrors());
+
+                if (Errors > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                try
+                {
+                    DonationForm form = unitOfWork.DonationForms
+                        .Entities
+                        .First(f => f.DonationFormID == selectedBloodDonationRequestItem.Id);
+                    form.DCPersonnelID = appViewModel.User.PersonID;
+                    form.DonationStatus = true;
+
+                    Message message = new Message
+                    {
+                        RecieverID = form.DonorID,
+                        SenderID = appViewModel.User.PersonID,
+                        SendDate = DateTime.Now,
+                        Content = "Donation request has been approved!\n" + Messages
+                    };
+
+                    unitOfWork.Persons
+                        .Entities
+                        .First(p => p.PersonID == form.DonorID)
+                        .ReceivedMessages
+                        .Add(message);
+                    
+                    unitOfWork.Complete();
+                    
+                    LoadRequestsAsync();
+                    SelectedBloodDonationRequestItem = null;
+                    ClearFields();
+                    Popup("Request handled successfully!", PopupType.Successful);
+                }
+                catch (Exception e)
+                {
+                }
+            });
+        }
+
+        private async void RejectDonation()
+        {
 
         }
+
+        private async void LoadRequestsAsync()
+        {
+            await Task.Run(() =>
+            {
+                BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
+                unitOfWork.DonationForms
+                    .Entities
+                    .Where(request => request.DonationStatus is null)
+                    .ToList()
+                    .ForEach(request =>
+                        dispatcherWrapper.InvokeAsync(() => 
+                        {
+                            BloodDonationRequestItems.Add(new BloodDonationRequestItem
+                            {
+                                Id = request.DonationFormID,
+                                FullName = request.Donor.Person.FirstName + " " + request.Donor.Person.LastName,
+                                Age = DateTime.Today.Year - request.Donor.Person.BirthDate.Year,
+                                NationalIdentificationNumber = request.Donor.Person.Nin,
+                                Weight = request.Weight,
+                                HeartRate = request.HeartRate,
+                                SystolicBP = request.SystolicBloodPressure,
+                                DiastolicBP = request.DiastolicBloodPressure,
+                                ApplyDate = request.ApplyDate,
+                                PastSurgeries = request.PastSurgeries,
+                                TravelStatus = request.TravelStatus
+                            });
+                        })
+                    );
+            });
+        }
+
+        private void PopulateFields()
+        {
+            FullName = selectedBloodDonationRequestItem.FullName;
+            NationalIdentificationNumber = selectedBloodDonationRequestItem.NationalIdentificationNumber;
+            Age = selectedBloodDonationRequestItem.Age;
+            Weight = selectedBloodDonationRequestItem.Weight;
+            HeartRate = selectedBloodDonationRequestItem.HeartRate;
+            SystolicBP = selectedBloodDonationRequestItem.SystolicBP;
+            DiastolicBP = selectedBloodDonationRequestItem.DiastolicBP;
+            ApplyDate = selectedBloodDonationRequestItem.ApplyDate;
+            PastSurgeries = selectedBloodDonationRequestItem.PastSurgeries;
+            TravelStatus = selectedBloodDonationRequestItem.TravelStatus;
+        }
+
+        private void ClearFields()
+        {
+            FullName = string.Empty;
+            NationalIdentificationNumber = string.Empty;
+            Age = null;
+            Weight = null;
+            HeartRate = null;
+            SystolicBP = null;
+            DiastolicBP = null;
+            ApplyDate = null;
+            PastSurgeries = string.Empty;
+            TravelStatus = string.Empty;
+            Messages = string.Empty;
+        }
         #endregion
+
     }
     public class BloodDonationRequestItem : BaseViewModel
     {
@@ -317,6 +470,12 @@
         private string nationalIdentificationNumber;
         private string fullName;
         private int age;
+        private int weight;
+        private int heartRate;
+        private int systolicBP;
+        private int diastolicBP;
+        private string pastSurgeries;
+        private string travelStatus;
         #endregion
 
         #region Public Properties
@@ -387,23 +546,101 @@
                 OnPropertyChanged();
             }
         }
-        public override string this[string propertyName]
-        {
-            get
-            {
-                return null;
+
+        public int Weight {
+            get => weight;
+            set {
+                if (weight == value)
+
+                    return;
+
+                weight = value;
+
+                OnPropertyChanged();
+            }
+
+        }
+        public int HeartRate {
+            get => heartRate;
+
+            set {
+                if (heartRate == value)
+
+                    return;
+
+                heartRate = value;
+
+                OnPropertyChanged();
+
+
             }
         }
-        #endregion
+        public int SystolicBP {
+            get => systolicBP;
 
-        public BloodDonationRequestItem()
-        {
-            Id = 10;
-            ApplyDate = new DateTime(2012, 11, 1);
-            NationalIdentificationNumber = "123";
-            FullName = "Sinklars Draptinen";
-            Age = 11;
+            set {
+                if (systolicBP == value)
+
+                    return;
+
+                systolicBP = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public int DiastolicBP {
+            get => diastolicBP;
+
+            set {
+                if (diastolicBP == value)
+
+                    return;
+
+                diastolicBP = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string PastSurgeries {
+
+            get => pastSurgeries;
+
+            set {
+                if (pastSurgeries == value)
+
+                    return;
+
+                pastSurgeries = value;
+
+                OnPropertyChanged();
+            }
+        }
+        public string TravelStatus {
+            get => travelStatus;
+
+            set {
+                if (travelStatus == value)
+
+                    return;
+
+                travelStatus = value;
+
+                OnPropertyChanged();
+
+            }
 
         }
+
+        //public override string this[string propertyName]
+        //{
+        //    get
+        //    {
+        //        return null;
+        //    }
+        //}
+        #endregion
+
+        public BloodDonationRequestItem() { }
     }
 }
