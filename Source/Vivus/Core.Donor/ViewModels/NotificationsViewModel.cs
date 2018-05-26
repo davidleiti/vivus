@@ -43,7 +43,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationsViewModel"/> class with the default values.
         /// </summary>
-        public NotificationsViewModel()
+        public NotificationsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Title = "Latest notifications";
             Items = new ObservableCollection<NotificationViewModel>();
@@ -51,31 +51,24 @@
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApllicationViewModel<Donor>>();
 
-            updateNotifications();
-            // Test whether the binding was done right or not
-            /*
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), "AP", "andreipopescu", new DateTime(2018, 4, 28), "This is dă message."));
-            });
-            */
+            UpdateNotifications();
         }
 
-        private async void updateNotifications()
+        private async void UpdateNotifications()
         {
             while (true)
             {
-                loadNotifications();
+                await LoadNotifications();
                 await Task.Delay(5000);
             }
         }
 
-        private async void loadNotifications()
+        private async Task LoadNotifications()
         {
             await Task.Run(() =>
             {
-                Model.Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
-                List<Model.Message> messages = donor.Person.ReceivedMessages.ToList();
+                Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
+                List<Message> messages = donor.Person.ReceivedMessages.ToList();
                 messages.Sort((m1, m2) =>
                 {
                     if (m1.SendDate > m2.SendDate)
@@ -94,8 +87,13 @@
                     char initial1 = m.Sender.FirstName[0];
                     char initial2 = m.Sender.LastName[0];
                     String initials = "" + initial1 + initial2;
-                    dispatcherWrapper.InvokeAsync(() => Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), initials, m.Sender.Donor.Account.Email, m.SendDate, m.Content)));
+                    dispatcherWrapper.InvokeAsync(() => Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), initials, FormatSenderName(m.Sender), m.SendDate, m.Content)));
                 });
+
+                string FormatSenderName(Person sender)
+                {
+                    return $"{ sender.FirstName.Replace("-", string.Empty).Replace(" ", string.Empty).ToLower() }.{ sender.LastName.Replace("-", string.Empty).Replace(" ", string.Empty).ToLower() }";
+                }
             });
         }
         #endregion
