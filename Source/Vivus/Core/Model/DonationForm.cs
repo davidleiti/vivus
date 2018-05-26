@@ -15,7 +15,7 @@ namespace Vivus.Core.Model
     public partial class DonationForm
     {
         public int DonationFormID { get; set; }
-        public int DCPersonnelID { get; set; }
+        public Nullable<int> DCPersonnelID { get; set; }
         public int DonorID { get; set; }
         public int Weight { get; set; }
         public int HeartRate { get; set; }
@@ -25,6 +25,7 @@ namespace Vivus.Core.Model
         public string TravelStatus { get; set; }
         public System.DateTime ApplyDate { get; set; }
         public Nullable<System.DateTime> DonationDate { get; set; }
+        public Nullable<bool> DonationStatus { get; set; }
     
         public virtual DCPersonnel DCPersonnel { get; set; }
         public virtual Donor Donor { get; set; }
