@@ -11,6 +11,7 @@
     using Vivus.Core.Security;
     using Vivus.Core.ViewModels.Base;
     using System.Linq;
+    using System.Windows;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -69,7 +70,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> class with the default values.
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             LoginCommand = new RelayCommand(async () => await LoginAsync());
         }
