@@ -399,5 +399,138 @@
 
             VivusConsole.WriteLine($"Doctors: { unitOfWork.Complete() }");
         }
+
+        /// <summary>
+        /// Populates the patients table.
+        /// </summary>
+        public static void Patients()
+        {
+            // Delete all the patients
+            unitOfWork.Patients.Entities.ToList().ForEach(patient =>
+            {
+                unitOfWork.Addresses.Remove(patient.Person.Address);
+                unitOfWork.Persons.Remove(patient.Person);
+                unitOfWork.Patients.Remove(patient);
+            });
+
+            // Add all the patients
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = "Magda",
+                    LastName = "Petrescu",
+                    BirthDate = new DateTime(1988, 7, 2),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "2880702243246",
+                    PhoneNo = "+(40) 743 425 761",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Maramureș"),
+                        City = "Baia Mare",
+                        Street = "Melodiei",
+                        StreetNo = "3",
+                        ZipCode = "4000000"
+                    }
+                },
+                PersonStatus = (unitOfWork.PersonStatuses as PersonStatusesRepository).PersonStatus("Alive"),
+                BloodType = (unitOfWork.BloodTypes as BloodTypesRepository).BloodType("AB"),
+                RH = (unitOfWork.RHs as RhsRepository).RH("Positive")
+            });
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = "Vlad",
+                    LastName = "Dumitru",
+                    BirthDate = new DateTime(2002, 11, 15),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Nin = "5021115384320",
+                    PhoneNo = "+(40) 752 002 472",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Vâlcea"),
+                        City = "Râmnicu Vâlcea",
+                        Street = "Știrbei Vodă",
+                        StreetNo = "3",
+                        ZipCode = "2400184"
+                    }
+                },
+                PersonStatus = (unitOfWork.PersonStatuses as PersonStatusesRepository).PersonStatus("Alive"),
+                BloodType = (unitOfWork.BloodTypes as BloodTypesRepository).BloodType("A"),
+                RH = (unitOfWork.RHs as RhsRepository).RH("Negative")
+            });
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = "Aurel",
+                    LastName = "Nicolescu",
+                    BirthDate = new DateTime(1992, 3, 1),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Nin = "1920301056591",
+                    PhoneNo = "+(40) 736 959 637",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Bihor"),
+                        City = "Oradea",
+                        Street = "Carașului",
+                        StreetNo = "26",
+                        ZipCode = null
+                    }
+                },
+                PersonStatus = (unitOfWork.PersonStatuses as PersonStatusesRepository).PersonStatus("Dead"),
+                BloodType = (unitOfWork.BloodTypes as BloodTypesRepository).BloodType("O"),
+                RH = (unitOfWork.RHs as RhsRepository).RH("Negative")
+            });
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = "Sergiu",
+                    LastName = "Ionescu",
+                    BirthDate = new DateTime(1986, 4, 10),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Nin = "1860410173657",
+                    PhoneNo = "+(40) 769 161 432",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Galați"),
+                        City = "Tecuci",
+                        Street = "Focșani",
+                        StreetNo = "25",
+                        ZipCode = "805300"
+                    }
+                },
+                PersonStatus = (unitOfWork.PersonStatuses as PersonStatusesRepository).PersonStatus("Alive"),
+                BloodType = (unitOfWork.BloodTypes as BloodTypesRepository).BloodType("B"),
+                RH = (unitOfWork.RHs as RhsRepository).RH("Negative")
+            });
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = "Oana",
+                    LastName = "Șerban",
+                    BirthDate = new DateTime(1971, 10, 6),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "2711006227892",
+                    PhoneNo = "+(40) 729 973 344",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Iași"),
+                        City = "Iași",
+                        Street = "Brândușa",
+                        StreetNo = "35",
+                        ZipCode = null
+                    }
+                },
+                PersonStatus = (unitOfWork.PersonStatuses as PersonStatusesRepository).PersonStatus("Alive"),
+                BloodType = (unitOfWork.BloodTypes as BloodTypesRepository).BloodType("O"),
+                RH = (unitOfWork.RHs as RhsRepository).RH("Positive")
+            });
+
+            VivusConsole.WriteLine($"Patients: { unitOfWork.Complete() }");
+        }
     }
 }

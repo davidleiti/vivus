@@ -24,7 +24,7 @@ namespace Vivus.Core.Model
         public int PersonStatusID { get; set; }
         public int RhID { get; set; }
         public int BloodTypeID { get; set; }
-        public int DoctorID { get; set; }
+        public Nullable<int> DoctorID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodRequest> BloodRequests { get; set; }
