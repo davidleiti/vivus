@@ -25,14 +25,11 @@
 
         public void DontAllowErrors()
         {
-            Console.WriteLine("IMPLEMENT DON'T ALLOW ERRORS!");
-            //throw new System.NotImplementedException();
+            dcMessages.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
         }
 
         public void AllowOptionalErrors()
         {
-            //throw new System.NotImplementedException();
-            Console.WriteLine("IMPLEMENT ALLOW OPTIONAL ERRORS!");
         }
     }
 }

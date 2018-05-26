@@ -37,9 +37,7 @@
         private string messages;
         private BloodDonationRequestItem selectedBloodDonationRequestItem;
         private ObservableCollection<BloodDonationRequestItem> bloodDonationRequestItems;
-        private bool optionalErrors;
-        //Remove if not needed!!!
-        private bool actionIsRunning;
+
         private IUnitOfWork unitOfWork;
         private IApllicationViewModel<DCPersonnel> appViewModel;
         private ISecurity security;
@@ -222,21 +220,7 @@
                 OnPropertyChanged();
             }
         }
-        //public bool Approved
-        //{
-        //    get => approved;
 
-        //    set
-        //    {
-        //        if (approved == value)
-
-        //            return;
-
-        //        approved = value;
-
-        //        OnPropertyChanged();
-        //    }
-        //}
         public BloodDonationRequestItem SelectedBloodDonationRequestItem
         {
             get => selectedBloodDonationRequestItem;
@@ -250,16 +234,12 @@
 
                 if (selectedBloodDonationRequestItem is null)
                 {
-                    optionalErrors = false;
-
                     dispatcherWrapper.InvokeAsync(() => Parentpage.DontAllowErrors());
 
                     ClearFields();
                 }
                 else
                 {
-                    optionalErrors = true;
-
                     dispatcherWrapper.InvokeAsync(() => Parentpage.AllowOptionalErrors());
 
                     PopulateFields();
@@ -302,13 +282,12 @@
         #region Constructors
         public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
-            optionalErrors = false;
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
             security = IoCContainer.Get<ISecurity>();
 
-            ApproveCommand = new RelayCommand(() => ApproveDonation());
-            DenyCommand = new RelayCommand(() => RejectDonation());
+            ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
+            DenyCommand = new RelayCommand(() => ApproveOrRejectDonation(false));
             BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
             LoadRequestsAsync();
         }
@@ -322,7 +301,6 @@
         /// <param name="security">The collection of security methods.</param>
         public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
-            optionalErrors = false;
             this.unitOfWork = unitOfWork;
             this.appViewModel = appViewModel;
             this.dispatcherWrapper = dispatcherWrapper;
@@ -330,8 +308,8 @@
 
             LoadRequestsAsync();
 
-            ApproveCommand = new RelayCommand(() => ApproveDonation());
-            DenyCommand = new RelayCommand(() => RejectDonation());
+            ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
+            DenyCommand = new RelayCommand(() => ApproveOrRejectDonation(false));
         }
         #endregion
 
@@ -348,7 +326,7 @@
             Popup("Successfull operation!", PopupType.Successful);
         }
 
-        private async void ApproveDonation()
+        private async void ApproveOrRejectDonation(bool decision)
         {
             await Task.Run(() =>
             {
@@ -366,14 +344,17 @@
                         .Entities
                         .First(f => f.DonationFormID == selectedBloodDonationRequestItem.Id);
                     form.DCPersonnelID = appViewModel.User.PersonID;
-                    form.DonationStatus = true;
+                    form.DonationStatus = decision;
+
+                    string messageContent = decision ? "Donation request has been approved!" : "Donation request has been rejected!";
+                    messageContent += "\n" + Messages;
 
                     Message message = new Message
                     {
                         RecieverID = form.DonorID,
                         SenderID = appViewModel.User.PersonID,
                         SendDate = DateTime.Now,
-                        Content = "Donation request has been approved!\n" + Messages
+                        Content = messageContent
                     };
 
                     unitOfWork.Persons
@@ -381,23 +362,16 @@
                         .First(p => p.PersonID == form.DonorID)
                         .ReceivedMessages
                         .Add(message);
-                    
+
                     unitOfWork.Complete();
-                    
+
                     LoadRequestsAsync();
                     SelectedBloodDonationRequestItem = null;
                     ClearFields();
                     Popup("Request handled successfully!", PopupType.Successful);
                 }
-                catch (Exception e)
-                {
-                }
+                catch (Exception e) { MessageBox.Show(e.Message); }
             });
-        }
-
-        private async void RejectDonation()
-        {
-
         }
 
         private async void LoadRequestsAsync()
