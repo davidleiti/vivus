@@ -1,10 +1,19 @@
 ﻿namespace Vivus.Core.Doctor.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Doctor.IoC;
+    using Vivus.Core.Security;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
     using Vivus = Console;
 
     /// <summary>
@@ -18,6 +27,15 @@
         private string filter;
         private PatientItemViewModel selectedPatient;
         private PatientItemViewModel mySelectedPatient;
+        private bool newPatientIsRunning;
+        private bool choosePatientIsRunning;
+        private bool dismissPatientIsRunning;
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<Model.Doctor> appViewModel;
+
+        // Lock objects
+        private object allPatientsLockObj;
+        private object myPatientsLockObj;
 
         #endregion
 
@@ -102,47 +120,133 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the flag that indicates whether a new patient action is running or not.
+        /// </summary>
+        public bool NewPatientIsRunning
+        {
+            get => newPatientIsRunning;
+
+            set
+            {
+                if (newPatientIsRunning == value)
+                    return;
+
+                newPatientIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag that indicates whether a choose patient action is running or not.
+        /// </summary>
+        public bool ChoosePatientIsRunning
+        {
+            get => choosePatientIsRunning;
+
+            set
+            {
+                if (choosePatientIsRunning == value)
+                    return;
+
+                choosePatientIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag that indicates whether a dismiss patient action is running or not.
+        /// </summary>
+        public bool DismissPatientIsRunning
+        {
+            get => dismissPatientIsRunning;
+
+            set
+            {
+                if (dismissPatientIsRunning == value)
+                    return;
+
+                dismissPatientIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Constructors
 
-        public PatientsViewModel()
+        public PatientsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             AllPatients = new ObservableCollection<PatientItemViewModel>();
             MyPatients = new ObservableCollection<PatientItemViewModel>();
+
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Doctor>>();
 
             NewPatientCommand = new RelayCommand(NewPatient);
             ChooseCommand = new RelayCommand(ChoosePatient);
             DismissCommand = new RelayCommand(DismissPatient);
 
-            // Test whether the binding was done right or not
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                AllPatients.Add(new PatientItemViewModel
-                {
-                    Id = 1,
-                    Name = "Patient One",
-                    BloodType = "AB4",
-                    Age = 18,
-                    Gender = "male",
-                    Status = "alive"
-                });
+            allPatientsLockObj = new object();
+            myPatientsLockObj = new object();
+            BindingOperations.EnableCollectionSynchronization(AllPatients, allPatientsLockObj);
+            BindingOperations.EnableCollectionSynchronization(MyPatients, myPatientsLockObj);
 
-                MyPatients.Add(new PatientItemViewModel
-                {
-                    Id = 2,
-                    Name = "Patient Two",
-                    BloodType = "A2",
-                    Age = 20,
-                    Gender = "female",
-                    Status = "dead"
-                });
-            });
+            LoadPatientsAsync();
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Loads all the patients.
+        /// </summary>
+        private async void LoadPatientsAsync()
+        {
+            await Task.Run(() =>
+            {
+                lock (allPatientsLockObj)
+                {
+                    AllPatients.Clear();
+                }
+                lock (myPatientsLockObj)
+                {
+                    MyPatients.Clear();
+                }
+
+                unitOfWork.Patients
+                            .Entities
+                            .Where(patient => !patient.DoctorID.HasValue || patient.DoctorID == appViewModel.User.PersonID)
+                            .ToList()
+                            .ForEach(patient =>
+                            {
+                                PatientItemViewModel patientVM = new PatientItemViewModel
+                                {
+                                    Id = patient.PersonID,
+                                    Name = $"{ patient.Person.FirstName } { patient.Person.LastName }",
+                                    BloodType = patient.BloodType.Type + (patient.RH.Type == "Positive" ? "+" : "-"),
+                                    Age = DateTime.Now.Year - patient.Person.BirthDate.Year,
+                                    Gender = patient.Person.Gender.Type,
+                                    Status = patient.PersonStatus.Type
+                                };
+
+                                if (patient.DoctorID.HasValue)
+                                {
+                                    lock (myPatientsLockObj)
+                                        MyPatients.Add(patientVM);
+
+                                    return;
+                                }
+
+                                lock (allPatientsLockObj)
+                                    AllPatients.Add(patientVM);
+                            });
+            });
+        }
 
         /// <summary>
         /// Add a new patient
