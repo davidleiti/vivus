@@ -32,6 +32,8 @@
 
         #endregion
 
+        #region Public Methods
+
         /// <summary>
         /// Returns a collection of all the distances and durations with their origin and destination addresses.
         /// </summary>
@@ -71,6 +73,10 @@
                     };
         }
 
+        #endregion
+
+        #region Inner Classes
+
         /// <summary>
         /// Represents an entity returned by the <see cref="GetDistances(Address, IEnumerable{Address})"/> method.
         /// </summary>
@@ -96,5 +102,7 @@
             /// </summary>
             public int Duration { get; set; }
         }
+
+        #endregion
     }
 }
