@@ -201,7 +201,7 @@
 
             NewPatientCommand = new RelayCommand(NewPatient);
             ChooseCommand = new RelayCommand(ChoosePatientAsync);
-            DismissCommand = new RelayCommand(DismissPatient);
+            DismissCommand = new RelayCommand(DismissPatientAsync);
 
             BindingOperations.EnableCollectionSynchronization(AllPatients, allPatientsLockObj);
             BindingOperations.EnableCollectionSynchronization(MyPatients, myPatientsLockObj);
@@ -333,7 +333,7 @@
 
             if (SelectedPatient is null)
             {
-                Popup("No patient selected. Before going further select a patient.");
+                Popup("No patient selected. Before choosing a patient, select one.");
                 return;
             }
 
@@ -366,10 +366,35 @@
         /// <summary>
         /// Dismiss a patient
         /// </summary>
-        private void DismissPatient()
+        private async void DismissPatientAsync()
         {
-            VivusConsole.WriteLine("PatientsPage: Dismiss a patient!");
-            Popup("Successfull operation!", PopupType.Successful);
+            if (MySelectedPatient is null)
+            {
+                Popup("No patient selected. Before dismissing a patient, select one.");
+                return;
+            }
+
+            try
+            {
+                // Get the selected item
+                PatientItemViewModel selectedItem = MySelectedPatient;
+
+                // Change patient's doctor identificator
+                unitOfWork.Persons[selectedItem.Id].Patient.DoctorID = null;
+                await unitOfWork.CompleteAsync();
+                // Add the patient to the all patients list
+                allPatients.Add(selectedItem);
+                // Remove the patient from the doctor's patients table
+                MyPatients.Remove(selectedItem);
+                // Add the patient to all patients table
+                AllPatients.Add(selectedItem);
+
+                Popup("Patient dismissed successfully!", PopupType.Successful);
+            }
+            catch
+            {
+                Popup("Unexpected error occured. Try again later.");
+            }
         }
 
         /// <summary>
