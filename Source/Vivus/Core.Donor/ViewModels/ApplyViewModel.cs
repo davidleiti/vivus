@@ -1,12 +1,21 @@
 ﻿namespace Vivus.Core.Donor.ViewModels
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Donor.IoC;
     using Vivus.Core.Donor.Validators;
+    using Vivus.Core.Helpers;
+    using Vivus.Core.Model;
+    using Vivus.Core.Security;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
+    using static Vivus.Core.Helpers.DistanceMatrixApiHelpers;
     using VivusConsole = Console.Console;
 
     /// <summary>
@@ -29,7 +38,8 @@
         private string pastSurgeries;
         private string travelStatus;
         private bool applyIsRunning;
-
+        private IApllicationViewModel<Donor> appViewModel;
+        private IUnitOfWork unitOfWork;
         #endregion
 
         #region Public Members
@@ -319,11 +329,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplyViewModel"/> class with the default values.
         /// </summary>
-        public ApplyViewModel()
+        public ApplyViewModel(): base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Diseases = new HashSet<string>();
-
+            
             ApplyCommand = new RelayCommand(ApplyAsync);
+
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+
         }
 
         #endregion
@@ -338,6 +352,7 @@
             await RunCommand(() => ApplyIsRunning, async () =>
             {
                 List<string> popupErrors = new List<string>();
+               await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors > 0)
                     popupErrors.Add("Some errors were found. Fix them before going forward.");
@@ -380,11 +395,95 @@
                     return;
                 }
 
+                await AddDonationForm();
                 await Task.Delay(3000);
 
                 VivusConsole.WriteLine("Apply done!");
                 Popup("Successfull operation!", PopupType.Successful);
             });
+        }
+
+        /// <summary>
+        /// Returns a donation form
+        /// </summary>
+        /// <param name="fillOptional">Whether to fill the optional fields or not</param>
+        private async Task<DonationForm> CreateDonationForm(bool fillOptional = false)
+        {
+            Donor donor = appViewModel.User;
+            DonationForm donationForm = new DonationForm();
+
+            // Fill mandatory fields
+            donationForm.DonorID = donor.PersonID;
+            donationForm.DCPersonnelID = null;
+            donationForm.Weight = weight.GetValueOrDefault();
+            donationForm.HeartRate = heartRate.GetValueOrDefault();
+            donationForm.DonationDate = null;
+            donationForm.DonationStatus = null;
+            donationForm.ApplyDate = new DateTime();
+
+            // Set the id of the donation center
+            if (donor.DonationCenterID != null)
+            {
+                donationForm.DonationCenterID = donor.DonationCenterID;
+            }
+            else
+            {
+                RouteDetails bestRoute = await getBetsRouteToDonationCenters(donor);
+                DonationCenter closestDonationCenter = await unitOfWork.DonationCenters.SingleAsync(singleDonationCenter => singleDonationCenter.AddressID == bestRoute.DestinationAddress.AddressID);
+                donationForm.DonationCenterID = closestDonationCenter.DonationCenterID;
+            }
+
+            // Fill optional fields
+            if (fillOptional)
+            {
+                donationForm.SystolicBloodPressure = systolicBP;
+                donationForm.DiastolicBloodPressure = diastolicBP;
+                donationForm.PastSurgeries = string.IsNullOrEmpty(pastSurgeries) ? null : pastSurgeries;
+                donationForm.TravelStatus = string.IsNullOrEmpty(travelStatus) ? null : travelStatus;               
+            }
+
+            return donationForm;
+        }
+
+        /// <summary>
+        /// Gets the route to the closest donation center from the donor 
+        /// </summary>
+        /// <param name="donor">The donor from whom we compute the route</param>
+        /// <returns></returns>
+        private async Task<RouteDetails> getBetsRouteToDonationCenters(Donor donor)
+        {
+            List<Address> donationCentersAddresses = new List<Address>();
+            Address donorAddress;
+            await unitOfWork.DonationCenters.GetAllAsync().ContinueWith(async donationCentersTask =>
+            {
+                IEnumerable<DonationCenter> donationCenters = donationCentersTask.Result;
+                Address donationCenterAddress;
+                foreach (var donationCenter in donationCenters)
+                {
+                    donationCenterAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donationCenter.AddressID);
+
+                    donationCentersAddresses.Add(donationCenterAddress);
+                }
+            });
+            if (donor.ResidenceID != null)
+            {
+                donorAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donor.ResidenceID);
+            }
+            else
+            {
+                Person person = await unitOfWork.Persons.SingleAsync(singlePerson => singlePerson.PersonID == donor.PersonID);
+                donorAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == person.AddressID);
+            }
+            RouteDetails bestRoute = DistanceMatrixApiHelpers.GetDistances(donorAddress, donationCentersAddresses).OrderBy(RouteDetails => RouteDetails.Distance).First();
+            return bestRoute;
+        }
+
+        private async Task AddDonationForm()
+        {
+            DonationForm donationForm = await CreateDonationForm(true);
+            unitOfWork.DonationForms.Add(donationForm);
+            // Make changes persistent
+            //unitOfWork.Complete();
         }
 
         #endregion
