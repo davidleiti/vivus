@@ -139,6 +139,8 @@
           <Property Name="AccountID" Type="int" Nullable="false" />
           <Property Name="ResidenceID" Type="int" />
           <Property Name="DonationCenterID" Type="int" />
+          <Property Name="BloodTypeID" Type="int" />
+          <Property Name="RhID" Type="int" />
         </EntityType>
         <EntityType Name="Genders">
           <Key>
@@ -332,6 +334,18 @@
             </Principal>
             <Dependent Role="BloodRequests">
               <PropertyRef Name="RequestPriorityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BloodTypeDonor">
+          <End Role="BloodTypes" Type="Self.BloodTypes" Multiplicity="0..1" />
+          <End Role="Donors" Type="Self.Donors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloodTypes">
+              <PropertyRef Name="BloodTypeID" />
+            </Principal>
+            <Dependent Role="Donors">
+              <PropertyRef Name="BloodTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -619,6 +633,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RHDonor">
+          <End Role="RHs" Type="Self.RHs" Multiplicity="0..1" />
+          <End Role="Donors" Type="Self.Donors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RHs">
+              <PropertyRef Name="RhID" />
+            </Principal>
+            <Dependent Role="Donors">
+              <PropertyRef Name="RhID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RHPatient">
           <End Role="RHs" Type="Self.RHs" Multiplicity="1" />
           <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
@@ -696,6 +722,10 @@
           <AssociationSet Name="FK_BloodRequestRequestPriority" Association="Self.FK_BloodRequestRequestPriority">
             <End Role="RequestPriorities" EntitySet="RequestPriorities" />
             <End Role="BloodRequests" EntitySet="BloodRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BloodTypeDonor" Association="Self.FK_BloodTypeDonor">
+            <End Role="BloodTypes" EntitySet="BloodTypes" />
+            <End Role="Donors" EntitySet="Donors" />
           </AssociationSet>
           <AssociationSet Name="FK_BloodTypePatient" Association="Self.FK_BloodTypePatient">
             <End Role="BloodTypes" EntitySet="BloodTypes" />
@@ -788,6 +818,10 @@
           <AssociationSet Name="FK_PersonMessage1" Association="Self.FK_PersonMessage1">
             <End Role="Persons" EntitySet="Persons" />
             <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RHDonor" Association="Self.FK_RHDonor">
+            <End Role="RHs" EntitySet="RHs" />
+            <End Role="Donors" EntitySet="Donors" />
           </AssociationSet>
           <AssociationSet Name="FK_RHPatient" Association="Self.FK_RHPatient">
             <End Role="RHs" EntitySet="RHs" />
@@ -889,6 +923,7 @@
           <Property Name="BloodTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_BloodContainerBloodType" FromRole="BloodTypes" ToRole="BloodContainers" />
+          <NavigationProperty Name="Donors" Relationship="Self.FK_BloodTypeDonor" FromRole="BloodTypes" ToRole="Donors" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_BloodTypePatient" FromRole="BloodTypes" ToRole="Patients" />
         </EntityType>
         <EntityType Name="County">
@@ -966,11 +1001,15 @@
           <Property Name="AccountID" Type="Int32" Nullable="false" />
           <Property Name="ResidenceID" Type="Int32" />
           <Property Name="DonationCenterID" Type="Int32" />
+          <Property Name="BloodTypeID" Type="Int32" />
+          <Property Name="RhID" Type="Int32" />
           <NavigationProperty Name="Account" Relationship="Self.FK_DonorAccount" FromRole="Donors" ToRole="Accounts" />
           <NavigationProperty Name="ResidenceAddress" Relationship="Self.FK_DonorAddress" FromRole="Donors" ToRole="Addresses" />
+          <NavigationProperty Name="BloodType" Relationship="Self.FK_BloodTypeDonor" FromRole="Donors" ToRole="BloodTypes" />
           <NavigationProperty Name="DonationCenter" Relationship="Self.FK_DonorDonationCenter" FromRole="Donors" ToRole="DonationCenters" />
           <NavigationProperty Name="DonationForms" Relationship="Self.FK_DonationFormDonor" FromRole="Donors" ToRole="DonationForms" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Donor_inherits_Person" FromRole="Donors" ToRole="Persons" />
+          <NavigationProperty Name="RH" Relationship="Self.FK_RHDonor" FromRole="Donors" ToRole="RHs" />
         </EntityType>
         <EntityType Name="Gender">
           <Key>
@@ -1053,6 +1092,7 @@
           <Property Name="RhID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_BloodContainerRH" FromRole="RHs" ToRole="BloodContainers" />
+          <NavigationProperty Name="Donors" Relationship="Self.FK_RHDonor" FromRole="RHs" ToRole="Donors" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_RHPatient" FromRole="RHs" ToRole="Patients" />
         </EntityType>
         <Association Name="FK_AdministratorAccount">
@@ -1273,6 +1313,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_BloodTypeDonor">
+          <End Role="BloodTypes" Type="Self.BloodType" Multiplicity="0..1" />
+          <End Role="Donors" Type="Self.Donor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloodTypes">
+              <PropertyRef Name="BloodTypeID" />
+            </Principal>
+            <Dependent Role="Donors">
+              <PropertyRef Name="BloodTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BloodTypePatient">
           <End Role="BloodTypes" Type="Self.BloodType" Multiplicity="1" />
           <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
@@ -1384,6 +1436,18 @@
             </Principal>
             <Dependent Role="Donors">
               <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RHDonor">
+          <End Role="RHs" Type="Self.RH" Multiplicity="0..1" />
+          <End Role="Donors" Type="Self.Donor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RHs">
+              <PropertyRef Name="RhID" />
+            </Principal>
+            <Dependent Role="Donors">
+              <PropertyRef Name="RhID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1558,6 +1622,10 @@
             <End Role="RequestPriorities" EntitySet="RequestPriorities" />
             <End Role="BloodRequests" EntitySet="BloodRequests" />
           </AssociationSet>
+          <AssociationSet Name="FK_BloodTypeDonor" Association="Self.FK_BloodTypeDonor">
+            <End Role="BloodTypes" EntitySet="BloodTypes" />
+            <End Role="Donors" EntitySet="Donors" />
+          </AssociationSet>
           <AssociationSet Name="FK_BloodTypePatient" Association="Self.FK_BloodTypePatient">
             <End Role="BloodTypes" EntitySet="BloodTypes" />
             <End Role="Patients" EntitySet="Patients" />
@@ -1592,6 +1660,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Donor_inherits_Person" Association="Self.FK_Donor_inherits_Person">
             <End Role="Persons" EntitySet="Persons" />
+            <End Role="Donors" EntitySet="Donors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RHDonor" Association="Self.FK_RHDonor">
+            <End Role="RHs" EntitySet="RHs" />
             <End Role="Donors" EntitySet="Donors" />
           </AssociationSet>
           <AssociationSet Name="FK_GenderPerson" Association="Self.FK_GenderPerson">
@@ -1766,6 +1838,8 @@
                 <ScalarProperty Name="AccountID" ColumnName="AccountID" />
                 <ScalarProperty Name="ResidenceID" ColumnName="ResidenceID" />
                 <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
+                <ScalarProperty Name="BloodTypeID" ColumnName="BloodTypeID" />
+                <ScalarProperty Name="RhID" ColumnName="RhID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
