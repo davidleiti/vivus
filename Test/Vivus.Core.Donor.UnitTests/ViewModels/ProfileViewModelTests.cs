@@ -19,7 +19,7 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
     public class ProfileViewModelTests
     {
         private UnitOfWork unitOfWork;
-        private Mock<IApllicationViewModel<Model.Donor>> appViewModel;
+        private ApplicationViewModel<Model.Donor> appViewModel;
         private Core.UnitTests.Dependencies.DispatcherWrapper dispatcherWrapper;
         private Security.Security security;
         private ParentPage parentPage;
@@ -32,12 +32,14 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
         [TestInitialize]
         public void Setup()
         {
+
             unitOfWork = new UnitOfWork();
-            appViewModel = new Mock<IApllicationViewModel<Model.Donor>>();
+            appViewModel = new ApplicationViewModel<Model.Donor>();
+            appViewModel.User = new Model.Donor { PersonID = 0 };
             dispatcherWrapper = new Core.UnitTests.Dependencies.DispatcherWrapper();
             parentPage = new ParentPage();
             security = new Security.Security();
-            viewModel = new ProfileViewModel(unitOfWork, appViewModel.Object, dispatcherWrapper, security)
+            viewModel = new ProfileViewModel(unitOfWork, appViewModel, dispatcherWrapper, security)
             {
                 ParentPage = parentPage
             };
@@ -69,8 +71,8 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
 
             viewModel.UpdatePublicAsync().Wait();
 
-            donor = unitOfWork.Persons[appViewModel.Object.User.PersonID].Donor;
-            Assert.AreEqual("LastName", donor.Person.LastName);
+            Assert.AreEqual(viewModel.Errors, 0);
+            Assert.AreEqual("LastName", viewModel.Person.LastName);
         }
     }
 }
