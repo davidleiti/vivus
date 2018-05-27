@@ -32,7 +32,8 @@
         /// </summary>
         public void DontAllowErrors()
         {
-            throw new NotImplementedException();
+            tbDonationDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
+            tbDonationResults.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
         }
 
         /// <summary>
@@ -40,7 +41,6 @@
         /// </summary>
         public void AllowOptionalErrors()
         {
-            throw new NotImplementedException();
         }
     }
 }
