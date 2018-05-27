@@ -23,7 +23,7 @@
             //Populate.RequestPriorities();
             //Populate.Administrators();
             //Populate.DonationCenters();
-            //Populate.DonationCentersPersonnel();
+            Populate.DonationCentersPersonnel();
             //Populate.Doctors();
             //Populate.Donors();
             //Populate.Patients();
