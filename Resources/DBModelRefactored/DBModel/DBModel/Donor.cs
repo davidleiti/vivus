@@ -20,10 +20,14 @@ namespace DBModel
             this.DonationForm = new HashSet<DonationForm>();
         }
     
+        public int BloodTypeID { get; set; }
+        public int RhID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonationForm> DonationForm { get; set; }
         public virtual Account Account { get; set; }
         public virtual Address Residence { get; set; }
+        public virtual BloodType BloodType { get; set; }
+        public virtual RH RH { get; set; }
     }
 }

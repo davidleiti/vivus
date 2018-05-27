@@ -414,6 +414,8 @@
 
         public ICommand RedirectCommand { get; }
 
+        public ICommand FinishCommand { get; }
+
         #endregion
 
         #region Constructors
@@ -428,6 +430,7 @@
             AddCommand = new RelayCommand(AddRequest);
             RemoveCommand = new RelayCommand(RemoveRequest);
             RedirectCommand = new RelayCommand(RedirectRequest);
+            FinishCommand = new RelayCommand(FinishRequest);
             RequestDetailsItems = new ObservableCollection<RequestDetailsItem> { new RequestDetailsItem() };
             AllRequestsItems = new ObservableCollection<AllRequestsItem> { new AllRequestsItem() };
 
@@ -495,6 +498,12 @@
             }
 
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request redirected!");
+            Popup("Successfull operation!", PopupType.Successful);
+        }
+
+        private void FinishRequest()
+        {
+            Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request finished!");
             Popup("Successfull operation!", PopupType.Successful);
         }
         #endregion

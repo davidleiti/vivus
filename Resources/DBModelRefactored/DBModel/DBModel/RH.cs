@@ -19,6 +19,7 @@ namespace DBModel
         {
             this.Patient = new HashSet<Patient>();
             this.BloodContainer = new HashSet<BloodContainer>();
+            this.Donor = new HashSet<Donor>();
         }
     
         public int RhID { get; set; }
@@ -28,5 +29,7 @@ namespace DBModel
         public virtual ICollection<Patient> Patient { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodContainer> BloodContainer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Donor> Donor { get; set; }
     }
 }

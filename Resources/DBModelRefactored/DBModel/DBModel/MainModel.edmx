@@ -907,6 +907,14 @@
             <End Role="Donor" EntitySet="Persons" />
             <End Role="Address" EntitySet="Addresses" />
           </AssociationSet>
+          <AssociationSet Name="DonorBloodType" Association="MainModel.DonorBloodType">
+            <End Role="Donor" EntitySet="Persons" />
+            <End Role="BloodType" EntitySet="BloodTypes" />
+          </AssociationSet>
+          <AssociationSet Name="DonorRH" Association="MainModel.DonorRH">
+            <End Role="Donor" EntitySet="Persons" />
+            <End Role="RH" EntitySet="RHs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -1013,6 +1021,7 @@
           <Property Name="Type" Type="String" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.RHPatient" FromRole="RH" ToRole="Patient" />
           <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodContainerRH" FromRole="RH" ToRole="BloodContainer" />
+          <NavigationProperty Name="Donor" Relationship="MainModel.DonorRH" FromRole="RH" ToRole="Donor" />
         </EntityType>
         <EntityType Name="BloodType">
           <Key>
@@ -1022,6 +1031,7 @@
           <Property Name="Type" Type="String" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="MainModel.BloodTypePatient" FromRole="BloodType" ToRole="Patient" />
           <NavigationProperty Name="BloodContainer" Relationship="MainModel.BloodContainerBloodType" FromRole="BloodType" ToRole="BloodContainer" />
+          <NavigationProperty Name="Donor" Relationship="MainModel.DonorBloodType" FromRole="BloodType" ToRole="Donor" />
         </EntityType>
         <EntityType Name="Patient" BaseType="MainModel.Person">
           <NavigationProperty Name="PersonStatus" Relationship="MainModel.PatientPersonStatus" FromRole="Patient" ToRole="PersonStatus" />
@@ -1082,6 +1092,10 @@
           <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDonor" FromRole="Donor" ToRole="DonationForm" />
           <NavigationProperty Name="Account" Relationship="MainModel.DonorAccount" FromRole="Donor" ToRole="Account" />
           <NavigationProperty Name="Residence" Relationship="MainModel.DonorAddress" FromRole="Donor" ToRole="Address" />
+          <NavigationProperty Name="BloodType" Relationship="MainModel.DonorBloodType" FromRole="Donor" ToRole="BloodType" />
+          <Property Name="BloodTypeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RH" Relationship="MainModel.DonorRH" FromRole="Donor" ToRole="RH" />
+          <Property Name="RhID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Doctor" BaseType="MainModel.Person">
           <Property Name="Active" Type="Boolean" Nullable="false" />
@@ -1411,6 +1425,30 @@
         <Association Name="DonorAddress">
           <End Type="MainModel.Donor" Role="Donor" Multiplicity="1" />
           <End Type="MainModel.Address" Role="Address" Multiplicity="1" />
+        </Association>
+        <Association Name="DonorBloodType">
+          <End Type="MainModel.Donor" Role="Donor" Multiplicity="*" />
+          <End Type="MainModel.BloodType" Role="BloodType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BloodType">
+              <PropertyRef Name="BloodTypeID" />
+            </Principal>
+            <Dependent Role="Donor">
+              <PropertyRef Name="BloodTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DonorRH">
+          <End Type="MainModel.Donor" Role="Donor" Multiplicity="*" />
+          <End Type="MainModel.RH" Role="RH" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="RH">
+              <PropertyRef Name="RhID" />
+            </Principal>
+            <Dependent Role="Donor">
+              <PropertyRef Name="RhID" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>

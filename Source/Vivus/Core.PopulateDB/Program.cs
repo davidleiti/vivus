@@ -1,5 +1,6 @@
 ﻿namespace Vivus.Core.PopulateDB
 {
+    using Vivus.Core.Model;
     using VivusConsole = Console.Console;
 
     /// <summary>
@@ -26,6 +27,8 @@
             //Populate.Doctors();
             //Populate.Donors();
             //Populate.Patients();
+            Address address=new Address();
+            VivusConsole.WriteLine(address.AddressID + " is the address id");
             VivusConsole.WriteLine("Everything is already generated! Be careful if you wanna play with the fire. c;");
 
             VivusConsole.WriteLine("Press any key to continue...", false);
