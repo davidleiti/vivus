@@ -230,6 +230,19 @@
 
         #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Adds an adminstrator.
+        /// </summary>
+        public async Task UpdatePublicAsync()
+        {
+            await RunCommand(() => UpdateIsRunning, async () =>
+            {               
+                    await UpdateAsync();
+            });
+        }
+        #endregion
+
         #region Private Methods
 
         /// <summary>
