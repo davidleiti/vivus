@@ -129,6 +129,8 @@
         {
             this.context = context;
             this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json", "mainConfiguration");
+            this.context.Configuration.LazyLoadingEnabled = true;
+            this.context.Configuration.ProxyCreationEnabled = true;
 
             Accounts = new Repository<Account>(this.context);
             Addresses = new Repository<Address>(this.context);

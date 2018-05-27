@@ -4,17 +4,17 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.Doctor.IoC;
-    using Vivus.Core.Security;
+    using Vivus.Core.Helpers;
+    using Vivus.Core.Model;
     using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
     using Vivus.Core.ViewModels.Base;
-    using Vivus = Console;
+    using VivusConsole = Console.Console;
 
     /// <summary>
     /// Represents a view model for the patients page.
@@ -25,24 +25,24 @@
         #region Private Members
 
         private string filter;
+        private object currentFilterId;
+        private object allPatientsLockObj;
+        private object myPatientsLockObj;
         private PatientItemViewModel selectedPatient;
         private PatientItemViewModel mySelectedPatient;
         private bool newPatientIsRunning;
         private bool choosePatientIsRunning;
         private bool dismissPatientIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Doctor> appViewModel;
-
-        // Lock objects
-        private object allPatientsLockObj;
-        private object myPatientsLockObj;
+        private IApllicationViewModel<Doctor> appViewModel;
+        private List<PatientItemViewModel> allPatients;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the filter applied over the all patients collection.
+        /// Gets or sets the filter value.
         /// </summary>
         public string Filter
         {
@@ -55,6 +55,8 @@
 
                 filter = value;
 
+                FilterPatients();
+
                 OnPropertyChanged();
             }
         }
@@ -62,27 +64,12 @@
         /// <summary>
         /// Gets the collection of all the patients
         /// </summary>
-        public ObservableCollection<PatientItemViewModel> AllPatients { get; }
-
-        /// <summary>
-        /// Gets the new patient command
-        /// </summary>
-        public ICommand NewPatientCommand { get; }
-
-        /// <summary>
-        /// Gets the choose command
-        /// </summary>
-        public ICommand ChooseCommand { get; }
+        public ObservableCollection<PatientItemViewModel> AllPatients { get; private set; }
 
         /// <summary>
         /// Gets the collection of own patients
         /// </summary>
         public ObservableCollection<PatientItemViewModel> MyPatients { get; }
-
-        /// <summary>
-        /// Get the dismiss command
-        /// </summary>
-        public ICommand DismissCommand { get; }
 
         /// <summary>
         /// Gets or sets the selected patient
@@ -96,7 +83,7 @@
                     return;
 
                 selectedPatient = value;
-                Vivus.Console.WriteLine(selectedPatient.Name);
+                VivusConsole.WriteLine(selectedPatient.Name);
 
                 OnPropertyChanged();
             }
@@ -114,7 +101,7 @@
                     return;
 
                 mySelectedPatient = value;
-                Vivus.Console.WriteLine(mySelectedPatient.Name);
+                VivusConsole.WriteLine(mySelectedPatient.Name);
 
                 OnPropertyChanged();
             }
@@ -176,22 +163,44 @@
 
         #endregion
 
+        #region Public Commands
+
+        /// <summary>
+        /// Gets the new patient command
+        /// </summary>
+        public ICommand NewPatientCommand { get; }
+
+        /// <summary>
+        /// Gets the choose command
+        /// </summary>
+        public ICommand ChooseCommand { get; }
+
+        /// <summary>
+        /// Get the dismiss command
+        /// </summary>
+        public ICommand DismissCommand { get; }
+
+        #endregion
+
         #region Constructors
 
         public PatientsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
+            currentFilterId = 0;
+            allPatientsLockObj = new object();
+            myPatientsLockObj = new object();
+            allPatients = new List<PatientItemViewModel>();
+
             AllPatients = new ObservableCollection<PatientItemViewModel>();
             MyPatients = new ObservableCollection<PatientItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Doctor>>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
 
             NewPatientCommand = new RelayCommand(NewPatient);
             ChooseCommand = new RelayCommand(ChoosePatient);
             DismissCommand = new RelayCommand(DismissPatient);
 
-            allPatientsLockObj = new object();
-            myPatientsLockObj = new object();
             BindingOperations.EnableCollectionSynchronization(AllPatients, allPatientsLockObj);
             BindingOperations.EnableCollectionSynchronization(MyPatients, myPatientsLockObj);
 
@@ -202,50 +211,106 @@
 
         #region Private Methods
 
+        private void FilterPatients()
+        {
+            int filterId;
+            string[] patterns;
+
+            lock (currentFilterId)
+            {
+                // Generate current identificator
+                currentFilterId = (int)currentFilterId + 1;
+                // Assign the identificator to the current method
+                filterId = (int)currentFilterId;
+            }
+
+            patterns = filter.Trim().Split(' ');
+
+            lock (allPatientsLockObj)
+            {
+                lock (currentFilterId)
+                    // If other method changed the identificator, return
+                    if ((int)currentFilterId != filterId)
+                        return;
+
+                AllPatients.Clear();
+            }
+
+            foreach (var patient in allPatients.Where(p => IsValid(p, patterns)))
+            {
+                lock (allPatientsLockObj)
+                {
+                    lock (currentFilterId)
+                        // If other method changed the identificator, return
+                        if ((int)currentFilterId != filterId)
+                            return;
+
+                    AllPatients.Add(patient);
+                }
+            };
+        }
+
         /// <summary>
         /// Loads all the patients.
         /// </summary>
         private async void LoadPatientsAsync()
         {
-            await Task.Run(() =>
+            lock (allPatientsLockObj)
+                AllPatients.Clear();
+
+            lock (myPatientsLockObj)
+                MyPatients.Clear();
+
+            await unitOfWork.Patients.GetAllAsync().ContinueWith(async patientsTask =>
             {
-                lock (allPatientsLockObj)
+                IEnumerable<Patient> patients = patientsTask.Result;
+                Person person;
+                PatientItemViewModel patientVM;
+
+                foreach (var patient in patients)
                 {
-                    AllPatients.Clear();
+                    person = await unitOfWork.Persons.SingleAsync(patientPerson => patientPerson.PersonID == patient.PersonID);
+
+                    patientVM = new PatientItemViewModel
+                    {
+                        Id = patient.PersonID,
+                        Name = $"{ patient.Person.FirstName } { patient.Person.LastName }",
+                        NationalIdentificationNumber = patient.Person.Nin,
+                        BloodType = patient.BloodType.Type + (patient.RH.Type == "Positive" ? "+" : "-"),
+                        Age = DateTime.Now.Year - patient.Person.BirthDate.Year,
+                        Gender = patient.Person.Gender.Type,
+                        Status = patient.PersonStatus.Type
+                    };
+
+                    if (patient.DoctorID.HasValue)
+                    {
+                        lock (myPatientsLockObj)
+                            MyPatients.Add(patientVM);
+
+                        continue;
+                    }
+
+                    lock (allPatientsLockObj)
+                        lock (currentFilterId)
+                            // If filter is active, skip all patients
+                            if ((int)currentFilterId == 0 || IsValid(patientVM, filter.Trim().Split(' ')))
+                                AllPatients.Add(patientVM);
+
+                    lock (allPatients)
+                        allPatients.Add(patientVM);
                 }
-                lock (myPatientsLockObj)
-                {
-                    MyPatients.Clear();
-                }
-
-                unitOfWork.Patients
-                            .Entities
-                            .Where(patient => !patient.DoctorID.HasValue || patient.DoctorID == appViewModel.User.PersonID)
-                            .ToList()
-                            .ForEach(patient =>
-                            {
-                                PatientItemViewModel patientVM = new PatientItemViewModel
-                                {
-                                    Id = patient.PersonID,
-                                    Name = $"{ patient.Person.FirstName } { patient.Person.LastName }",
-                                    BloodType = patient.BloodType.Type + (patient.RH.Type == "Positive" ? "+" : "-"),
-                                    Age = DateTime.Now.Year - patient.Person.BirthDate.Year,
-                                    Gender = patient.Person.Gender.Type,
-                                    Status = patient.PersonStatus.Type
-                                };
-
-                                if (patient.DoctorID.HasValue)
-                                {
-                                    lock (myPatientsLockObj)
-                                        MyPatients.Add(patientVM);
-
-                                    return;
-                                }
-
-                                lock (allPatientsLockObj)
-                                    AllPatients.Add(patientVM);
-                            });
             });
+        }
+
+        /// <summary>
+        /// Checks whether a patient viewmodel passes the filter or not.
+        /// </summary>
+        /// <param name="patient">The patient viewmodel.</param>
+        /// <param name="patterns">The patterns to check.</param>
+        /// <returns></returns>
+        private bool IsValid(PatientItemViewModel patient, string[] patterns)
+        {
+            return patient.Name.Contains(patterns) || patient.NationalIdentificationNumber.ContainsFromBegining(patterns);
         }
 
         /// <summary>
@@ -253,7 +318,7 @@
         /// </summary>
         private void NewPatient()
         {
-            Vivus.Console.WriteLine("PatientsPage: Add new patient!");
+            VivusConsole.WriteLine("PatientsPage: Add new patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
 
@@ -262,7 +327,7 @@
         /// </summary>
         private void ChoosePatient()
         {
-            Vivus.Console.WriteLine("PatientsPage: Choose a patient!");
+            VivusConsole.WriteLine("PatientsPage: Choose a patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
 
@@ -271,11 +336,10 @@
         /// </summary>
         private void DismissPatient()
         {
-            Vivus.Console.WriteLine("PatientsPage: Dismiss a patient!");
+            VivusConsole.WriteLine("PatientsPage: Dismiss a patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-
-
+        
         #endregion
     }
 
@@ -285,6 +349,7 @@
 
         private int id;
         private string name;
+        private string nin;
         private string bloodType;
         private int age;
         private string gender;
@@ -325,6 +390,24 @@
                     return;
 
                 name = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the national identification number of the patient.
+        /// </summary>
+        public string NationalIdentificationNumber
+        {
+            get => nin;
+
+            set
+            {
+                if (nin == value)
+                    return;
+
+                nin = value;
 
                 OnPropertyChanged();
             }

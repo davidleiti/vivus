@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents an interface for a generic repository.
@@ -20,10 +21,25 @@
         TEntity this[int id] { get; }
 
         /// <summary>
+        /// Asynchronously returns the only entity of a sequence that satisfies a specific condition.
+        /// </summary>
+        /// <param name="predicate">The condition the entity has to satisfy.</param>
+        /// <returns>The entity that satisfies the condition.</returns>
+        /// <exception cref="ArgumentNullException">If the condition is null.</exception>
+        /// <exception cref="InvalidOperationException">If the entity was not found.</exception>
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
         /// Gets all the entities inside the <see cref="IRepository{TEntity}"/>.
         /// </summary>
         /// <returns>All the entities inside the <see cref="IRepository{TEntity}"/>.</returns>
         IEnumerable<TEntity> Entities { get; }
+
+        /// <summary>
+        /// Gets asynchronously all the entities inside the <see cref="IRepository{TEntity}"/>.
+        /// </summary>
+        /// <returns>All the entities inside the <see cref="IRepository{TEntity}"/>.</returns>
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
         /// <summary>
         /// Gets the number of entities contained in the <see cref="IRepository{TEntity}"/>.

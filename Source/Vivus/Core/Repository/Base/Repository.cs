@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a container that implements the <see cref="IRepository{TEntity}"/> interface.
@@ -54,10 +55,31 @@
         }
 
         /// <summary>
+        /// Asynchronously returns the only entity of a sequence that satisfies a specific condition.
+        /// </summary>
+        /// <param name="predicate">The condition the entity has to satisfy.</param>
+        /// <returns>The entity that satisfies the condition.</returns>
+        /// <exception cref="ArgumentNullException">If the condition is null.</exception>
+        /// <exception cref="InvalidOperationException">If the entity was not found.</exception>
+        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbSet.SingleAsync(predicate);
+        }
+
+        /// <summary>
         /// Gets all the entities inside the <see cref="Repository{TEntity}"/>.
         /// </summary>
         /// <returns>All the entities inside the <see cref="Repository{TEntity}"/>.</returns>
         public IEnumerable<TEntity> Entities => dbSet.ToList();
+
+        /// <summary>
+        /// Gets asynchronously all the entities inside the <see cref="Repository{TEntity}"/>.
+        /// </summary>
+        /// <returns>All the entities inside the <see cref="Repository{TEntity}"/>.</returns>
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await dbSet.ToListAsync();
+        }
 
         /// <summary>
         /// Gets the number of entities contained in the <see cref="Repository{TEntity}"/>.
@@ -65,8 +87,10 @@
         public int Count => dbSet.Count();
 
         /// <summary>
-        /// Gets the number of entities contained in the <see cref="Repository{TEntity}"/>.
+        /// Searches for a collection of entities based on a filter.
         /// </summary>
+        /// <param name="predicate">The filter the entities should pass in order to be selected.</param>
+        /// <returns>All the entities that satisfy the filter.</returns>
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return dbSet.Where(predicate);

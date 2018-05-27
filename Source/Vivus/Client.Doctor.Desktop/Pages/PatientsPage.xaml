@@ -21,7 +21,7 @@
                 <!-- All patients -->
                 <TextBlock Foreground="#212529" FontSize="18.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 12" Text="All patients" />
                 <!-- Filter all patients -->
-                <TextBox Tag="Filter patients" Text="{Binding Filter, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" MaxLength="256" Margin="0 0 0 20" />
+                <TextBox Tag="Filter patients" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" MaxLength="256" Margin="0 0 0 20" />
                 <!-- Table -->
                 <DataGrid Height="420" Margin="0 0 0 20" ItemsSource="{Binding AllPatients}" SelectedItem="{Binding SelectedPatient}">
                     <DataGrid.Columns>
