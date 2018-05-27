@@ -22,6 +22,7 @@
         #region Private Members
         private IUnitOfWork unitOfWork;
         private IApllicationViewModel<Model.Donor> appViewModel;
+        private int lastMessageId;
         #endregion
 
         #region Public Properties
@@ -50,6 +51,7 @@
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApllicationViewModel<Donor>>();
+            lastMessageId = -1;
 
             UpdateNotifications();
         }
@@ -68,7 +70,12 @@
             await Task.Run(() =>
             {
                 Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
-                List<Message> messages = donor.Person.ReceivedMessages.ToList();
+                List<Message> messages = new List<Message>();
+                foreach(Message m in donor.Person.ReceivedMessages)
+                {
+                    if (m.MessageID > lastMessageId)
+                        messages.Add(m);
+                }
                 messages.Sort((m1, m2) =>
                 {
                     if (m1.SendDate > m2.SendDate)
@@ -80,7 +87,8 @@
                     return 0;
                 });
 
-
+                if (messages.Count > 0 && messages[0].MessageID > lastMessageId)
+                    lastMessageId = messages[0].MessageID;
 
                 messages.ForEach(m =>
                 {
