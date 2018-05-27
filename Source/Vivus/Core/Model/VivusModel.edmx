@@ -73,6 +73,7 @@
           <Property Name="RequestPriorityID" Type="int" Nullable="false" />
           <Property Name="PatientID" Type="int" Nullable="false" />
           <Property Name="DoctorID" Type="int" Nullable="false" />
+          <Property Name="IsFinished" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BloodTypes">
           <Key>
@@ -927,6 +928,7 @@
           <Property Name="RequestPriorityID" Type="Int32" Nullable="false" />
           <Property Name="PatientID" Type="Int32" Nullable="false" />
           <Property Name="DoctorID" Type="Int32" Nullable="false" />
+          <Property Name="IsFinished" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_BloodRequestBloodContainer" FromRole="BloodRequests" ToRole="BloodContainers" />
           <NavigationProperty Name="Doctor" Relationship="Self.FK_BloodRequestDoctor" FromRole="BloodRequests" ToRole="Doctors" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_BloodRequestPatient" FromRole="BloodRequests" ToRole="Patients" />
@@ -1801,6 +1803,7 @@
                 <ScalarProperty Name="RequestPriorityID" ColumnName="RequestPriorityID" />
                 <ScalarProperty Name="PatientID" ColumnName="PatientID" />
                 <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
+                <ScalarProperty Name="IsFinished" ColumnName="IsFinished" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -29,6 +29,7 @@ namespace Vivus.Core.Model
         public int RequestPriorityID { get; set; }
         public int PatientID { get; set; }
         public int DoctorID { get; set; }
+        public bool IsFinished { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodContainer> BloodContainers { get; set; }
