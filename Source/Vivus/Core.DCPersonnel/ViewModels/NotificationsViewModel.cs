@@ -335,6 +335,7 @@
         {
             while (true)
             {
+                Items.Clear();
                 await LoadNotifications();
                 await Task.Delay(5000);
             }
