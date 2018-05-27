@@ -129,7 +129,7 @@
         public UnitOfWork(DbContext context)
         {
             this.context = context;
-            this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json","testConfiguration");
+            this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json");
             this.context.Configuration.LazyLoadingEnabled = true;
             this.context.Configuration.ProxyCreationEnabled = true;
 
