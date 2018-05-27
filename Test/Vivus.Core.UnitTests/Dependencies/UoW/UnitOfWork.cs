@@ -4,6 +4,7 @@
     using VivusRepository = Core.Repository;
     using Vivus.Core.UnitTests.Dependencies.Repository;
     using Vivus.Core.UoW;
+    using System.Threading.Tasks;
 
     public class UnitOfWork : IUnitOfWork
     {
@@ -153,6 +154,15 @@
         public int Complete()
         {
             return 0;
+        }
+
+        /// <summary>
+        /// Saves asynchronously all the changes made to the persistance level.
+        /// </summary>
+        /// <returns>The number of entities written to the persistance level.</returns>
+        public async Task<int> CompleteAsync()
+        {
+            return await Task.Run(() => 0);
         }
 
         /// <summary>

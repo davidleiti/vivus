@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using Vivus.Core.Repository;
 
     /// <summary>
@@ -31,12 +32,22 @@
             return new List<TEntity> { new TEntity() };
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await Task.Run(() => new List<TEntity>());
+        }
+
         public void Remove(TEntity entity)
         {
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
+        }
+
+        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Task.Run(() => new TEntity());
         }
     }
 }
