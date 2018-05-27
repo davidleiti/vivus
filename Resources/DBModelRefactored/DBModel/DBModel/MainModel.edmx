@@ -915,6 +915,10 @@
             <End Role="Donor" EntitySet="Persons" />
             <End Role="RH" EntitySet="RHs" />
           </AssociationSet>
+          <AssociationSet Name="DonationFormDonationCenter" Association="MainModel.DonationFormDonationCenter">
+            <End Role="DonationForm" EntitySet="DonationForms" />
+            <End Role="DonationCenter" EntitySet="DonationCenters" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -1128,6 +1132,7 @@
           <NavigationProperty Name="BloodContainer" Relationship="MainModel.DonationCenterBloodContainer" FromRole="DonationCenter" ToRole="BloodContainer" />
           <NavigationProperty Name="BloodRequest" Relationship="MainModel.BloodRequestDonationCenter" FromRole="DonationCenter" ToRole="BloodRequest" />
           <NavigationProperty Name="DCPersonnel" Relationship="MainModel.DCPersonnelDonationCenter" FromRole="DonationCenter" ToRole="DCPersonnel" />
+          <NavigationProperty Name="DonationForm" Relationship="MainModel.DonationFormDonationCenter" FromRole="DonationCenter" ToRole="DonationForm" />
         </EntityType>
         <EntityType Name="BloodContainer">
           <Key>
@@ -1316,6 +1321,8 @@
           <Property Name="PastSurgeries" Type="String" Nullable="true" MaxLength="256" />
           <Property Name="ApplyDate" Type="DateTime" Nullable="false" />
           <Property Name="DonationDate" Type="DateTime" Nullable="true" />
+          <NavigationProperty Name="DonationCenter" Relationship="MainModel.DonationFormDonationCenter" FromRole="DonationForm" ToRole="DonationCenter" />
+          <Property Name="DonationCenterID" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="DonationFormDCPersonnel">
           <End Type="MainModel.DonationForm" Role="DonationForm" Multiplicity="*" />
@@ -1447,6 +1454,18 @@
             </Principal>
             <Dependent Role="Donor">
               <PropertyRef Name="RhID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DonationFormDonationCenter">
+          <End Type="MainModel.DonationForm" Role="DonationForm" Multiplicity="*" />
+          <End Type="MainModel.DonationCenter" Role="DonationCenter" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="DonationCenter">
+              <PropertyRef Name="DonationCenterID" />
+            </Principal>
+            <Dependent Role="DonationForm">
+              <PropertyRef Name="DonationCenterID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

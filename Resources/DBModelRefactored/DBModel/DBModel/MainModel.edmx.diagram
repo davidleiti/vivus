@@ -62,6 +62,7 @@
         <AssociationConnector Association="MainModel.DonorDonationCenter" />
         <AssociationConnector Association="MainModel.DonorBloodType" />
         <AssociationConnector Association="MainModel.DonorRH" />
+        <AssociationConnector Association="MainModel.DonationFormDonationCenter" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -123,13 +123,14 @@
           <Property Name="DonorID" Type="int" Nullable="false" />
           <Property Name="Weight" Type="int" Nullable="false" />
           <Property Name="HeartRate" Type="int" Nullable="false" />
-          <Property Name="SystolicBloodPressure" Type="int" Nullable="false" />
-          <Property Name="DiastolicBloodPressure" Type="int" Nullable="false" />
+          <Property Name="SystolicBloodPressure" Type="int" />
+          <Property Name="DiastolicBloodPressure" Type="int" />
           <Property Name="PastSurgeries" Type="nvarchar(max)" />
           <Property Name="TravelStatus" Type="nvarchar(max)" />
           <Property Name="ApplyDate" Type="datetime" Nullable="false" />
           <Property Name="DonationDate" Type="datetime" />
           <Property Name="DonationStatus" Type="bit" />
+          <Property Name="DonationCenterID" Type="int" />
         </EntityType>
         <EntityType Name="Donors">
           <Key>
@@ -497,6 +498,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DonationFormDonationCenter">
+          <End Role="DonationCenters" Type="Self.DonationCenters" Multiplicity="0..1" />
+          <End Role="DonationForms" Type="Self.DonationForms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonationCenters">
+              <PropertyRef Name="DonationCenterID" />
+            </Principal>
+            <Dependent Role="DonationForms">
+              <PropertyRef Name="DonationCenterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DonationFormDonor">
           <End Role="Donors" Type="Self.Donors" Multiplicity="1" />
           <End Role="DonationForms" Type="Self.DonationForms" Multiplicity="*" />
@@ -775,6 +788,10 @@
             <End Role="DCPersonnel" EntitySet="DCPersonnel" />
             <End Role="DonationForms" EntitySet="DonationForms" />
           </AssociationSet>
+          <AssociationSet Name="FK_DonationFormDonationCenter" Association="Self.FK_DonationFormDonationCenter">
+            <End Role="DonationCenters" EntitySet="DonationCenters" />
+            <End Role="DonationForms" EntitySet="DonationForms" />
+          </AssociationSet>
           <AssociationSet Name="FK_DonationFormDonor" Association="Self.FK_DonationFormDonor">
             <End Role="Donors" EntitySet="Donors" />
             <End Role="DonationForms" EntitySet="DonationForms" />
@@ -971,6 +988,7 @@
           <NavigationProperty Name="Address" Relationship="Self.FK_DonationCenterAddress" FromRole="DonationCenters" ToRole="Addresses" />
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_DonationCenterBloodContainer" FromRole="DonationCenters" ToRole="BloodContainers" />
           <NavigationProperty Name="DCPersonnels" Relationship="Self.FK_DCPersonnelDonationCenter" FromRole="DonationCenters" ToRole="DCPersonnel" />
+          <NavigationProperty Name="DonationForms" Relationship="Self.FK_DonationFormDonationCenter" FromRole="DonationCenters" ToRole="DonationForms" />
           <NavigationProperty Name="Donors" Relationship="Self.FK_DonorDonationCenter" FromRole="DonationCenters" ToRole="Donors" />
           <NavigationProperty Name="BloodRequests" Relationship="Self.BloodRequestDonationCenter" FromRole="DonationCenters" ToRole="BloodRequests" />
         </EntityType>
@@ -983,14 +1001,16 @@
           <Property Name="DonorID" Type="Int32" Nullable="false" />
           <Property Name="Weight" Type="Int32" Nullable="false" />
           <Property Name="HeartRate" Type="Int32" Nullable="false" />
-          <Property Name="SystolicBloodPressure" Type="Int32" Nullable="false" />
-          <Property Name="DiastolicBloodPressure" Type="Int32" Nullable="false" />
+          <Property Name="SystolicBloodPressure" Type="Int32" />
+          <Property Name="DiastolicBloodPressure" Type="Int32" />
           <Property Name="PastSurgeries" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TravelStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ApplyDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DonationDate" Type="DateTime" Precision="3" />
           <Property Name="DonationStatus" Type="Boolean" />
+          <Property Name="DonationCenterID" Type="Int32" />
           <NavigationProperty Name="DCPersonnel" Relationship="Self.FK_DonationFormDCPersonnel" FromRole="DonationForms" ToRole="DCPersonnel" />
+          <NavigationProperty Name="DonationCenter" Relationship="Self.FK_DonationFormDonationCenter" FromRole="DonationForms" ToRole="DonationCenters" />
           <NavigationProperty Name="Donor" Relationship="Self.FK_DonationFormDonor" FromRole="DonationForms" ToRole="Donors" />
         </EntityType>
         <EntityType Name="Donor">
@@ -1401,6 +1421,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DonationFormDonationCenter">
+          <End Role="DonationCenters" Type="Self.DonationCenter" Multiplicity="0..1" />
+          <End Role="DonationForms" Type="Self.DonationForm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonationCenters">
+              <PropertyRef Name="DonationCenterID" />
+            </Principal>
+            <Dependent Role="DonationForms">
+              <PropertyRef Name="DonationCenterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DonorDonationCenter">
           <End Role="DonationCenters" Type="Self.DonationCenter" Multiplicity="0..1" />
           <End Role="Donors" Type="Self.Donor" Multiplicity="*" />
@@ -1650,6 +1682,10 @@
             <End Role="Doctors" EntitySet="Doctors" />
             <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
+          <AssociationSet Name="FK_DonationFormDonationCenter" Association="Self.FK_DonationFormDonationCenter">
+            <End Role="DonationCenters" EntitySet="DonationCenters" />
+            <End Role="DonationForms" EntitySet="DonationForms" />
+          </AssociationSet>
           <AssociationSet Name="FK_DonorDonationCenter" Association="Self.FK_DonorDonationCenter">
             <End Role="DonationCenters" EntitySet="DonationCenters" />
             <End Role="Donors" EntitySet="Donors" />
@@ -1828,6 +1864,7 @@
                 <ScalarProperty Name="ApplyDate" ColumnName="ApplyDate" />
                 <ScalarProperty Name="DonationDate" ColumnName="DonationDate" />
                 <ScalarProperty Name="DonationStatus" ColumnName="DonationStatus" />
+                <ScalarProperty Name="DonationCenterID" ColumnName="DonationCenterID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

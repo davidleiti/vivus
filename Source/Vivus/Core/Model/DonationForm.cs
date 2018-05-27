@@ -19,15 +19,17 @@ namespace Vivus.Core.Model
         public int DonorID { get; set; }
         public int Weight { get; set; }
         public int HeartRate { get; set; }
-        public int SystolicBloodPressure { get; set; }
-        public int DiastolicBloodPressure { get; set; }
+        public Nullable<int> SystolicBloodPressure { get; set; }
+        public Nullable<int> DiastolicBloodPressure { get; set; }
         public string PastSurgeries { get; set; }
         public string TravelStatus { get; set; }
         public System.DateTime ApplyDate { get; set; }
         public Nullable<System.DateTime> DonationDate { get; set; }
         public Nullable<bool> DonationStatus { get; set; }
+        public Nullable<int> DonationCenterID { get; set; }
     
         public virtual DCPersonnel DCPersonnel { get; set; }
+        public virtual DonationCenter DonationCenter { get; set; }
         public virtual Donor Donor { get; set; }
     }
 }
