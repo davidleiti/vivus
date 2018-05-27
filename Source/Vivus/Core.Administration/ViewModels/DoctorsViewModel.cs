@@ -173,7 +173,7 @@
                     dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());
                     PopulateFields();
                 }
-                Vivus.Console.WriteLine(selectedDoctor.Name+" was selected");
+                Vivus.Console.WriteLine(selectedDoctor.Name + " was selected");
 
                 OnPropertyChanged();
             }
@@ -326,8 +326,16 @@
                             StreetName = add.Street,
                             StreetNumber = add.StreetNo,
                             ZipCode = add.ZipCode
-                        }
-                    });
+                        },
+                        WorkAddress = add.County.Name + "," + add.City + "," + add.Street + "," + add.StreetNo.ToString(),
+                        HomeAddress = doctor.Person.Address.County.Name + ","
+                        + doctor.Person.Address.City + ","
+                        + doctor.Person.Address.Street + ","
+                        + doctor.Person.Address.StreetNo.ToString(),
+                        Name = doctor.Person.FirstName + " " + doctor.Person.LastName,
+                        NationalIdentificationNumber=doctor.Person.Nin
+                    }
+                    );
                     //Console.Console.WriteLine(Doctors.Count.ToString() + "is the len");
                 }
                 )
@@ -429,16 +437,27 @@
                     FillViewModelDoctor(ref doctorItemViewModel);
 
                     doctorItemViewModel.PersonID = doctor.PersonID;
+                    /*doctorItemViewModel.WorkAddress = WorkAddress.County.Value + ","
+                        + WorkAddress.City + ","
+                        + WorkAddress.StreetName + ","
+                        + WorkAddress.StreetNumber.ToString();
+                    doctorItemViewModel.HomeAddress = HomeAddress.County.Value + ","
+                        + HomeAddress.City + ","
+                        + HomeAddress.StreetName + ","
+                        + HomeAddress.StreetNumber.ToString();*/
+
+
 
                     dispatcherWrapper.InvokeAsync(() => Doctors.Add(doctorItemViewModel));
                     Popup($"Doctor added successfully!", PopupType.Successful);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Popup($"An error occured while adding the doctor.");
+                    Popup($"ex:" + ex);
+                    Vivus.Console.WriteLine("ex:" + ex + " " + ex.StackTrace);
                 }
                 Vivus.Console.WriteLine("Adminstration: Add Doctor works!");
-                
+
 
             });
         }
@@ -507,12 +526,15 @@
                 doctor = new Doctor();
             if (doctor.Person == null)
                 doctor.Person = new Person();
+            if (doctor.Person.Address is null)
+                doctor.Person.Address = new Address();
             if (doctor.Address == null)
                 doctor.Address = new Address();
             if (doctor.Account == null)
                 doctor.Account = new Account();
-            if (doctor.WorkAddressID == 0)
-                doctor.WorkAddressID = 0;//todo
+            //if (doctor.WorkAddressID == 0)
+            //  doctor.WorkAddressID = 0;//todo
+
 
             doctor.Active = true;
 
@@ -529,14 +551,18 @@
             doctor.Person.Gender = gender;
 
             //home address
-            doctor.Person.Address.Street = HomeAddress.StreetName;
-            doctor.Person.Address.StreetNo = HomeAddress.StreetNumber;
-            doctor.Person.Address.City = HomeAddress.City;
-            doctor.Person.Address.County = homeCounty;
-            doctor.Person.Address.ZipCode = HomeAddress.ZipCode;
+            doctor.Person.Address.Street = WorkAddress.StreetName;
+            doctor.Person.Address.StreetNo = WorkAddress.StreetNumber;
+            doctor.Person.Address.City = WorkAddress.City;
+            doctor.Person.Address.County = workCounty;
+            doctor.Person.Address.ZipCode = WorkAddress.ZipCode;
 
             //work address
-            doctor.WorkAddressID = 0;
+            doctor.Address.Street = HomeAddress.StreetName;
+            doctor.Address.StreetNo = HomeAddress.StreetNumber;
+            doctor.Address.City = HomeAddress.City;
+            doctor.Address.County = homeCounty;
+            doctor.Address.ZipCode = HomeAddress.ZipCode;
         }
 
         private void FillViewModelDoctor(ref DoctorItemViewModel doctor)
@@ -578,6 +604,10 @@
             doctor.WorkAddressViewModel.City = WorkAddress.City;
             doctor.WorkAddressViewModel.County = new BasicEntity<string>(workCounty.CountyID, workCounty.Name);
             doctor.WorkAddressViewModel.ZipCode = WorkAddress.ZipCode;
+            doctor.WorkAddress = WorkAddress.County.Value + ","
+                        + WorkAddress.City + ","
+                        + WorkAddress.StreetName + ","
+                        + WorkAddress.StreetNumber.ToString();
 
             //home address propertes
             doctor.HomeAddressViewModel.StreetName = HomeAddress.StreetName;
@@ -585,6 +615,10 @@
             doctor.HomeAddressViewModel.City = HomeAddress.City;
             doctor.HomeAddressViewModel.County = new BasicEntity<string>(homeCounty.CountyID, homeCounty.Name);
             doctor.HomeAddressViewModel.ZipCode = HomeAddress.ZipCode;
+            doctor.HomeAddress= HomeAddress.County.Value + ","
+                        + HomeAddress.City + ","
+                        + HomeAddress.StreetName + ","
+                        + HomeAddress.StreetNumber.ToString();
 
         }
 
@@ -742,12 +776,14 @@
                 workAddressViewModel = value;
 
 
+                /*if (workAddressViewModel != null)
+                {
 
-                workAddress = workAddressViewModel.County.Value + ","
-                    + workAddressViewModel.City + ","
-                    + workAddressViewModel.StreetName + ","
-                    + workAddressViewModel.StreetNumber.ToString();
-
+                    workAddress = workAddressViewModel.County.Value + ","
+                        + workAddressViewModel.City + ","
+                        + workAddressViewModel.StreetName + ","
+                        + workAddressViewModel.StreetNumber.ToString();
+                }*/
                 OnPropertyChanged();
 
             }
@@ -762,13 +798,14 @@
                     return;
 
                 homeAddressViewModel = value;
-
-                homeAddress = homeAddressViewModel.County.Value + ","
-                    + homeAddressViewModel.City + ","
-                    + homeAddressViewModel.StreetName + ","
-                    + homeAddressViewModel.StreetNumber.ToString();
-
-                OnPropertyChanged();
+               /* if (homeAddressViewModel != null)
+                {
+                    homeAddress = homeAddressViewModel.County.Value + ","
+                        + homeAddressViewModel.City + ","
+                        + homeAddressViewModel.StreetName + ","
+                        + homeAddressViewModel.StreetNumber.ToString();
+                }
+                OnPropertyChanged();*/
             }
         }
 
@@ -798,7 +835,12 @@
         #endregion
 
         #region Constructors
-        public DoctorItemViewModel() { }
+        public DoctorItemViewModel()
+        {
+            workAddress = "";
+            homeAddress = "";
+            nationalIdentificationNumber = "";
+        }
         #endregion
     }
 }
