@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dependencies\ApplicationViewModel.cs" />
     <Compile Include="Dependencies\DispatcherWrapper.cs" />
     <Compile Include="Dependencies\ParentPage.cs" />
     <Compile Include="Dependencies\Repository\Base\Repository.cs" />
