@@ -429,7 +429,7 @@
             else
             {
                 RouteDetails bestRoute = await getBetsRouteToDonationCenters(donor);
-                DonationCenter closestDonationCenter = await unitOfWork.DonationCenters.SingleAsync(singleDonationCenter => singleDonationCenter.AddressID == bestRoute.DestinationAddress.AddressID);
+                DonationCenter closestDonationCenter = unitOfWork.DonationCenters.Entities.Single(singleDonationCenter => singleDonationCenter.AddressID == bestRoute.DestinationAddress.AddressID);
                 donationForm.DonationCenterID = closestDonationCenter.DonationCenterID;
             }
 
@@ -454,17 +454,19 @@
         {
             List<Address> donationCentersAddresses = new List<Address>();
             Address donorAddress;
-            await unitOfWork.DonationCenters.GetAllAsync().ContinueWith(async donationCentersTask =>
-            {
-                IEnumerable<DonationCenter> donationCenters = donationCentersTask.Result;
-                Address donationCenterAddress;
-                foreach (var donationCenter in donationCenters)
-                {
-                    donationCenterAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donationCenter.AddressID);
 
-                    donationCentersAddresses.Add(donationCenterAddress);
-                }
-            });
+            List<DonationCenter> donationCenters;
+
+            donationCenters = (List<DonationCenter>)await unitOfWork.DonationCenters.GetAllAsync();
+            
+            Address donationCenterAddress;
+            foreach (var donationCenter in donationCenters)
+            {
+                donationCenterAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donationCenter.AddressID);
+
+                donationCentersAddresses.Add(donationCenterAddress);
+            }
+
             if (donor.ResidenceID != null)
             {
                 donorAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donor.ResidenceID);
@@ -474,7 +476,7 @@
                 Person person = await unitOfWork.Persons.SingleAsync(singlePerson => singlePerson.PersonID == donor.PersonID);
                 donorAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == person.AddressID);
             }
-            RouteDetails bestRoute = DistanceMatrixApiHelpers.GetDistances(donorAddress, donationCentersAddresses).OrderBy(RouteDetails => RouteDetails.Distance).First();
+            RouteDetails bestRoute = (await DistanceMatrixApiHelpers.GetDistancesAsync(donorAddress, donationCentersAddresses)).OrderBy(RouteDetails => RouteDetails.Distance).First();
             return bestRoute;
         }
 

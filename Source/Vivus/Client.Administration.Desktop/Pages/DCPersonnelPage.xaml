@@ -47,7 +47,7 @@
                     <!-- Donation center -->
                     <StackPanel>
                         <TextBlock Text="Donation center" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox  x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding SelectedDonationCenter, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox  x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding SelectedDonationCenter, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Person status -->
                     <Grid Grid.Column="2">
@@ -179,7 +179,7 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox  x:Name="cbAddressCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding Address.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox  x:Name="cbAddressCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding Address.County, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
                     <!-- Zip -->
