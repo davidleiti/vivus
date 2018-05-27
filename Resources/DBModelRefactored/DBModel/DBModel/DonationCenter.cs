@@ -20,6 +20,7 @@ namespace DBModel
             this.BloodContainer = new HashSet<BloodContainer>();
             this.BloodRequest = new HashSet<BloodRequest>();
             this.DCPersonnel = new HashSet<DCPersonnel>();
+            this.DonationForm = new HashSet<DonationForm>();
         }
     
         public int DonationCenterID { get; set; }
@@ -33,5 +34,7 @@ namespace DBModel
         public virtual ICollection<BloodRequest> BloodRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DCPersonnel> DCPersonnel { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonationForm> DonationForm { get; set; }
     }
 }

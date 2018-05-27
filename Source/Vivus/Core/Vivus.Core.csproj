@@ -253,13 +253,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="dbConfigurations.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EntityDeploy Include="Model\VivusModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>VivusModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="dbConfigurations.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Model\VivusModel.edmx.diagram">
       <DependentUpon>VivusModel.edmx</DependentUpon>
     </None>

@@ -287,19 +287,6 @@
         /// </summary>
         private async Task UpdateAsync()
         {
-            /*
-            ParentPage.AllowErrors();
-
-            if (Errors + Person.Errors + IdentificationCardAddress.Errors > 0)
-            {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
-
-            Vivus.Console.WriteLine("DC Personnel Profile: Update worked!");
-            Popup("Successfull operation!", PopupType.Successful);
-            */
-
             await RunCommand(() => UpdateIsRunning, async() =>
             {
                 await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());

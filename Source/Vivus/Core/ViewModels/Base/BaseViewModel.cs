@@ -91,7 +91,23 @@
         /// <summary>
         /// Gets a string containing all the errors.
         /// </summary>
-        public string Error => string.Join("\n", errors.Values);
+        //public string Error => string.Join("\n", errors.Values);
+        public string Error
+        {
+            get {
+                string errs = "";
+
+                for (int i = 0; i < errors.Values.Count; i++)
+                {
+                    for (int j = 0; j < errors.Values.ToArray()[i].Count; j++)
+                    {
+                        errs += "\n" + errors.Values.ToArray()[i][j];
+                    }
+                }
+
+                return errs;
+            }
+        }
 
         #endregion
 

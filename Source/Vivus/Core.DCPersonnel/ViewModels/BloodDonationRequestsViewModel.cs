@@ -4,9 +4,7 @@
     using Vivus.Core.DataModels;
     using System;
     using System.Windows.Input;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using Vivus = Console;
     using Vivus.Core.DCPersonnel.Validators;
     using Vivus.Core.UoW;
     using Vivus.Core.ViewModels.Base;
@@ -461,8 +459,8 @@
         private int age;
         private int weight;
         private int heartRate;
-        private int systolicBP;
-        private int diastolicBP;
+        private int? systolicBP;
+        private int? diastolicBP;
         private string pastSurgeries;
         private string travelStatus;
         #endregion
@@ -564,7 +562,7 @@
 
             }
         }
-        public int SystolicBP {
+        public int? SystolicBP {
             get => systolicBP;
 
             set {
@@ -577,7 +575,7 @@
                 OnPropertyChanged();
             }
         }
-        public int DiastolicBP {
+        public int? DiastolicBP {
             get => diastolicBP;
 
             set {

@@ -25,8 +25,10 @@ namespace DBModel
         public string PastSurgeries { get; set; }
         public System.DateTime ApplyDate { get; set; }
         public Nullable<System.DateTime> DonationDate { get; set; }
+        public int DonationCenterID { get; set; }
     
         public virtual DCPersonnel DCPersonnel { get; set; }
         public virtual Donor Donor { get; set; }
+        public virtual DonationCenter DonationCenter { get; set; }
     }
 }
