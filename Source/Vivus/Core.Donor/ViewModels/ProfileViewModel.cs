@@ -387,33 +387,30 @@
         /// </summary>
         private async Task UpdateAsync()
         {
-            await RunCommand(() => UpdateIsRunning, async () =>
+            await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+
+            if (Errors + Person.Errors + IdentificationCardAddress.Errors + ResidenceAddress.Errors > 0)
             {
-                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
 
-                if (Errors + Person.Errors + IdentificationCardAddress.Errors + ResidenceAddress.Errors > 0)
+            await Task.Run(() =>
+            {
+                try
                 {
-                    Popup("Some errors were found. Fix them before going forward.");
-                    return;
-                }
+                    Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
 
-                await Task.Run(() =>
-                {
-                    try
-                    {
-                        Donor donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
-
-                        FillModelAdministrator(ref donor, true);
-                        // Make changes persistent
-                        unitOfWork.Complete();
+                   FillModelAdministrator(ref donor, true);
+                    // Make changes persistent
+                    unitOfWork.Complete();
                         
-                        Popup($"Donor updated successfully!", PopupType.Successful);
-                    }
-                    catch
-                    {
-                        Popup($"An error occured while updating the donor.");
-                    }
-                });
+                    Popup($"Donor updated successfully!", PopupType.Successful);
+                }
+                catch
+                {
+                    Popup($"An error occured while updating the donor.");
+                }
             });
         }
        
@@ -441,9 +438,12 @@
             // If the person instance is null, initialize it
             if (donor.Person is null)
                 donor.Person = new Person();
-            // If the person's address instance is null, initialize it
+            // If the person's national identification card's address instance is null, initialize it
             if (donor.Person.Address is null)
                 donor.Person.Address = new Address();
+            // If the person's residence address instance is null, initialize it
+            if (donor.ResidenceAddress is null)
+                donor.ResidenceAddress = new Address();
             // If the account instance is null, initialize it
             if (donor.Account is null)
                 donor.Account = new Account();
