@@ -268,6 +268,9 @@
                 IEnumerable<Patient> patients = patientsTask.Result;
                 Person person;
                 PatientItemViewModel patientVM;
+                int doctorId;
+
+                doctorId = appViewModel.User.PersonID;
 
                 foreach (var patient in patients)
                 {
@@ -284,7 +287,7 @@
                         Status = patient.PersonStatus.Type
                     };
 
-                    if (patient.DoctorID.HasValue)
+                    if (patient.DoctorID.HasValue && patient.DoctorID == doctorId)
                     {
                         lock (myPatientsLockObj)
                             MyPatients.Add(patientVM);
