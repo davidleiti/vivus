@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Core.UoW
 {
     using System.Data.Entity;
+    using System.Threading.Tasks;
     using Vivus.Core.Model;
     using Vivus.Core.Repository;
 
@@ -128,7 +129,8 @@
         public UnitOfWork(DbContext context)
         {
             this.context = context;
-            this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json", "mainConfiguration");
+            this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json", "localConfiguration");
+            //this.context.Database.Connection.ConnectionString = Configurations.Configurations.GetConnectionString("dbConfigurations.json", "mainConfiguration");
             this.context.Configuration.LazyLoadingEnabled = true;
             this.context.Configuration.ProxyCreationEnabled = true;
 
@@ -167,6 +169,15 @@
         public int Complete()
         {
             return context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Saves asynchronously all the changes made to the persistance level.
+        /// </summary>
+        /// <returns>The number of entities written to the persistance level.</returns>
+        public async Task<int> CompleteAsync()
+        {
+            return await context.SaveChangesAsync();
         }
 
         /// <summary>

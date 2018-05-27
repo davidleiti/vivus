@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Core.UoW
 {
     using System;
+    using System.Threading.Tasks;
     using Vivus.Core.Model;
     using Vivus.Core.Repository;
 
@@ -120,5 +121,11 @@
         /// </summary>
         /// <returns>The number of entities written to the persistance level.</returns>
         int Complete();
+
+        /// <summary>
+        /// Saves asynchronously all the changes made to the persistance level.
+        /// </summary>
+        /// <returns>The number of entities written to the persistance level.</returns>
+        Task<int> CompleteAsync();
     }
 }
