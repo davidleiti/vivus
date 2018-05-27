@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:Vivus.Client.Administration.Desktop.Pages"
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Administration.ViewModels;assembly=Vivus.Core.Administration"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
@@ -166,7 +167,7 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbHomeCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding HomeAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbHomeCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding HomeAddress.County, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
                     <!-- Zip -->
@@ -235,13 +236,13 @@
                         <ColumnDefinition Width=".8*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Add" Command="{Binding AddDoctorCommand}"/>
+                    <Button Grid.Column="1" Content="{Binding ButtonType, Converter={valueConverters:ButtonTypeToStringConverter}, FallbackValue=Add}" Command="{Binding AddDoctorCommand}" attachedProperties:IsBusyProperty.Value="{Binding ActionIsRunning}"/>
                 </Grid>
 
                 <!-- Table -->
                 <DataGrid Height="420" ItemsSource="{Binding Doctors}" SelectedItem="{Binding SelectedDoctor}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Id, Mode=OneWay}">
+                        <DataGridTextColumn Header="#" Binding="{Binding PersonID, Mode=OneWay}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -250,7 +251,7 @@
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneWay}" Width=".9*" />
-                        <DataGridTextColumn Header="NIN" Binding="{Binding NIN, Mode=OneWay}" Width="*" />
+                        <DataGridTextColumn Header="NIN" Binding="{Binding NationalIdentificationNumber, Mode=OneWay}" Width="*" />
                         <DataGridTextColumn Header="Home address" Binding="{Binding HomeAddress, Mode=OneWay}" Width="*" />
                         <DataGridTextColumn Header="Work address" Binding="{Binding WorkAddress, Mode=OneWay}" Width="*" />
                     </DataGrid.Columns>
