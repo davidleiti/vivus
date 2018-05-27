@@ -271,6 +271,32 @@
 
         }
 
+        public DCPersonnelViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        {
+
+            ButtonType = ButtonType.Add;
+            optionalErrors = false;
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispatcherWrapper;
+            this.security = security;
+
+            Person = new PersonViewModel();
+            Counties = new List<BasicEntity<string>>();
+            Items = new ObservableCollection<DCPItemViewModel>();
+            Counties = new List<BasicEntity<string>>();
+            Address = new AddressViewModel();
+
+            LoadCountiesAsync();
+            LoadDonationCentersAsync();
+            LoadDcPersonnelAsync();
+            AddCommand = new RelayCommand(async () => await AddModifyAsync());
+
+
+
+
+        }
+
         #endregion
 
         #region Public Methods
@@ -360,7 +386,7 @@
                             ZipCode = dcPersonnel.Person.Address.ZipCode
                         },
                         DonationCenter = dcPersonnel.DonationCenter.Name,
-                        DonationCenterId = dcPersonnel.DonationCenter.DonationCenterID,
+                        DonationCenterId = dcPersonnel.DonationCenterID,
                         Name = dcPersonnel.Person.FirstName + " " + dcPersonnel.Person.LastName,
                         NationalIdentificationNumber = dcPersonnel.Person.Nin
 
@@ -449,6 +475,9 @@
             if (dCPersonnel.Account is null)
                 dCPersonnel.Account = new Account();
 
+            /*if (dCPersonnel.DonationCenter is null)
+                dCPersonnel.DonationCenter = new DonationCenter();*/
+
             dCPersonnel.Active = Active;
             //fill account
 
@@ -469,6 +498,8 @@
             dCPersonnel.Person.Address.City = Address.City;
             dCPersonnel.Person.Address.County = county;
             dCPersonnel.Person.Address.ZipCode = Address.ZipCode;
+
+            dCPersonnel.DonationCenterID = SelectedDonationCenter.Id;
 
         }
 

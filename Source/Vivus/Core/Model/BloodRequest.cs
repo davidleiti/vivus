@@ -22,13 +22,14 @@ namespace Vivus.Core.Model
         }
     
         public int BloodRequestID { get; set; }
-        public int ThrombocytesQuantity { get; set; }
-        public int RedCellsQuantity { get; set; }
-        public int PlasmaQuantity { get; set; }
-        public int BloodQuantity { get; set; }
+        public Nullable<int> ThrombocytesQuantity { get; set; }
+        public Nullable<int> RedCellsQuantity { get; set; }
+        public Nullable<int> PlasmaQuantity { get; set; }
+        public Nullable<int> BloodQuantity { get; set; }
         public int RequestPriorityID { get; set; }
         public int PatientID { get; set; }
         public int DoctorID { get; set; }
+        public bool IsFinished { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BloodContainer> BloodContainers { get; set; }

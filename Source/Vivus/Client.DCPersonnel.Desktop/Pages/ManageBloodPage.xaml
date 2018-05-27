@@ -122,7 +122,7 @@
                         <ComboBox x:Name="cbRHReq" ItemsSource="{Binding RHTypes}" SelectedItem="{Binding RequestRH, ValidatesOnDataErrors=True}" />
                     </StackPanel>
                     <!-- Request button -->
-                    <Button Grid.Column="4" VerticalAlignment="Bottom" MaxHeight="148" Width="Auto" Content="Request" Command="{Binding RequestCommand}" />
+                    <Button Grid.Column="4" VerticalAlignment="Bottom" MaxHeight="148" Width="Auto" Content="Request" Command="{Binding RequestCommand}" attachedProperties:IsBusyProperty.Value="{Binding ActionIsRunning}" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>

@@ -4,12 +4,25 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Windows;
+    using Vivus.Core.DataModels;
+    using Vivus.Core.Donor.IoC;
+    using Vivus.Core.UoW;
+    using Vivus.Core.ViewModels.Base;
+    using System.Threading.Tasks;
+    using System.Linq;
 
     /// <summary>
     /// Represents a view model for the history page.
     /// </summary>
     public class HistoryViewModel : BaseViewModel
     {
+        #region private fields
+
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<Model.Donor> appViewModel;
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -24,27 +37,46 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryViewModel"/> class with the default values.
         /// </summary>
-        public HistoryViewModel()
+        public HistoryViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Items = new ObservableCollection<HistoryItemViewModel>();
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
 
-            // Test whether the binding was done right or not
-            Application.Current.Dispatcher.Invoke(() =>
+            Task.Run(async () =>
             {
-                Items.Add(new HistoryItemViewModel
-                {
-                    Id = 39,
-                    Date = new DateTime(2018, 2, 17),
-                    Weight = 72,
-                    HeartRate = 68,
-                    SystolicBP = 103,
-                    DiastolicBP = 52,
-                    Approved = true
-                });
+                await LoadHistoryAsync();
             });
         }
 
         #endregion
+
+        /// <summary>
+        /// Loads all the History asynchronously.
+        /// </summary>
+        private async Task LoadHistoryAsync()
+        {
+            await Task.Run(() =>
+            {
+                dispatcherWrapper.InvokeAsync(() => Items.Clear());
+                unitOfWork.DonationForms
+                .Entities
+                .ToList()
+                .ForEach(history =>
+                    dispatcherWrapper.InvokeAsync(() =>
+                        Items.Add(new HistoryItemViewModel
+                        {
+                            Id = history.DonationFormID,
+                            Date = history.ApplyDate,
+                            Weight = history.Weight,
+                            HeartRate = history.HeartRate,
+                            SystolicBP = history.SystolicBloodPressure,
+                            DiastolicBP = history.DiastolicBloodPressure,
+                            Approved = !(history.DonationDate is null)
+                        })));
+
+            });
+        }
     }
 
     /// <summary>
@@ -58,8 +90,8 @@
         private DateTime date;
         private int weight;
         private int heartRate;
-        private int systolicBP;
-        private int diastolicBP;
+        private int? systolicBP;
+        private int? diastolicBP;
         private bool approved;
 
         #endregion
@@ -141,7 +173,7 @@
         /// <summary>
         /// Gets or sets the systolic blood pressure of the donor.
         /// </summary>
-        public int SystolicBP
+        public int? SystolicBP
         {
             get => systolicBP;
 
@@ -159,7 +191,7 @@
         /// <summary>
         /// Gets or sets the diastolic blood pressure of the donor.
         /// </summary>
-        public int DiastolicBP
+        public int? DiastolicBP
         {
             get => diastolicBP;
 

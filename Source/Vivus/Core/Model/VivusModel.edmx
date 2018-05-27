@@ -66,13 +66,14 @@
             <PropertyRef Name="BloodRequestID" />
           </Key>
           <Property Name="BloodRequestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ThrombocytesQuantity" Type="int" Nullable="false" />
-          <Property Name="RedCellsQuantity" Type="int" Nullable="false" />
-          <Property Name="PlasmaQuantity" Type="int" Nullable="false" />
-          <Property Name="BloodQuantity" Type="int" Nullable="false" />
+          <Property Name="ThrombocytesQuantity" Type="int" />
+          <Property Name="RedCellsQuantity" Type="int" />
+          <Property Name="PlasmaQuantity" Type="int" />
+          <Property Name="BloodQuantity" Type="int" />
           <Property Name="RequestPriorityID" Type="int" Nullable="false" />
           <Property Name="PatientID" Type="int" Nullable="false" />
           <Property Name="DoctorID" Type="int" Nullable="false" />
+          <Property Name="IsFinished" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BloodTypes">
           <Key>
@@ -920,13 +921,14 @@
             <PropertyRef Name="BloodRequestID" />
           </Key>
           <Property Name="BloodRequestID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ThrombocytesQuantity" Type="Int32" Nullable="false" />
-          <Property Name="RedCellsQuantity" Type="Int32" Nullable="false" />
-          <Property Name="PlasmaQuantity" Type="Int32" Nullable="false" />
-          <Property Name="BloodQuantity" Type="Int32" Nullable="false" />
+          <Property Name="ThrombocytesQuantity" Type="Int32" />
+          <Property Name="RedCellsQuantity" Type="Int32" />
+          <Property Name="PlasmaQuantity" Type="Int32" />
+          <Property Name="BloodQuantity" Type="Int32" />
           <Property Name="RequestPriorityID" Type="Int32" Nullable="false" />
           <Property Name="PatientID" Type="Int32" Nullable="false" />
           <Property Name="DoctorID" Type="Int32" Nullable="false" />
+          <Property Name="IsFinished" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BloodContainers" Relationship="Self.FK_BloodRequestBloodContainer" FromRole="BloodRequests" ToRole="BloodContainers" />
           <NavigationProperty Name="Doctor" Relationship="Self.FK_BloodRequestDoctor" FromRole="BloodRequests" ToRole="Doctors" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_BloodRequestPatient" FromRole="BloodRequests" ToRole="Patients" />
@@ -1801,6 +1803,7 @@
                 <ScalarProperty Name="RequestPriorityID" ColumnName="RequestPriorityID" />
                 <ScalarProperty Name="PatientID" ColumnName="PatientID" />
                 <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
+                <ScalarProperty Name="IsFinished" ColumnName="IsFinished" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
