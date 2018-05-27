@@ -31,11 +31,28 @@
 
         private IUnitOfWork unitOfWork;
         private IApllicationViewModel<Model.DCPersonnel> appViewModel;
+
+        private bool sendingIsRunning;
 		#endregion
 
 		#region Public Properties
 
 		public IPage ParentPage { get; set; }
+
+        public bool SendingIsRunning
+        {
+            get => sendingIsRunning;
+
+            set
+            {
+                if (sendingIsRunning == value)
+                    return;
+
+                sendingIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
 
 		/// <summary>
 		/// Gets gets the list of person types (Donor, Doctor, or DCPersonnel)
@@ -54,6 +71,8 @@
 				personType = value;
 
 				OnPropertyChanged();
+
+                LoadPersons();
 			}
 		}
 
@@ -73,6 +92,8 @@
 
 				personName = value;
 				OnPropertyChanged();
+
+                LoadNin();
 			}
 		}
 
@@ -88,7 +109,17 @@
 				message = value;
 
 				OnPropertyChanged();
-			}
+
+                /*
+                 * Used to check fields values when validated.
+                Console.WriteLine(PersonType is null);
+                Console.WriteLine(PersonName is null);
+                Console.WriteLine(string.IsNullOrEmpty(Message));
+
+                Console.WriteLine(PersonType.Id);
+                Console.WriteLine(PersonName.Id);
+                */
+            }
 		}
 
 		/// <summary>
@@ -145,12 +176,14 @@
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NotificationsViewModel"/> class with the default values.
 		/// </summary>
-		public NotificationsViewModel() {
+		public NotificationsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        {
 			PersonTypes = new List<BasicEntity<string>>();
 			PersonTypes.Add(new BasicEntity<string>(-1, "Select person type"));
-			PersonTypes.Add(new BasicEntity<string>(0, "Donor"));
-			PersonTypes.Add(new BasicEntity<string>(1, "Doctor"));
+			PersonTypes.Add(new BasicEntity<string>(0, "Donors"));
+			PersonTypes.Add(new BasicEntity<string>(1, "Doctors"));
 			PersonTypes.Add(new BasicEntity<string>(2, "DC Personnel"));
+
 			Persons = new ObservableCollection<BasicEntity<string>>();
 			Persons.Add(new BasicEntity<string>(-1, "Select person name"));
 
@@ -159,13 +192,7 @@
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
 
-            /*
-			Application.Current.Dispatcher.Invoke(() => {
-				Items.Add(new NotificationViewModel(new ArgbColor(255, 0, 123, 255), "AP", "andreipopescu", new DateTime(2018, 4, 28), "This is dă message."));
-			});
-            */
-
-			SendCommand = new RelayCommand(Send);
+			SendCommand = new RelayCommand(async() => await SendAsync());
 
             UpdateNotifications();
 		}
@@ -176,17 +203,121 @@
 		/// Sends a notification
 		/// </summary>
 		#region Private Methods
-		private void Send() {
-			ParentPage.AllowErrors();
+		private async Task SendAsync() {
+            await RunCommand(() => SendingIsRunning, async() =>
+            {
+                await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-			if (Errors > 0) {
-				Popup("Some errors were found. Fix them before going forward.");
-				return;
-			}
+                if (Errors > 0)
+                {
+                    Console.WriteLine(Error);
 
-			Vivus.Console.WriteLine("DCPersonnel: Notification sent successfully!");
-			Popup("Successfull operation!", PopupType.Successful);
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                await Task.Run(() => 
+                {
+                    try
+                    {
+                        Message message = new Message();
+                        message.Sender = appViewModel.User.Person;
+                        message.Receiver = unitOfWork.Persons[PersonName.Id];
+                        message.Content = Message;
+
+                        unitOfWork.Messages.Add(message);
+                        unitOfWork.Complete();
+
+                        Popup("Message sent successfuly!", PopupType.Successful);
+                    }
+                    catch
+                    {
+                        Popup("An error occured while sending the message.", PopupType.Error);
+                    }
+                });
+
+            });
 		}
+
+        private async void LoadPersons()
+        {
+            Console.WriteLine("Selected " + PersonType);
+
+            Console.WriteLine("Clearing fields.");
+            Persons.Clear();
+            Persons.Add(new BasicEntity<string>(-1, "Select person name"));
+            PersonName = Persons[0];
+            NationalIdentificationNumber = null;
+
+            if (PersonType.Value.Equals("Doctors"))
+                await LoadDoctors();
+
+            if (PersonType.Value.Equals("DC Personnel"))
+                await LoadDCPersonnel();
+        }
+
+        private async Task LoadDoctors()
+        {
+            await Task.Run(() =>
+            {
+                unitOfWork.Doctors.Entities.ToList().ForEach(doctor =>
+                dispatcherWrapper.InvokeAsync(() => Persons.Add(new BasicEntity<string>(doctor.PersonID, doctor.Person.FirstName + " " + doctor.Person.LastName))));
+            });
+        }
+
+        private async Task LoadDCPersonnel()
+        {
+            await Task.Run(() => 
+            {
+                unitOfWork.DCPersonnel.Entities.ToList().ForEach(dcp => 
+                {
+                    dispatcherWrapper.InvokeAsync(() =>
+                    {
+                        if (dcp.PersonID != appViewModel.User.PersonID)
+                            Persons.Add(new BasicEntity<string>(dcp.PersonID, dcp.Person.FirstName + " " + dcp.Person.LastName));
+                    });
+                });
+            });
+        }
+
+        private async Task LoadDonors()
+        {
+            await Task.Run(() => 
+            {
+                unitOfWork.Donors.Entities.ToList().ForEach(donor => 
+                {
+                    dispatcherWrapper.InvokeAsync(() => 
+                    {
+                        if (donor.DonationCenterID == appViewModel.User.DonationCenterID)
+                            Persons.Add(new BasicEntity<string>(donor.PersonID, donor.Person.FirstName + " " + donor.Person.LastName));
+                    });
+                });
+            });
+        }
+
+        private async void LoadNin()
+        {
+            Console.WriteLine("Loading Nin");
+            await LoadPersonNin();
+        }
+
+        private async Task LoadPersonNin()
+        {
+            await Task.Run(() => 
+            {
+                try
+                {
+                    NationalIdentificationNumber = unitOfWork.Persons.Entities.ToList().Find(p =>
+                    {
+                        return (p.FirstName + " " + p.LastName) == PersonName.Value;
+                    }).Nin;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Nin could not be loaded. Person name not found.");
+                }
+            });
+        }
 
         private async void UpdateNotifications()
         {
