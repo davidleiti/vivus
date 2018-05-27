@@ -8,6 +8,7 @@
       xmlns:pages="clr-namespace:Vivus.Client.Core.Pages;assembly=Vivus.Client.Core"
       xmlns:viewModel="clr-namespace:Vivus.Core.Doctor.ViewModels;assembly=Vivus.Core.Doctor"
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
+      xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Background="#fafafa"
@@ -51,7 +52,7 @@
                     <!-- National identification number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="National identification number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbNid" Tag="0000000000000" Text="{Binding Person.NationalIdentificationNumber, ValidatesOnDataErrors=True}" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
+                        <TextBox x:Name="tbNin" Tag="0000000000000" Text="{Binding Person.NationalIdentificationNumber, ValidatesOnDataErrors=True}" MaxLength="13" PreviewKeyDown="DigitsTextBox_PreviewKeyDown" PreviewTextInput="DigitsTextBox_PreviewTextInput" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -108,17 +109,17 @@
                     <!-- Street name -->
                     <StackPanel>
                         <TextBlock Text="Street name" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbStreet" Tag="Street" Text="{Binding IdentificationCardAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
+                        <TextBox x:Name="tbStreetName" Tag="Street" Text="{Binding IdentificationCardAddress.StreetName, ValidatesOnDataErrors=True}" MaxLength="18" />
                     </StackPanel>
                     <!-- Street number -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Street number" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbNumber" Tag="Number" Text="{Binding IdentificationCardAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox x:Name="tbStreetNumber" Tag="Number" Text="{Binding IdentificationCardAddress.StreetNumber, ValidatesOnDataErrors=True}" CharacterCasing="Upper" MaxLength="6" PreviewKeyDown="TextBox_PreviewKeyDown" />
                     </StackPanel>
                     <!-- City -->
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="City" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox x:Name="tbCity" Tag="City" Text="{Binding WorkAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
+                        <TextBox x:Name="tbCity" Tag="City" Text="{Binding IdentificationCardAddress.City, ValidatesOnDataErrors=True}" MaxLength="24" />
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -133,7 +134,7 @@
                     <!-- County -->
                     <StackPanel>
                         <TextBlock Text="County" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbCountry" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, Mode=OneWayToSource, ValidatesOnDataErrors=True}"/>
+                        <ComboBox x:Name="cbCounty" ItemsSource="{Binding Counties}" SelectedItem="{Binding IdentificationCardAddress.County, ValidatesOnDataErrors=True}"/>
 
                     </StackPanel>
                     <!-- Zip -->
@@ -159,14 +160,14 @@
                     <!-- Blood type -->
                     <StackPanel>
                         <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbBloodType" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding BloodType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbBloodType" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding SelectedBloodType, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
 
                     <!-- RH -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <ComboBox x:Name="cbRh" ItemsSource="{Binding RhTypes}" SelectedItem="{Binding RhType, Mode=OneWayToSource, ValidatesOnDataErrors=True}" />
+                        <ComboBox x:Name="cbRh" ItemsSource="{Binding RhTypes}" SelectedItem="{Binding SelectedRh, ValidatesOnDataErrors=True}" />
 
                     </StackPanel>
 
@@ -187,8 +188,8 @@
                                 <ColumnDefinition Width="5*" />
                             </Grid.ColumnDefinitions>
 
-                            <RadioButton Grid.Column="0" Content="Alive" IsChecked="{Binding Status, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Alive}" Grid.ColumnSpan="2" />
-                            <RadioButton Grid.Column="3" Content="Dead" IsChecked="{Binding Status, Converter={valueConverters:BasicEntityToBoolConverter}, ConverterParameter=Dead}" Margin="10 0 0 0" />
+                            <RadioButton Grid.Column="0" Content="Alive" IsChecked="{Binding Status, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=True}" Grid.ColumnSpan="2" />
+                            <RadioButton Grid.Column="3" Content="Dead" IsChecked="{Binding Status, Converter={valueConverters:NullableBoolRadioButtonIsCheckBoolConverter}, ConverterParameter=False}" Margin="10 0 0 0" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -203,7 +204,7 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Command="{Binding AddCommand}" Grid.Column="2" FontSize="16" Margin="10 0" Content="Add" />
+                    <Button Content="{Binding ButtonType, Converter={valueConverters:ButtonTypeToStringConverter}, FallbackValue=Add}" Command="{Binding AddModifyCommand}" Grid.Column="2" FontSize="16" Margin="10 0" attachedProperties:IsBusyProperty.Value="{Binding ActionIsRunning}"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>
