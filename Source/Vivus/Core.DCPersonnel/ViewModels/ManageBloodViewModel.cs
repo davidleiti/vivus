@@ -42,6 +42,8 @@
         private IApllicationViewModel<Model.DCPersonnel> appViewModel;
         private ISecurity security;
 
+        private bool operationSuccessful;
+
         #endregion
 
         #region Public Enums
@@ -305,14 +307,29 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
+                bool result = false;
                 ToValidate = Validation.ManageBlood;
                 if (ButtonType == ButtonType.Add)
-                    await AddBloodContainerAsync();
+                {
+                    await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                    result = await AddBloodContainerAsync();
+                    if (result)
+                    {
+                        await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                        ClearFieldsAddAndModify();
+                    }
+                }
                 else
-                    await ModifyBloodContainerAsync();
-
-                await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
-                ClearFieldsAddAndModify();
+                {
+                    await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                    result = await ModifyBloodContainerAsync();
+                    if (result)
+                    {
+                        await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                        ClearFieldsAddAndModify();
+                    }
+                }
+                
                 ToValidate = Validation.None;
             });
         }
@@ -324,19 +341,18 @@
         {
             await RunCommand(() => ActionIsRunning, async () =>
             {
-                Task<bool> task;
-
-                task = SendRequestAsync();
+                bool result = false;
                 ToValidate = Validation.RequestDonation;
 
                 await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-                task.Wait();
+                result = await SendRequestAsync();
 
-                if (task.Result)
+                if (result)
                 {
                     await dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
                     // Add clear function
+                    ClearFieldsRequest();
                 }
 
                 ToValidate = Validation.None;
@@ -361,7 +377,7 @@
 
         private void ClearFieldsRequest()
         {
-            RequestBloodType = new BasicEntity<string>(-1, "Select container type");
+            RequestBloodType = new BasicEntity<string>(-1, "Select blood type");
             RequestRH = new BasicEntity<string>(-1, "Select rh");
         }
 
@@ -433,7 +449,10 @@
                             BloodType = new BasicEntity<string>(bloodContainer.BloodType.BloodTypeID, bloodContainer.BloodType.Type),
                             HarvestDate = bloodContainer.HarvestDate,
                             Rh = new BasicEntity<string>(bloodContainer.RH.RhID, bloodContainer.RH.Type),
-                            Id = bloodContainer.BloodContainerID
+                            Id = bloodContainer.BloodContainerID,
+                            Expired = isExpired(ContainerType, bloodContainer.HarvestDate)
+                            
+                            
                 })));
 
             });
@@ -454,11 +473,10 @@
         /// <summary>
         /// Adds a new blood container
         /// </summary>
-        private async Task AddBloodContainerAsync()
+        private async Task<bool> AddBloodContainerAsync()
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
-                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 int count = errors.Keys
                         .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
@@ -468,7 +486,7 @@
                 if (count > 0)
                 {
                     Popup("Some errors were found. Fix them before going forward.");
-                    return;
+                    return false;
                 }
 
                 try
@@ -497,16 +515,18 @@
                     
                     Popup($"An error occured while adding the blood container.");
                 }
+
+                return true;
             });
 
         }
         
-        private async Task ModifyBloodContainerAsync()
+        private async Task<bool> ModifyBloodContainerAsync()
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 if (selectedItem is null)
-                    return;
+                    return false;
 
                 int count = errors.Keys
                         .Where(key => key != nameof(RequestBloodType) && key != nameof(RequestRH))
@@ -516,7 +536,7 @@
                 if (count > 0)
                 {
                     Popup("Some errors were found. Fix them before going forward.");
-                    return;
+                    return false;
                 }
 
                 try
@@ -541,6 +561,7 @@
 
                 ButtonType = ButtonType.Add;
                 SelectedItem = null;
+                return true;
             });
         }
 
@@ -560,6 +581,32 @@
                 {
                     Popup("Some errors were found. Fix them before going forward.");
                     return false;
+                }
+
+                try
+                {
+                    int dcId = unitOfWork.DCPersonnel[appViewModel.User.AccountID].DonationCenterID;
+                    
+                    unitOfWork.Donors
+                        .Entities.ToList()
+                        .Where(donor => donor.DonationCenterID == dcId)
+                        .ToList()
+                            .ForEach(donor =>
+                                unitOfWork.Messages.Add(new Model.Message
+                                {
+                                    SenderID = dcId,
+                                    SendDate = DateTime.Now,
+                                    Content = "We lack in blood of your type, we are already waiting for you at the donation center you are registered at, come and donate to save a life!",
+                                    RecieverID = donor.AccountID
+                                })
+                            );
+                    // Make changes persistent
+                    //unitOfWork.Complete();
+
+                }
+                catch
+                {
+                    Popup("An error occured while sending requests.");
                 }
 
                 Vivus.Console.WriteLine("DC Personnel: Blood requested!");
@@ -606,6 +653,18 @@
                 new BasicEntity<string>(unitOfWork.RHs[AddContainerRH.Id].RhID,
                 unitOfWork.RHs[AddContainerRH.Id].Type);
             storageItemViewModel.HarvestDate = DateTime.Parse(HarvestDate);
+            storageItemViewModel.Expired = isExpired(storageItemViewModel.ContainerType, storageItemViewModel.HarvestDate);
+        }
+
+        private bool isExpired(BasicEntity<string> containerType, DateTime harvestDate)
+        {
+            if (containerType.Value.Equals("Thrombocytes"))
+                return harvestDate.AddDays(6) <= DateTime.Now;
+            if (containerType.Value.Equals("Red cells"))
+                return harvestDate.AddDays(43) <= DateTime.Now;
+            if (containerType.Value.Equals("Plasma"))
+                return harvestDate.AddMonths(12).AddDays(1) <= DateTime.Now;
+            return harvestDate.AddDays(43) <= DateTime.Now;
         }
         
         #endregion
@@ -621,6 +680,7 @@
         private BasicEntity<string> bloodType;
         private BasicEntity<string> rh;
         private DateTime harvestDate;
+        private bool expired;
 
         #endregion
 
@@ -713,7 +773,6 @@
                 harvestDate = value;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Expired));
             }
         }
 
@@ -721,14 +780,23 @@
         {
             get
             {
-                
-                    if (ContainerType.Equals("Thrombocytes"))
-                        return HarvestDate.AddDays(6) <= DateTime.Now;
-                    if (ContainerType.Equals("Red cells"))
-                        return HarvestDate.AddDays(43) <= DateTime.Now;
-                    if (ContainerType.Equals("Plasma"))
-                        return HarvestDate.AddMonths(12).AddDays(1) <= DateTime.Now;
-                    return HarvestDate.AddDays(43) <= DateTime.Now;
+                if (containerType.Value.Equals("Thrombocytes"))
+                    return harvestDate.AddDays(6) <= DateTime.Now;
+                if (containerType.Value.Equals("Red cells"))
+                    return harvestDate.AddDays(43) <= DateTime.Now;
+                if (containerType.Value.Equals("Plasma"))
+                    return harvestDate.AddMonths(12).AddDays(1) <= DateTime.Now;
+                return harvestDate.AddDays(43) <= DateTime.Now;
+            }
+
+            set
+            {
+                if (expired == value)
+                    return;
+
+                expired = value;
+
+                OnPropertyChanged();
             }
 
         }
