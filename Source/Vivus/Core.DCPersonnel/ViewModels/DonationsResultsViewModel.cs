@@ -7,8 +7,16 @@
     using System.Windows.Input;
     using Vivus.Core.DataModels;
     using Vivus.Core.DCPersonnel.Validators;
+    using Vivus.Core.UoW;
+    using Vivus.Core.Model;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
     using VivusConsole = Core.Console.Console;
+    using System.Linq;
+    using Vivus.Core.DCPersonnel.IoC;
+    using System.Windows.Data;
+    using Vivus.Core.Helpers;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents a view model for the donation results page.
@@ -22,7 +30,13 @@
         private string donationDate;
         private string donationResults;
         private string filter;
+
         DonationFormItemViewModel selectedDonationForm;
+
+        private object formsLock;
+
+        private IUnitOfWork unitOfWork;
+        private IApllicationViewModel<DCPersonnel> appViewModel;
 
         #endregion
 
@@ -36,12 +50,10 @@
         /// <summary>
         /// Gets or sets the full name of the donor.
         /// </summary>
-        public string Donor
-        {
+        public string Donor {
             get => donor;
 
-            set
-            {
+            set {
                 if (donor == value)
                     return;
 
@@ -54,12 +66,10 @@
         /// <summary>
         /// Gets or sets the national identification number of the donor.
         /// </summary>
-        public string NationalIdentificationNumber
-        {
+        public string NationalIdentificationNumber {
             get => nin;
 
-            set
-            {
+            set {
                 if (nin == value)
                     return;
 
@@ -72,12 +82,10 @@
         /// <summary>
         /// Gets or sets the donation date of the donor.
         /// </summary>
-        public string DonationDate
-        {
+        public string DonationDate {
             get => donationDate;
 
-            set
-            {
+            set {
                 if (donationDate == value)
                     return;
 
@@ -90,12 +98,10 @@
         /// <summary>
         /// Gets or sets the results of the donation.
         /// </summary>
-        public string DonationResults
-        {
+        public string DonationResults {
             get => donationResults;
 
-            set
-            {
+            set {
                 if (donationResults == value)
                     return;
 
@@ -108,16 +114,23 @@
         /// <summary>
         /// Gets or sets the filter value for the donation forms.
         /// </summary>
-        public string Filter
-        {
+        public string Filter {
             get => filter;
 
-            set
-            {
+            set {
                 if (filter == value)
                     return;
 
                 filter = value;
+
+                if (!String.IsNullOrEmpty(filter))
+                {
+                    FilterForms();
+                }
+                else
+                {
+                    LoadRequestsAsync();
+                }
 
                 OnPropertyChanged();
             }
@@ -126,16 +139,25 @@
         /// <summary>
         /// Gets or sets the selected donation form.
         /// </summary>
-        public DonationFormItemViewModel SelectedDonationForm
-        {
+        public DonationFormItemViewModel SelectedDonationForm {
             get => selectedDonationForm;
 
-            set
-            {
+            set {
                 if (selectedDonationForm == value)
                     return;
 
                 selectedDonationForm = value;
+
+                if (selectedDonationForm is null)
+                {
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
+                    ClearFields();
+                }
+                else
+                {
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());
+                    PopulateFields();
+                }
 
                 OnPropertyChanged();
             }
@@ -151,10 +173,8 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns></returns>
-        public override string this[string propertyName]
-        {
-            get
-            {
+        public override string this[string propertyName] {
+            get {
                 if (propertyName == nameof(DonationDate))
                     return GetErrorString(propertyName, DCPersonnelValidator.DonationDateValidation(DonationDate));
 
@@ -185,15 +205,12 @@
         {
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
 
-            dispatcherWrapper.InvokeAsync(() => DonationForms.Add(new DonationFormItemViewModel
-            {
-                PersonId = 10,
-                ApplyDate = new DateTime(2018, 5, 24),
-                Donor = "Bara Gabriela",
-                NationalIdentificationNumber = "2840812094291",
-                BloodType = "O-"
-            }));
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
 
+            formsLock = new object();
+            DonationForms = new ObservableCollection<DonationFormItemViewModel>();
+            BindingOperations.EnableCollectionSynchronization(DonationForms, formsLock);
             SendCommand = new RelayCommand(async () => await SendResults());
         }
 
@@ -201,21 +218,147 @@
 
         #region Private Methods
 
+        /// <summary>
+        /// Sets the DonationDate of the currently selected DonationForm and sends a message to the Donor with the results
+        /// </summary>
+        /// <returns></returns>
         private async Task SendResults()
         {
             await Task.Run(() =>
             {
                 dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
-                
+
                 if (Errors > 0)
                 {
                     Popup("Some errors were found. Fix them before going forward.");
                     return;
                 }
 
+                DonationForm donationForm = unitOfWork.DonationForms
+                    .Entities
+                    .First(form => form.DonorID == selectedDonationForm.PersonId);
+                donationForm.DonationDate = DateTime.Parse(DonationDate);
+
+                string messageContent = "Below are the results of your latest donation:\n" + DonationResults;
+                Message message = new Message
+                {
+                    RecieverID = donationForm.DonorID,
+                    SenderID = appViewModel.User.PersonID,
+                    SendDate = DateTime.Now,
+                    Content = messageContent
+                };
+
+                Console.WriteLine(donationForm.DonorID);
+
+                unitOfWork.Persons
+                    .Entities
+                    .First(person => person.PersonID == donationForm.DonorID)
+                    .ReceivedMessages
+                    .Add(message);
+
+                unitOfWork.Complete();
+
+                LoadRequestsAsync();
+                ClearFields();
+                SelectedDonationForm = null;
                 VivusConsole.WriteLine("Dontaion results sent successfully!");
                 Popup("Successfull operation!", PopupType.Successful);
             });
+        }
+
+        /// <summary>
+        /// Loads all <see cref="DonationForm"/> items which don't yet have a DonationDate specified
+        /// </summary>
+        private async void LoadRequestsAsync()
+        {
+            await Task.Run(() =>
+            {
+                lock (formsLock)
+                {
+                    DonationForms.Clear();
+                    unitOfWork.DonationForms
+                        .Entities
+                        .Where(form => form.DonationStatus == true && form.DonationDate is null)
+                        .ToList()
+                        .ForEach(form =>
+                        {
+                            DonationForms.Add(FormToViewModel(form));
+                        });
+                }
+            });
+        }
+
+        /// <summary>
+        /// Loads only the <see cref="DonationForm"/> items which match the specified filtering criteria
+        /// </summary>
+        private async void FilterForms()
+        {
+            await Task.Run(() =>
+            {
+
+                string[] patterns = Filter.Trim().Split(' ');
+                List<DonationFormItemViewModel> allForms = unitOfWork.DonationForms.Entities.ToList()
+                                   .Select(form => FormToViewModel(form))
+                                   .Where(form => IsValidForm(form, patterns))
+                                   .ToList();
+                lock (formsLock)
+                {
+                    DonationForms.Clear();
+                    foreach (var form in allForms)
+                    {
+                        DonationForms.Add(form);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Returns a <see cref="DonationFormItemViewModel"/> representation of the given <see cref="DonationForm"/> item
+        /// </summary>
+        /// <param name="form">The form which needs to be converted</param>
+        /// <returns></returns>
+        private DonationFormItemViewModel FormToViewModel(DonationForm form)
+        {
+            return new DonationFormItemViewModel
+            {
+                PersonId = form.DonorID,
+                Donor = $"{form.Donor.Person.FirstName} {form.Donor.Person.LastName}",
+                ApplyDate = form.ApplyDate,
+                NationalIdentificationNumber = form.Donor.Person.Nin,
+                BloodType = form.Donor.BloodType.Type + (form.Donor.RH.Type == "Positive" ? "+" : "-")
+            };
+        }
+
+        /// <summary>
+        /// Checks whether the given donation form matches the given patterns or not
+        /// </summary>
+        /// <param name="form">The form which we are checking</param>
+        /// <param name="patterns">Array of patterns</param>
+        /// <returns></returns>
+        private bool IsValidForm(DonationFormItemViewModel form, string[] patterns)
+        {
+            return form.Donor.Contains(patterns) || form.NationalIdentificationNumber.ContainsFromBegining(patterns);
+        }
+
+        /// <summary>
+        /// Populate the fields with the information of the selected donation form
+        /// </summary>
+        private void PopulateFields()
+        {
+            Donor = SelectedDonationForm.Donor;
+            DonationDate = DateTime.Today.ToShortDateString();
+            NationalIdentificationNumber = SelectedDonationForm.NationalIdentificationNumber;
+        }
+
+        /// <summary>
+        /// Clears the fields of the form
+        /// </summary>
+        private void ClearFields()
+        {
+            Donor = string.Empty;
+            DonationDate = string.Empty;
+            NationalIdentificationNumber = string.Empty;
+            DonationResults = string.Empty;
         }
 
         #endregion
@@ -241,12 +384,10 @@
         /// <summary>
         /// Gets or sets the identificatior of the person.
         /// </summary>
-        public int PersonId
-        {
+        public int PersonId {
             get => personId;
 
-            set
-            {
+            set {
                 if (personId == value)
                     return;
 
@@ -259,12 +400,10 @@
         /// <summary>
         /// Gets or sets the apply date of the donor.
         /// </summary>
-        public DateTime ApplyDate
-        {
+        public DateTime ApplyDate {
             get => applyDate;
 
-            set
-            {
+            set {
                 if (applyDate == value)
                     return;
 
@@ -277,12 +416,10 @@
         /// <summary>
         /// Gets or sets the full name of the donor.
         /// </summary>
-        public string Donor
-        {
+        public string Donor {
             get => donor;
 
-            set
-            {
+            set {
                 if (donor == value)
                     return;
 
@@ -295,12 +432,10 @@
         /// <summary>
         /// Gets or sets the national identification number of the donor.
         /// </summary>
-        public string NationalIdentificationNumber
-        {
+        public string NationalIdentificationNumber {
             get => nin;
 
-            set
-            {
+            set {
                 if (nin == value)
                     return;
 
@@ -313,12 +448,10 @@
         /// <summary>
         /// Gets or sets the blood type and the rh of the donor.
         /// </summary>
-        public string BloodType
-        {
+        public string BloodType {
             get => bloodType;
 
-            set
-            {
+            set {
                 if (bloodType == value)
                     return;
 

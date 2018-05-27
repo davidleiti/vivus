@@ -285,7 +285,7 @@
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdministratorsViewModel"/> class with the default values.
+        /// Initializes a new instance of the <see cref="BloodDonationRequestsViewModel"/> class with the default values.
         /// </summary>
         public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
