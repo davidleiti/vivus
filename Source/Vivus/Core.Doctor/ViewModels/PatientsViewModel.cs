@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
@@ -198,7 +200,7 @@
             appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
 
             NewPatientCommand = new RelayCommand(NewPatient);
-            ChooseCommand = new RelayCommand(ChoosePatient);
+            ChooseCommand = new RelayCommand(ChoosePatientAsync);
             DismissCommand = new RelayCommand(DismissPatient);
 
             BindingOperations.EnableCollectionSynchronization(AllPatients, allPatientsLockObj);
@@ -323,12 +325,42 @@
         }
 
         /// <summary>
-        /// Choose a patient
+        /// Chooses asynchronously a patient.
         /// </summary>
-        private void ChoosePatient()
+        private async void ChoosePatientAsync()
         {
-            VivusConsole.WriteLine("PatientsPage: Choose a patient!");
-            Popup("Successfull operation!", PopupType.Successful);
+            int allPatientsIndex;
+
+            if (SelectedPatient is null)
+            {
+                Popup("No patient selected. Before going further select a patient.");
+                return;
+            }
+
+            try
+            {
+                // Get the selected item
+                PatientItemViewModel selectedItem = SelectedPatient;
+
+                // Get the index inside the all patients list
+                allPatientsIndex = await FirstIndexAsync(allPatients, patient => patient.Id == SelectedPatient.Id);
+
+                // Remove the patient from the all patients list
+                allPatients.RemoveAt(allPatientsIndex);
+                // Change patient's doctor identificator
+                unitOfWork.Persons[selectedItem.Id].Patient.DoctorID = appViewModel.User.PersonID;
+                await unitOfWork.CompleteAsync();
+                // Remove the patient from the all patients table
+                AllPatients.Remove(selectedItem);
+                // Add the patient to doctor's patients table
+                MyPatients.Add(selectedItem);
+
+                Popup("Patient chosen successfully!", PopupType.Successful);
+            }
+            catch
+            {
+                Popup("Unexpected error occured. Try again later.");
+            }
         }
 
         /// <summary>
@@ -339,7 +371,28 @@
             VivusConsole.WriteLine("PatientsPage: Dismiss a patient!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-        
+
+        /// <summary>
+        /// Gets asynchronously the index of an element from a collection, based on a condition.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="collection">The collection to parse.</param>
+        /// <param name="predicate">The find condition.</param>
+        /// <returns></returns>
+        private async Task<int> FirstIndexAsync<T>(IEnumerable<T> collection, Expression<Func<T, bool>> predicate)
+        {
+            List<T> elements = collection.ToList();
+
+            return await Task.Run(() =>
+            {
+                for (int i = 0; i < elements.Count; i++)
+                    if (predicate.Compile().Invoke(elements[i]))
+                        return i;
+
+                throw new InvalidOperationException("Item not found.");
+            });
+        }
+
         #endregion
     }
 
