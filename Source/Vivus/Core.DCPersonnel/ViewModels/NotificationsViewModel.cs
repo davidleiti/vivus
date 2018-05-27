@@ -149,18 +149,29 @@
 		/// <returns></returns>
 		public override string this[string propertyName] {
 			get {
-				if (propertyName == nameof(PersonType)) {
-					if (PersonType is null || PersonType.Id < 0)
-						return GetErrorString(propertyName, new List<string> { "Person type field is mandatory." });
+				if (propertyName == nameof(PersonType))
+                {
+                    if (PersonType is null || PersonType.Id < 0)
+                        return GetErrorString(propertyName, new List<string> { "Person type field is mandatory." });
+                    else
+                        return GetErrorString(propertyName, null);
 				}
-				if (propertyName == nameof(PersonName)) {
-					if (PersonName is null || PersonName.Id < 0)
-						return GetErrorString(propertyName, new List<string> { "Person name field is mandatory." });
+				if (propertyName == nameof(PersonName))
+                {
+                    if (PersonName is null || PersonName.Id < 0)
+                        return GetErrorString(propertyName, new List<string> { "Person name field is mandatory." });
+                    else
+                        return GetErrorString(propertyName, null);
 				}
-				if (propertyName == nameof(Message))
-					if (string.IsNullOrEmpty(Message))
-						return GetErrorString(propertyName, new List<string> { "Message field is mandatory." });
-				return null;
+                if (propertyName == nameof(Message))
+                {
+                    if (string.IsNullOrEmpty(Message))
+                        return GetErrorString(propertyName, new List<string> { "Message field is mandatory." });
+                    else
+                        return GetErrorString(propertyName, null);
+                }
+
+                return null;
 			}
 		}
 
@@ -221,9 +232,10 @@
                     try
                     {
                         Message message = new Message();
-                        message.Sender = appViewModel.User.Person;
-                        message.Receiver = unitOfWork.Persons[PersonName.Id];
+                        message.SenderID = appViewModel.User.PersonID;
+                        message.RecieverID = PersonName.Id;
                         message.Content = Message;
+                        message.SendDate = DateTime.Today;
 
                         unitOfWork.Messages.Add(message);
                         unitOfWork.Complete();
