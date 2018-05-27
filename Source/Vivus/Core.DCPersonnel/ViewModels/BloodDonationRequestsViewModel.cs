@@ -265,6 +265,11 @@
 
         }
 
+        /// <summary>
+		/// Gets the error string of a property.
+		/// </summary>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <returns></returns>
         public override string this[string propertyName]
         {
             get
@@ -280,6 +285,10 @@
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdministratorsViewModel"/> class with the default values.
+        /// </summary>
         public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
@@ -314,18 +323,11 @@
         #endregion
 
         #region Private Methods
-        private void CheckMessages()
-        {
-            Parentpage.AllowErrors();
-            if (Errors > 0)
-            {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
-            Vivus.Console.WriteLine("DCPersonnel approval/denial successful");
-            Popup("Successfull operation!", PopupType.Successful);
-        }
 
+        /// <summary>
+        /// Handles the selected blood donation request
+        /// </summary>
+        /// <param name="decision">Boolean representing whether the request has been approved or rejected</param>
         private async void ApproveOrRejectDonation(bool decision)
         {
             await Task.Run(() =>
@@ -374,6 +376,9 @@
             });
         }
 
+        /// <summary>
+        /// Loads all pending blood donation requests (not approved or rejected yet) in the table
+        /// </summary>
         private async void LoadRequestsAsync()
         {
             await Task.Run(() =>
@@ -405,6 +410,9 @@
             });
         }
 
+        /// <summary>
+        /// Fills the readonly fields of the form with the data of the selected request
+        /// </summary>
         private void PopulateFields()
         {
             FullName = selectedBloodDonationRequestItem.FullName;
@@ -419,6 +427,9 @@
             TravelStatus = selectedBloodDonationRequestItem.TravelStatus;
         }
 
+        /// <summary>
+        /// Clears the fields of the form
+        /// </summary>
         private void ClearFields()
         {
             FullName = string.Empty;
@@ -436,6 +447,10 @@
         #endregion
 
     }
+
+    /// <summary>
+    /// Class used for representing the data of a DonationForm entity
+    /// </summary>
     public class BloodDonationRequestItem : BaseViewModel
     {
         #region Private members
@@ -614,7 +629,5 @@
         //    }
         //}
         #endregion
-
-        public BloodDonationRequestItem() { }
     }
 }
