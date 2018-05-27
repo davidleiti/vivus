@@ -207,17 +207,19 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispatcherWrapper;
+            this.security = security;
+
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();
             ResidenceAddress = new AddressViewModel(false);
+            DonationCenters = new ObservableCollection<BasicEntity<string>>();
             Counties = new ObservableCollection<BasicEntity<string>>();
-
-            this.unitOfWork = unitOfWork;
-            this.appViewModel = appViewModel;
-            this.security = security;
-
+           
             Task.Run(async () =>
             {
                 await LoadDonationCentersAsync();

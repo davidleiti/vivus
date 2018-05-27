@@ -15,7 +15,8 @@ using VivusDataModels = Vivus.Core.DataModels;
 
 namespace Vivus.Core.Donor.UnitTests.ViewModels
 {
-    class ProfileViewModelTests
+    [TestClass]
+    public class ProfileViewModelTests
     {
         private UnitOfWork unitOfWork;
         private Mock<IApllicationViewModel<Model.Donor>> appViewModel;
@@ -23,7 +24,7 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
         private Security.Security security;
         private ParentPage parentPage;
         private ProfileViewModel viewModel;
-
+        Model.Donor donor;
 
         /// <summary>
         /// Called before each test. Puts the viewmodel in a clean state.
@@ -40,12 +41,15 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
             {
                 ParentPage = parentPage
             };
+            donor = new Model.Donor();
         }
-
+     
         [TestMethod]
         public void Update_OnUpdate_DonorUpdated()
         {
             viewModel.Email = "you@email.com";
+            viewModel.SelectedDonationCenter = new BasicEntity<string>(10, "DonationCenter");
+
             viewModel.Person.FirstName = "FirstName";
             viewModel.Person.LastName = "LastName";
             viewModel.Person.BirthDate = "1/1/1";
@@ -53,7 +57,7 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
             viewModel.Person.PhoneNumber = "012345678";
             viewModel.Person.Gender = new BasicEntity<string>(0, "Gender");
 
-            viewModel.IdentificationCardAddress.County = new VivusDataModels.BasicEntity<string>(0, "County");
+            viewModel.IdentificationCardAddress.County = new BasicEntity<string>(0, "County");
             viewModel.IdentificationCardAddress.City = "City";
             viewModel.IdentificationCardAddress.StreetName = "Streetname";
             viewModel.IdentificationCardAddress.StreetNumber = "StreetNumber";
@@ -64,8 +68,6 @@ namespace Vivus.Core.Donor.UnitTests.ViewModels
             viewModel.ResidenceAddress.StreetNumber = "StreetNumber";
 
             viewModel.UpdatePublicAsync().Wait();
-
-            Model.Donor donor;
 
             donor = unitOfWork.Persons[appViewModel.Object.User.PersonID].Donor;
             Assert.AreEqual("LastName", donor.Person.LastName);
