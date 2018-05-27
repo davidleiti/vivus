@@ -174,15 +174,17 @@
                         <ColumnDefinition Width="1.5*" />
                         <ColumnDefinition Width="31" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Donation center redirect -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Donation center redirect" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
                         <ComboBox x:Name="cbDonationCenter" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding DonationCenter, ValidatesOnDataErrors=True}"/>
-
                     </StackPanel>
+                    
                     <!-- Continue -->
                     <Grid Grid.Column="2">
                         <Grid.RowDefinitions>
@@ -190,6 +192,15 @@
                             <RowDefinition Height="38" />
                         </Grid.RowDefinitions>
                         <Button Grid.Row="1" Width="Auto" Content="Continue" Command="{Binding RedirectCommand}"/>
+                    </Grid>
+
+                    <!-- Finish -->
+                    <Grid Grid.Column="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="38" />
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Width="Auto" Content="Finish" Command="{Binding FinishCommand}"/>
                     </Grid>
                 </Grid>
 
