@@ -13,14 +13,19 @@
 
         /// <summary>
         /// Returns a connection string based on the name of the confguration.
+        /// If the name of the configurations is not specified, the first configuration will be chosen.
         /// </summary>
         /// <param name="path">The path to the json file.</param>
         /// <param name="configurationName">The name of the configuration.</param>
         /// <returns></returns>
-        public static string GetConnectionString(string path, string configurationName)
+        public static string GetConnectionString(string path, string configurationName = null)
         {
-            return JsonConvert.DeserializeObject<JsonConfigurations>(File.ReadAllText(path))
-                .Configurations
+            Configuration[] configurations = JsonConvert.DeserializeObject<JsonConfigurations>(File.ReadAllText(path)).Configurations;
+
+            if (configurationName is null)
+                return configurations[0].Fields.Select(field => $"{ field.Name }={ field.Value }")?.Aggregate((field1, field2) => $"{ field1 };{ field2 }");
+
+            return configurations
                 .Single(configuration => configuration.Name == configurationName)
                 .Fields.Select(field => $"{ field.Name }={ field.Value }")?.Aggregate((field1, field2) => $"{ field1 };{ field2 }");
         }
