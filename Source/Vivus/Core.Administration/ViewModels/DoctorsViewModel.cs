@@ -224,20 +224,33 @@
             security = IoCContainer.Get<ISecurity>();
             LoadCountiesAsync();
             LoadDoctorsAsync();
+        }
+        /// <summary>
+        /// constructor with params for DoctorViewModel
+        /// </summary>
+        /// <param name="unitOfWork">the UoW for repository access</param>
+        /// <param name="appViewModel">viewModel of the application</param>
+        /// <param name="dispatcherWrapper">the ui thread for the dispatcher</param>
+        /// <param name="security">collection of security methods</param>
+        public DoctorsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        {
+            ButtonType = ButtonType.Add;
+            optionalErrors = false;
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispatcherWrapper;
+            this.security = security;
 
+            Person = new PersonViewModel();
+            Counties = new List<BasicEntity<string>>();
+            Doctors = new ObservableCollection<DoctorItemViewModel>();
+            HomeAddress = new AddressViewModel();
+            WorkAddress = new AddressViewModel();
 
-            // Test whether the binding was done right or not
-            /* Application.Current.Dispatcher.Invoke(() =>
-             {
-                 Doctors.Add(new DoctorItemViewModel
-                 {
-                     PersonID = 39,
-                     Name = "Doctorul Smith",
-                     NationalIdentificationNumber = "1234567890123",
-                     HomeAddress = "Tara, Orasul, Strada strazilor, Nr 9999",
-                     WorkAddress = "Tara, Orasul, Strada strazilor, Nr 9999"
-                 });
-             });*/
+            LoadCountiesAsync();
+            LoadDoctorsAsync();
+
+            AddDoctorCommand = new RelayCommand(async () => await AddModifyAsync());
         }
 
         #endregion
