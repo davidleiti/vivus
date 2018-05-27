@@ -40,37 +40,41 @@
         /// <param name="originAddress">The origin address.</param>
         /// <param name="destinationAddresses">A collection of destination addresses.</param>
         /// <returns></returns>
-        public static IEnumerable<RouteDetails> GetDistances(this Address originAddress, IEnumerable<Address> destinationAddresses)
+        public static async Task<IEnumerable<RouteDetails>> GetDistancesAsync(this Address originAddress, IEnumerable<Address> destinationAddresses)
         {
             string apiResponse, orgAddress, destAddresses;
-            Task<string> getAsync;
+            //Task<string> getAsync;
             IList<DistanceMatrixRoute> routes;
             List<Address> destAddressesList;
+            List<RouteDetails> routesDetails;
             
             // Prepare the origin address to be sent as parameter to the get request
             orgAddress = $"{ originAddress.Street.Trim().Replace(' ', '+') }+{ originAddress.StreetNo.Trim().Replace(' ', '+') },+{ originAddress.City.Trim().Replace(' ', '+') }+Romania";
             // Prepare the destination addresses to be sent as parameter to the get request
             destAddresses = destinationAddresses.ToList().Select(addr => $"{ addr.Street.Trim().Replace(' ', '+') }+{ addr.StreetNo.Trim().Replace(' ', '+') },+{ addr.City.Trim().Replace(' ', '+') }+Romania").Aggregate((addr1, addr2) => $"{ addr1 }|{ addr2 }");
             // Send the request and wait for the result
-            getAsync = Http.Requests.GetAsync($"{ API_URL }?origins={ orgAddress }&destinations={ destAddresses }&mode={ API_MODE }&language={ API_LANGUAGE }");
-            getAsync.Wait();
-            apiResponse = getAsync.Result;
+            //getAsync = Http.Requests.GetAsync($"{ API_URL }?origins={ orgAddress }&destinations={ destAddresses }&mode={ API_MODE }&language={ API_LANGUAGE }");
+            apiResponse = await Http.Requests.GetAsync($"{ API_URL }?origins={ orgAddress }&destinations={ destAddresses }&mode={ API_MODE }&language={ API_LANGUAGE }");
             // Convert the request to a more understandable format and get the routes
             routes = JsonConvert.DeserializeObject<DistanceMatrix>(apiResponse).Results[0].Routes;
 
             // Convert the destionation addresses enumerable to a list.
             destAddressesList = destinationAddresses.ToList();
 
+            // Initialize the return list;
+            routesDetails = new List<RouteDetails>();
             // Add to the results the routes with their distance and duration
             for (int i = 0; i < destAddressesList.Count; i++)
                 if (routes[i].Status == "OK")
-                    yield return new RouteDetails
+                    routesDetails.Add(new RouteDetails
                     {
                         OriginAddress = originAddress,
                         DestinationAddress = destAddressesList[i],
                         Distance = routes[i].Distance.Value,
                         Duration = routes[i].Duration.Value
-                    };
+                    });
+
+            return routesDetails;
         }
 
         #endregion
