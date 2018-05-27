@@ -474,6 +474,7 @@
                     return;
                 //dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
+                Console.WriteLine("errors:"+Errors.ToString() + " " + HomeAddress.Errors.ToString() + " " + WorkAddress.Errors.ToString());
                 if (Errors + Person.Errors + HomeAddress.Errors + WorkAddress.Errors > 0)
                 {
                     Popup("Some errors were found! Fix them before going forward.");
@@ -551,18 +552,18 @@
             doctor.Person.Gender = gender;
 
             //home address
-            doctor.Person.Address.Street = WorkAddress.StreetName;
-            doctor.Person.Address.StreetNo = WorkAddress.StreetNumber;
-            doctor.Person.Address.City = WorkAddress.City;
-            doctor.Person.Address.County = workCounty;
-            doctor.Person.Address.ZipCode = WorkAddress.ZipCode;
+            doctor.Person.Address.Street = HomeAddress.StreetName;
+            doctor.Person.Address.StreetNo = HomeAddress.StreetNumber;
+            doctor.Person.Address.City = HomeAddress.City;
+            doctor.Person.Address.County = homeCounty;
+            doctor.Person.Address.ZipCode = HomeAddress.ZipCode;
 
             //work address
-            doctor.Address.Street = HomeAddress.StreetName;
-            doctor.Address.StreetNo = HomeAddress.StreetNumber;
-            doctor.Address.City = HomeAddress.City;
-            doctor.Address.County = homeCounty;
-            doctor.Address.ZipCode = HomeAddress.ZipCode;
+            doctor.Address.Street = WorkAddress.StreetName;
+            doctor.Address.StreetNo = WorkAddress.StreetNumber;
+            doctor.Address.City = WorkAddress.City;
+            doctor.Address.County = workCounty;
+            doctor.Address.ZipCode = WorkAddress.ZipCode;
         }
 
         private void FillViewModelDoctor(ref DoctorItemViewModel doctor)
@@ -619,6 +620,10 @@
                         + HomeAddress.City + ","
                         + HomeAddress.StreetName + ","
                         + HomeAddress.StreetNumber.ToString();
+
+            //those properties outside person view model
+            doctor.Name = doctor.Person.FirstName + " " + doctor.Person.LastName;
+            doctor.NationalIdentificationNumber = doctor.Person.NationalIdentificationNumber;
 
         }
 
