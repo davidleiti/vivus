@@ -95,6 +95,7 @@
                         <DataGridTextColumn Header="Thrombocytes" Binding="{Binding Thrombocytes}" Width="108" />
                         <DataGridTextColumn Header="Red cells" Binding="{Binding RedCells}" Width="78" />
                         <DataGridTextColumn Header="Plasma" Binding="{Binding Plasma}" Width="69" />
+                        <DataGridTextColumn Header="Blood" Binding="{Binding Blood}" Width="69" />
                         <DataGridTextColumn Header="Request status" Binding="{Binding RequestStatus}" Width="109" />
                         <DataGridTextColumn Header="CDC" Binding="{Binding Cdc}" Width="*" />
                         <DataGridTextColumn Header="DCN" Binding="{Binding Dcn}" Width="60" />
