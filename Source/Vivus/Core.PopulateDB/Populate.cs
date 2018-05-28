@@ -252,6 +252,66 @@
                     ZipCode = "050098"
                 }
             });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Județean de Urgență Alba Iulia",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Alba"),
+                    City = "Alba Iulia",
+                    Street = "Revoluției 1989",
+                    StreetNo = "23",
+                    ZipCode = "510007"
+                }
+            });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Județean de Urgență Brașov",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Brașov"),
+                    City = "Brașov",
+                    Street = "Calea București",
+                    StreetNo = "25",
+                    ZipCode = "500326"
+                }
+            });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Clinic Județean de Urgență Sibiu",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Sibiu"),
+                    City = "Sibiu",
+                    Street = "Corneliu Coposu",
+                    StreetNo = "2-4",
+                    ZipCode = "550245"
+                }
+            });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Județean de Urgență Târgu Jiu",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Gorj"),
+                    City = "Târgu Jiu",
+                    Street = "Tudor Vladimirescu",
+                    StreetNo = "17",
+                    ZipCode = "210132"
+                }
+            });
+            unitOfWork.DonationCenters.Add(new DonationCenter
+            {
+                Name = "Spitalul Clinic Județean de Urgență Târgu Mureș",
+                Address = new Address
+                {
+                    County = unitOfWork.Counties.Entities.First(c => c.Name == "Mureș"),
+                    City = "Târgu Mureș",
+                    Street = "Gheorghe Marinescu",
+                    StreetNo = "50",
+                    ZipCode = "540136"
+                }
+            });
 
             VivusConsole.WriteLine($"Donation centers: { unitOfWork.Complete() }");
         }
@@ -396,8 +456,146 @@
                     Password = BCrypt.HashPassword("hutanu12")
                 }
             });
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Valeria",
+                    LastName = "Constantinescu",
+                    BirthDate = new DateTime(2006, 7, 3),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "6060703322149",
+                    PhoneNo = "+(40) 764 551 811",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Sibiu"),
+                        City = "Cisnădie",
+                        Street = "Vișinilor",
+                        StreetNo = "18",
+                        ZipCode = "555300"
+                    },
+                },
+                Account = new Account
+                {
+                    Email = "valeriac@yahoo.com",
+                    Password = BCrypt.HashPassword("constantinescu")
+                },
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "B"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Positive"),
+            });
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Laurențiu",
+                    LastName = "Funar",
+                    BirthDate = new DateTime(1993, 3, 20),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Not specified"),
+                    Nin = "1930320086840",
+                    PhoneNo = "+(40) 796 569 360",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Brașov"),
+                        City = "Făgăraș",
+                        Street = "Teiului",
+                        StreetNo = "21"
+                    }
+                },
+                Account = new Account
+                {
+                    Email = "laur.funar@gmail.com",
+                    Password = BCrypt.HashPassword("funar123")
+                },
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Județean de Urgență Brașov"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "AB"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
+            });
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Zsolt",
+                    LastName = "Meggyesfalvi",
+                    BirthDate = new DateTime(1995, 2, 5),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Not specified"),
+                    Nin = "1950205265074",
+                    PhoneNo = "+(40) 759 397 104",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Mureș"),
+                        City = "Târgu Mureș",
+                        Street = "Grădinarilor",
+                        StreetNo = "11B",
+                        ZipCode = "540013"
+                    }
+                },
+                Account = new Account
+                {
+                    Email = "meggy.zsolt@hotmail.com",
+                    Password = BCrypt.HashPassword("meggyesfalvi")
+                },
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "A"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
+            });
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Cezar",
+                    LastName = "Ionesco",
+                    BirthDate = new DateTime(1984, 10, 10),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Male"),
+                    Nin = "1841010227210",
+                    PhoneNo = "+(40) 741 366 096",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Iași"),
+                        City = "Pașcani",
+                        Street = "Cosminului",
+                        StreetNo = "2",
+                        ZipCode = "705203"
+                    }
+                },
+                Account = new Account
+                {
+                    Email = "icezar@yahoo.com",
+                    Password = BCrypt.HashPassword("ionesco1")
+                },
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Târgu Mureș"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "AB"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
+            });
+            unitOfWork.Donors.Add(new Donor
+            {
+                Person = new Person
+                {
+                    FirstName = "Tamara",
+                    LastName = "Kerekes",
+                    BirthDate = new DateTime(1987, 5, 27),
+                    Gender = (unitOfWork.Genders as GendersRepository).Gender("Female"),
+                    Nin = "2870527307703",
+                    PhoneNo = "+(40) 762 817 520",
+                    Address = new Address
+                    {
+                        County = (unitOfWork.Counties as CountiesRepository).County("Satu Mare"),
+                        City = "Satu Mare",
+                        Street = "Trandafirilor",
+                        StreetNo = "110"
+                    }
+                },
+                Account = new Account
+                {
+                    Email = "kerekes.tamara@yahoo.com",
+                    Password = BCrypt.HashPassword("kerekes1")
+                },
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "O"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Positive"),
+            });
 
-            VivusConsole.WriteLine($"Doctors: { unitOfWork.Complete() }");
+            VivusConsole.WriteLine($"Donors: { unitOfWork.Complete() }");
         }
 
         /// <summary>

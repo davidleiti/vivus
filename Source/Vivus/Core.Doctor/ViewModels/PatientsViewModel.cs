@@ -36,7 +36,7 @@
         private bool choosePatientIsRunning;
         private bool dismissPatientIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Doctor> appViewModel;
+        private IApplicationViewModel<Doctor> appViewModel;
         private List<PatientItemViewModel> allPatients;
 
         #endregion
@@ -197,7 +197,7 @@
             MyPatients = new ObservableCollection<PatientItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Doctor>>();
 
             NewPatientCommand = new RelayCommand(NewPatient);
             ChooseCommand = new RelayCommand(ChoosePatientAsync);

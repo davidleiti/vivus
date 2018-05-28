@@ -23,12 +23,10 @@
             //Populate.RequestPriorities();
             //Populate.Administrators();
             //Populate.DonationCenters();
-            Populate.DonationCentersPersonnel();
+            //Populate.DonationCentersPersonnel();
             //Populate.Doctors();
             //Populate.Donors();
             //Populate.Patients();
-            Address address=new Address();
-            VivusConsole.WriteLine(address.AddressID + " is the address id");
             VivusConsole.WriteLine("Everything is already generated! Be careful if you wanna play with the fire. c;");
 
             VivusConsole.WriteLine("Press any key to continue...", false);

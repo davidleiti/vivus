@@ -32,7 +32,7 @@
         private bool optionalErrors;
         private bool actionIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Administrator> appViewModel;
+        private IApplicationViewModel<Administrator> appViewModel;
         private ISecurity security;
 
         #endregion
@@ -220,7 +220,7 @@
             Doctors = new ObservableCollection<DoctorItemViewModel>();
             ButtonType = ButtonType.Add;
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Administrator>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Administrator>>();
             security = IoCContainer.Get<ISecurity>();
             LoadCountiesAsync();
             LoadDoctorsAsync();
@@ -232,7 +232,7 @@
         /// <param name="appViewModel">viewModel of the application</param>
         /// <param name="dispatcherWrapper">the ui thread for the dispatcher</param>
         /// <param name="security">collection of security methods</param>
-        public DoctorsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public DoctorsViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             ButtonType = ButtonType.Add;
             optionalErrors = false;

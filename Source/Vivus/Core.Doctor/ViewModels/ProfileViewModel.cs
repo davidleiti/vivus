@@ -27,7 +27,7 @@
         private string email;
         private object password;
         private bool updateIsRunning;
-        private IApllicationViewModel<Doctor> appViewModel;
+        private IApplicationViewModel<Doctor> appViewModel;
         private IUnitOfWork unitOfWork;
         private ISecurity security;
 
@@ -147,7 +147,7 @@
             Counties = new List<BasicEntity<string>>();
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
 
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Doctor>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             security = IoCContainer.Get<ISecurity>();
 
@@ -169,7 +169,7 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();

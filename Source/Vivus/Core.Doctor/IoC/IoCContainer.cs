@@ -29,7 +29,7 @@
             // Bind to a single instance of the Security
             Kernel.Bind<ISecurity>().ToConstant(new Security());
             // Bind to a single instance of the application viewmodel
-            Kernel.Bind<IApllicationViewModel<Doctor>>().ToConstant(new ApplicationViewModel());
+            Kernel.Bind<IApplicationViewModel<Doctor>>().ToConstant(new ApplicationViewModel());
         }
 
         /// <summary>

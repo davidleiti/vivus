@@ -119,7 +119,7 @@
                             return;
                         }
 
-                        IoCContainer.Get<IApllicationViewModel<Model.DCPersonnel>>().User = personnel;
+                        IoCContainer.Get<IApplicationViewModel<Model.DCPersonnel>>().User = personnel;
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
                         IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.ManageBlood;

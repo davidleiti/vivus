@@ -33,11 +33,12 @@
         private string pastSurgeries;
         private string travelStatus;
         private string messages;
+        private bool actionIsRunning;
         private BloodDonationRequestItem selectedBloodDonationRequestItem;
         private ObservableCollection<BloodDonationRequestItem> bloodDonationRequestItems;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
         private ISecurity security;
 
         #endregion
@@ -263,6 +264,19 @@
 
         }
 
+        public bool ActionIsRunning {
+            get => actionIsRunning;
+
+            set {
+                if (actionIsRunning == value)
+                    return;
+
+                actionIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
 		/// Gets the error string of a property.
 		/// </summary>
@@ -290,7 +304,7 @@
         public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
             security = IoCContainer.Get<ISecurity>();
 
             ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
@@ -306,18 +320,29 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             this.unitOfWork = unitOfWork;
             this.appViewModel = appViewModel;
             this.dispatcherWrapper = dispatcherWrapper;
             this.security = security;
-
-            LoadRequestsAsync();
-
+            
+            BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
             ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
             DenyCommand = new RelayCommand(() => ApproveOrRejectDonation(false));
+            LoadRequestsAsync();
         }
+        #endregion
+
+        #region Public Methods
+
+        public async void ApproveOrRejectDonation(bool decision)
+        {
+            await RunCommand(() => ActionIsRunning, async () => {
+                await ApproveOrRejectDonationAsync(decision);
+            });
+        }
+
         #endregion
 
         #region Private Methods
@@ -326,10 +351,16 @@
         /// Handles the selected blood donation request
         /// </summary>
         /// <param name="decision">Boolean representing whether the request has been approved or rejected</param>
-        private async void ApproveOrRejectDonation(bool decision)
+        private async Task ApproveOrRejectDonationAsync(bool decision)
         {
             await Task.Run(() =>
             {
+                if (SelectedBloodDonationRequestItem is null)
+                {
+                    Popup("No donation request has been selected. Select one from the list and try again.");
+                    return;
+                }
+
                 dispatcherWrapper.InvokeAsync(() => Parentpage.AllowErrors());
 
                 if (Errors > 0)

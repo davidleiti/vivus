@@ -21,7 +21,7 @@
     {
         #region Private Members
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Donor> appViewModel;
+        private IApplicationViewModel<Model.Donor> appViewModel;
         private int lastMessageId;
         #endregion
 
@@ -50,7 +50,7 @@
             Items = new ObservableCollection<NotificationViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Donor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Donor>>();
             lastMessageId = -1;
 
             UpdateNotifications();

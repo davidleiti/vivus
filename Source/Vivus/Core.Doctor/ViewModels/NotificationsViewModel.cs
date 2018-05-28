@@ -29,7 +29,7 @@
         private BasicEntity<string> selectedPersonName;
         private BasicEntity<string> selectedPersonType;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Doctor> appViewModel;
+        private IApplicationViewModel<Doctor> appViewModel;
         private bool sendingIsRunning;
         private IDictionary<int, string> nins;
         #endregion
@@ -157,7 +157,7 @@
         public NotificationsViewModel():base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Doctor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Doctor>>();
             nins = new Dictionary<int, string>();
             //nins.Add(-1, "Select person type");
             //SelectedPersonType = new BasicEntity<string>(-1, "Select person type");

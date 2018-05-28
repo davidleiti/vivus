@@ -30,7 +30,7 @@
 		private string message;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.DCPersonnel> appViewModel;
+        private IApplicationViewModel<Model.DCPersonnel> appViewModel;
 
         private bool sendingIsRunning;
 
@@ -203,7 +203,7 @@
 			Items = new ObservableCollection<NotificationViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
 
 			SendCommand = new RelayCommand(async() => await SendAsync());
 

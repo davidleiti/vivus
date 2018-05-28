@@ -39,7 +39,7 @@
         private ContainersStorageItemViewModel selectedItem;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.DCPersonnel> appViewModel;
+        private IApplicationViewModel<Model.DCPersonnel> appViewModel;
         private ISecurity security;
 
         private bool operationSuccessful;
@@ -284,7 +284,7 @@
             Containers = new ObservableCollection<ContainersStorageItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.DCPersonnel>>();
             security = IoCContainer.Get<ISecurity>();
 
             Task.Run(async () =>

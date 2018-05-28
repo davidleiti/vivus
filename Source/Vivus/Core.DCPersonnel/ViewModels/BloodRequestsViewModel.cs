@@ -4,10 +4,19 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.DCPersonnel.IoC;
     using Vivus.Core.DCPersonnel.Validators;
+    using Vivus.Core.Helpers;
+    using Vivus.Core.Model;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
+    using static Vivus.Core.Helpers.DistanceMatrixApiHelpers;
     using Vivus = Console;
 
     /// <summary>
@@ -21,13 +30,13 @@
         private int? redCells;
         private int? blood;
 
-        private int? currentThrombocytes;
-        private int? currentPlasma;
-        private int? currentRedCells;
-        private int? currentBlood;
+        private string currentThrombocytes;
+        private string currentPlasma;
+        private string currentRedCells;
+        private string currentBlood;
         private string priority;
         private string bloodType;
-        private DateTime harvestDate;
+        private DateTime? harvestDate;
 
         private BasicEntity<string> containerType;
         private BasicEntity<string> containerCode;
@@ -39,8 +48,14 @@
 
         private RequestDetailsItem selectedRequestDetailsItem;
         private AllRequestsItem selectedAllRequestsItem;
+        private object allRequestsLockObj;
+        private object requestDetailsLockObj;
         private ObservableCollection<RequestDetailsItem> requestDetailsItems;
         private ObservableCollection<AllRequestsItem> allRequestsItems;
+
+        private IUnitOfWork unitOfWork;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
+
         #endregion
 
         #region Public Enums
@@ -58,6 +73,9 @@
         #endregion
 
         #region Public properties
+
+        public ButtonType ButtonType { get; set; }
+
         public int? Thrombocytes
         {
             get => thrombocytes;
@@ -130,7 +148,7 @@
         /// </summary>
         public Validation ToValidate { get; set; }
 
-        public int? CurrentThrombocytes
+        public string CurrentThrombocytes
         {
 
             get => currentThrombocytes;
@@ -146,7 +164,7 @@
                 OnPropertyChanged();
             }
         }
-        public int? CurrentPlasma
+        public string CurrentPlasma
         {
             get => currentPlasma;
 
@@ -161,7 +179,7 @@
                 OnPropertyChanged();
             }
         }
-        public int? CurrentRedCells
+        public string CurrentRedCells
         {
             get => currentRedCells;
 
@@ -180,7 +198,7 @@
         /// <summary>
         /// Gets or sets the current number of blood containers for the current request.
         /// </summary>
-        public int? CurrentBlood
+        public string CurrentBlood
         {
             get => currentBlood;
 
@@ -233,6 +251,7 @@
                 if (value == containerType) return;
 
                 containerType = value;
+                LoadContainerCodesAsync();
 
                 OnPropertyChanged();
             }
@@ -247,11 +266,12 @@
                     return;
 
                 containerCode = value;
+                PopulateCaseInfoAsync();
 
                 OnPropertyChanged();
             }
         }
-        private DateTime HarvestDate
+        private DateTime? HarvestDate
         {
 
             get => harvestDate;
@@ -328,6 +348,7 @@
                     return;
 
                 containerCodes = value;
+                    
 
                 OnPropertyChanged();
 
@@ -372,12 +393,12 @@
 
                     return;
 
-                allRequestsItems= value;
+                allRequestsItems = value;
 
                 OnPropertyChanged();
             }
         }
-    
+
         public RequestDetailsItem SelectedRequestDetailsItem
         {
             get => selectedRequestDetailsItem;
@@ -403,6 +424,20 @@
                     return;
 
                 selectedAllRequestsItem = value;
+                if(selectedAllRequestsItem is null)
+                {
+                    ClearFields();
+                }
+                else
+                {
+                    Task.Run(async () =>
+                    {
+                        await LoadContainerTypesAsync();
+                        await LoadDonationCentersAsync();
+                    });
+                    PopulateFields();
+                }
+                Vivus.Console.WriteLine(selectedAllRequestsItem.Doctor + "'s request was selected");
 
                 OnPropertyChanged();
             }
@@ -419,7 +454,7 @@
         #endregion
 
         #region Constructors
-        public BloodRequestsViewModel()
+        public BloodRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
@@ -431,14 +466,305 @@
             RemoveCommand = new RelayCommand(RemoveRequest);
             RedirectCommand = new RelayCommand(RedirectRequest);
             FinishCommand = new RelayCommand(FinishRequest);
+
+            // lock objects for the 2 Observable Collections
+            requestDetailsLockObj = new object();
+            allRequestsLockObj = new object();
+
             RequestDetailsItems = new ObservableCollection<RequestDetailsItem> { new RequestDetailsItem() };
             AllRequestsItems = new ObservableCollection<AllRequestsItem> { new AllRequestsItem() };
 
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
+
+            BindingOperations.EnableCollectionSynchronization(RequestDetailsItems, requestDetailsLockObj);
+            BindingOperations.EnableCollectionSynchronization(AllRequestsItems, allRequestsLockObj);
+
+            dispatcherWrapper.InvokeAsync(() => {
+                AllRequestsItems.Add(new AllRequestsItem
+                {
+                    Id = 1,
+                    Doctor = "Paul Alfredovici",
+                    Priority = "High",
+                    Thrombocytes = "0/3",
+                    RedCells = "0/2",
+                    Blood = "0/2",
+                    Plasma = "0/0",
+                    BloodType = "A2"
+                });
+            });
+
+            Task.Run(async () =>
+            {
+                await LoadRequestsAsync();
+                await LoadStashContainersAsync();
+            });
+            
 
         }
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Loads the reauest table
+        /// </summary>
+        private async Task LoadRequestsAsync()
+        {
+            lock (allRequestsLockObj)
+                AllRequestsItems.Clear();
+
+            lock (requestDetailsLockObj)
+                RequestDetailsItems.Clear();
+
+            IEnumerable<BloodRequest> bloodRequests = await unitOfWork.BloodRequests.GetAllAsync();
+            DCPersonnel dcPersonnel = appViewModel.User;
+            AllRequestsItem allRequestsItem;
+            int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+            foreach (var bloodRequest in bloodRequests.Where(bloodReq => bloodReq.IsFinished))
+            {
+                List<DonationCenter> associatedDonationCenters = bloodRequest.DonationCenters.ToList();
+                if (associatedDonationCenters.FindIndex(donationCenter => donationCenter.DonationCenterID == currentDonationCenterId) != -1)
+                {
+                    Dictionary<String, String> bloodContainersStrings = await generateContainersQuantityStrings(bloodRequest);
+                    allRequestsItem = new AllRequestsItem
+                    {
+                        Id = bloodRequest.BloodRequestID,
+                        Doctor = bloodRequest.Doctor.Person.FirstName + " " + bloodRequest.Doctor.Person.LastName,
+                        Priority = bloodRequest.RequestPriority.Type,
+                        BloodType = bloodRequest.Patient.BloodType.Type,
+                        Plasma = bloodContainersStrings["Plasma"],
+                        RedCells = bloodContainersStrings["Red cells"],
+                        Thrombocytes = bloodContainersStrings["Thrombocytes"],
+                        Blood = bloodContainersStrings["Blood"]
+                    };
+
+                    lock (allRequestsLockObj)
+                        AllRequestsItems.Add(allRequestsItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads the stash containers
+        /// </summary>
+        private async Task LoadStashContainersAsync()
+        {
+            DCPersonnel dcPersonnel = appViewModel.User;
+            int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+            IEnumerable<BloodContainer> bloodContainers = await unitOfWork.BloodContainers.GetAllAsync();
+            Dictionary<String, int> stashBloodContainers = new Dictionary<String, int>();
+
+            foreach(BloodContainer bloodContainer in bloodContainers)
+            {
+                if(bloodContainer.DonationCenterID == currentDonationCenterId)
+                {
+                    string type = bloodContainer.BloodContainerType.Type;
+                    if (!stashBloodContainers.ContainsKey(type)){
+                        stashBloodContainers[type] = 0;
+                    }
+                    stashBloodContainers[type] += 1;
+                }
+            }
+
+            Thrombocytes = stashBloodContainers.ContainsKey("Thrombocytes") ? stashBloodContainers["Thrombocytes"] : 0;
+            RedCells = stashBloodContainers.ContainsKey("Red cells") ? stashBloodContainers["Red cells"] : 0;
+            Plasma = stashBloodContainers.ContainsKey("Plasma") ? stashBloodContainers["Plasma"] : 0;
+            Blood = stashBloodContainers.ContainsKey("Blood") ? stashBloodContainers["Blood"] : 0;
+        }
+
+        /// <summary>
+        /// Loads the donation centers based on the provided blood request
+        /// </summary>
+        /// <param name="bloodRequest">the provided blood request</param>
+        private async Task LoadDonationCentersAsync()
+        {
+            DCPersonnel dcPersonnel = appViewModel.User;
+            int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+            
+            IEnumerable<BloodRequest> bloodRequests = await unitOfWork.BloodRequests.GetAllAsync();
+            BloodRequest bloodRequest = null;
+            foreach(BloodRequest bloodReq in bloodRequests)
+            {
+                DonationCenter lastDonationCenter = bloodReq.DonationCenters.Last();
+
+                if(lastDonationCenter.DonationCenterID == currentDonationCenterId)
+                {
+                    bloodRequest = bloodReq;
+                }
+            }
+
+            DonationCenter currentDonationCenter = await unitOfWork.DonationCenters.SingleAsync(donationCenter => donationCenter.DonationCenterID == currentDonationCenterId);
+            Address currentDonationCenterAddress = await unitOfWork.Addresses.SingleAsync(address => address.AddressID == currentDonationCenter.AddressID);
+
+            IEnumerable<DonationCenter> allDonationCenters = await unitOfWork.DonationCenters.GetAllAsync();
+
+            IEnumerable<DonationCenter> notVisitedCenters = allDonationCenters.Where(donationCenter => !donationCenter.BloodRequests.Contains(bloodRequest));
+            IEnumerable<DonationCenter> visitedCenters = allDonationCenters.Where(donationCenter => donationCenter.BloodRequests.Contains(bloodRequest));
+
+            List<Address> donationCentersAddresses = new List<Address>();
+            Address donationCenterAddress;
+            foreach (var donationCenter in notVisitedCenters)
+            {
+                donationCenterAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donationCenter.AddressID);
+
+                donationCentersAddresses.Add(donationCenterAddress);
+            }
+            IEnumerable<RouteDetails> routes = (await DistanceMatrixApiHelpers.GetDistancesAsync(currentDonationCenterAddress, donationCentersAddresses)).OrderBy(RouteDetails => RouteDetails.Distance);
+            donationCentersAddresses.Clear();
+            foreach(var donationCenter in notVisitedCenters)
+            {
+                donationCenterAddress = await unitOfWork.Addresses.SingleAsync(singleAddress => singleAddress.AddressID == donationCenter.AddressID);
+
+                donationCentersAddresses.Add(donationCenterAddress);
+            }
+            DonationCenters.Clear();
+            DonationCenters.Add(new BasicEntity<string>(-1, "select donation center"));
+            foreach (RouteDetails route in routes)
+            {
+                DonationCenter donationCenter = unitOfWork.DonationCenters.Entities.Single(donCenter => donCenter.AddressID == route.DestinationAddress.AddressID);
+                DonationCenters.Add(new BasicEntity<String>(donationCenter.DonationCenterID, donationCenter.Name));
+            }
+            foreach(DonationCenter donationCenter in visitedCenters)
+            {
+                DonationCenters.Add(new BasicEntity<String>(donationCenter.DonationCenterID, donationCenter.Name));
+            }
+        }
+        
+        /// <summary>
+        /// Generates strings for quantities in a blood request
+        /// </summary>
+        /// <param name="bloodRequest">the provided blood request</param>
+        /// <returns></returns>
+        private async Task<Dictionary<String, String>> generateContainersQuantityStrings(BloodRequest bloodRequest)
+        {
+            Dictionary<String, String> containersString = new Dictionary<String, String>();
+            int plasmaContainers = unitOfWork.BloodContainers.Entities.ToList().FindAll(bloodContainer => bloodContainer.BloodRequestID == bloodRequest.BloodRequestID && bloodContainer.BloodContainerType.Type == "Plasma").Count();
+            int redCellsContainers = unitOfWork.BloodContainers.Entities.ToList().FindAll(bloodContainer => bloodContainer.BloodRequestID == bloodRequest.BloodRequestID && bloodContainer.BloodContainerType.Type == "Red cells").Count();
+            int thrombocytesContainers = unitOfWork.BloodContainers.Entities.ToList().FindAll(bloodContainer => bloodContainer.BloodRequestID == bloodRequest.BloodRequestID && bloodContainer.BloodContainerType.Type == "Thrombocytes").Count();
+            int bloodContainers = unitOfWork.BloodContainers.Entities.ToList().FindAll(bloodContainer => bloodContainer.BloodRequestID == bloodRequest.BloodRequestID && bloodContainer.BloodContainerType.Type == "Blood").Count();
+
+            containersString.Add("Plasma", plasmaContainers + "/" + bloodRequest.PlasmaQuantity);
+            containersString.Add("Red cells", redCellsContainers + "/" + bloodRequest.RedCellsQuantity);
+            containersString.Add("Thrombocytes", thrombocytesContainers + "/" + bloodRequest.ThrombocytesQuantity);
+            containersString.Add("Blood",  bloodContainers + "/" + bloodRequest.BloodQuantity);
+
+            return containersString;
+        }
+
+        /// <summary>
+        /// Loads the container types
+        /// </summary>
+        private async Task LoadContainerTypesAsync()
+        {
+            DCPersonnel dcPersonnel = appViewModel.User;
+            int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+            IEnumerable<BloodContainer> bloodContainers = await unitOfWork.BloodContainers.GetAllAsync();
+            Dictionary<String, int> stashBloodContainers = new Dictionary<String, int>();
+
+            foreach (BloodContainer bloodContainer in bloodContainers)
+            {
+                if (bloodContainer.DonationCenterID == currentDonationCenterId)
+                {
+                    string type = bloodContainer.BloodContainerType.Type;
+                    if (!stashBloodContainers.ContainsKey(type))
+                    {
+                        stashBloodContainers[type] = 0;
+                    }
+                    stashBloodContainers[type] += 1;
+                }
+            }
+
+           ContainerTypes.Clear();
+           ContainerTypes.Add(new BasicEntity<string>(-1, "Select container code"));
+           foreach (String bloodConType in stashBloodContainers.Keys)
+           {
+                BloodContainerType containerType = unitOfWork.BloodContainerTypes.Entities.Single(bloodContainerType => bloodContainerType.Type == bloodConType);
+                ContainerTypes.Add(new BasicEntity<String>(containerType.ContainerTypeID, containerType.Type));
+           }
+        }
+
+
+        /// <summary>
+        /// Loads conatiner cases
+        /// </summary>
+        private async void LoadContainerCodesAsync()
+        {
+            DCPersonnel dcPersonnel = appViewModel.User;
+            int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+            if(containerType is null || containerType.Id == -1)
+            {
+                containerCodes.Clear();
+                containerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+                return;
+            }
+
+            List<BasicEntity<String>> contCodes = new List<BasicEntity<string>>();  
+            IEnumerable<BloodContainer> bloodContainers = await unitOfWork.BloodContainers.GetAllAsync();
+            foreach(BloodContainer bloodContainer in bloodContainers)
+            {
+                if (bloodContainer.BloodContainerType.ContainerTypeID == containerType.Id && bloodContainer.DonationCenterID == currentDonationCenterId) 
+                {
+                    contCodes.Add(new BasicEntity<string>(bloodContainer.BloodContainerID, bloodContainer.ContainerCode));
+                }
+            }
+            ContainerCodes.Clear();
+            ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+            foreach (BasicEntity<String> contCode in contCodes)
+            {
+                ContainerCodes.Add(contCode);
+            }
+        }
+
+        /// <summary>
+        /// Populates the info regarding the selected blood case
+        /// </summary>
+        private async void PopulateCaseInfoAsync()
+        {
+            if(containerCode is null || containerCode.Id == -1)
+            {
+                BloodType = string.Empty;
+                HarvestDate = null;
+                return;
+            }
+
+            BloodContainer bloodContainer = await unitOfWork.BloodContainers.SingleAsync(bloodCon => bloodCon.BloodContainerID == containerCode.Id);
+            BloodType bloodTy = await unitOfWork.BloodTypes.SingleAsync(bloodT => bloodT.BloodTypeID == bloodContainer.BloodTypeID);
+            BloodType = bloodTy.Type;
+            HarvestDate = bloodContainer.HarvestDate;
+        }
+
+        private void PopulateFields()
+        {
+            Priority = selectedAllRequestsItem.Priority;
+            CurrentThrombocytes = selectedAllRequestsItem.Thrombocytes;
+            CurrentRedCells = selectedAllRequestsItem.RedCells;
+            CurrentPlasma = selectedAllRequestsItem.Plasma;
+            CurrentBlood = selectedAllRequestsItem.Blood;
+        }
+
+        private void ClearFields()
+        {
+            Priority = string.Empty;
+            CurrentThrombocytes = string.Empty;
+            CurrentRedCells = string.Empty;
+            CurrentPlasma = string.Empty;
+            CurrentBlood = string.Empty;
+
+            ContainerTypes.Clear();
+            ContainerTypes.Add(new BasicEntity<string>(-1, "Select container code"));
+            ContainerCodes.Clear();
+            ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+            DonationCenters.Clear();
+            DonationCenters.Add(new BasicEntity<string>(-1, "Select donation center"));
+        }
+
+
         public void AddRequest()
         {
             int count;
@@ -600,10 +926,10 @@
         private string doctor;
 
         private string priority;
-        private int? thrombocytes;
-        private int? redCells;
-        private int? plasma;
-        private int? blood;
+        private string thrombocytes;
+        private string redCells;
+        private string plasma;
+        private string blood;
         private string bloodType;
 
         #endregion
@@ -651,7 +977,7 @@
                 OnPropertyChanged();
             }
         }
-        public int? Thrombocytes
+        public string Thrombocytes
         {
             get => thrombocytes;
             set
@@ -667,7 +993,7 @@
             }
 
         }
-        public int? Plasma
+        public string Plasma
         {
             get => plasma;
             set
@@ -682,7 +1008,7 @@
 
             }
         }
-        public int? RedCells
+        public string RedCells
         {
             get => redCells;
             set
@@ -701,7 +1027,7 @@
         /// <summary>
         /// Gets or sets the current blood containers number.
         /// </summary>
-        public int? Blood
+        public string Blood
         {
             get => blood;
 
@@ -741,11 +1067,11 @@
         {
             Id = 10;
             Doctor = "doc";
-            Thrombocytes = 10;
+            Thrombocytes = "0/10";
             Priority = "high";
-            redCells = 11;
-            Plasma = 12;
-            Blood = 13;
+            redCells = "0/11";
+            Plasma = "0/12";
+            Blood = "0/13";
             BloodType = "rhneg";
         }
        
