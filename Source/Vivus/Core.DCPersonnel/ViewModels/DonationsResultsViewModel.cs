@@ -30,6 +30,7 @@
         private string donationDate;
         private string donationResults;
         private string filter;
+        private bool actionIsRunning;
 
         DonationFormItemViewModel selectedDonationForm;
 
@@ -163,6 +164,18 @@
             }
         }
 
+        private bool ActionIsRunning {
+            get => actionIsRunning;
+            set {
+                if (actionIsRunning == value)
+                    return;
+
+                actionIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Gets the collection of the donation forms.
         /// </summary>
@@ -211,7 +224,17 @@
             formsLock = new object();
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
             BindingOperations.EnableCollectionSynchronization(DonationForms, formsLock);
-            SendCommand = new RelayCommand(async () => await SendResults());
+            SendCommand = new RelayCommand(() =>  SendResults());
+        }
+
+        #endregion
+
+        #region Public Methods
+        public async void SendResults()
+        {
+            await RunCommand(() => ActionIsRunning, async () => {
+                await SendResultsAsync();
+            });
         }
 
         #endregion
@@ -222,7 +245,7 @@
         /// Sets the DonationDate of the currently selected DonationForm and sends a message to the Donor with the results
         /// </summary>
         /// <returns></returns>
-        private async Task SendResults()
+        private async Task SendResultsAsync()
         {
             await Task.Run(() =>
             {
