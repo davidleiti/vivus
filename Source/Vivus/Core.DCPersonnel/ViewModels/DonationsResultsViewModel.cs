@@ -224,13 +224,13 @@
             formsLock = new object();
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
             BindingOperations.EnableCollectionSynchronization(DonationForms, formsLock);
-            SendCommand = new RelayCommand(() =>  SendResults());
+            SendCommand = new RelayCommand(async () => await SendResults());
         }
 
         #endregion
 
         #region Public Methods
-        public async void SendResults()
+        public async Task SendResults()
         {
             await RunCommand(() => ActionIsRunning, async () => {
                 await SendResultsAsync();
@@ -263,35 +263,55 @@
                     return;
                 }
 
-                DonationForm donationForm = unitOfWork.DonationForms
+                try
+                {
+                    DonationForm donationForm = unitOfWork.DonationForms
                     .Entities
                     .First(form => form.DonorID == selectedDonationForm.PersonId);
-                donationForm.DonationDate = DateTime.Parse(DonationDate);
+                    donationForm.DonationDate = DateTime.Parse(DonationDate);
 
-                string messageContent = "Below are the results of your latest donation:\n" + DonationResults;
+                    string messageContent = "Below are the results of your latest donation:\n" + DonationResults;
+
+                    SendMessage(donationForm.DonorID, messageContent);
+
+                    LoadRequestsAsync();
+                    ClearFields();
+                    SelectedDonationForm = null;
+
+                    Popup("Successfull operation!", PopupType.Successful);
+                }
+                catch
+                {
+                    Popup("Something went wrong when handling the request");
+                }
+
+            });
+        }
+
+        /// <summary>
+        /// Sends a message to the person with the given ID
+        /// </summary>
+        /// <param name="receiverID">ID of the receiver Person</param>
+        /// <param name="messageContent">Text of the message</param>
+        private async void SendMessage(int receiverID, string messageContent)
+        {
+            await Task.Run(() =>
+            {
                 Message message = new Message
                 {
-                    RecieverID = donationForm.DonorID,
+                    RecieverID = receiverID,
                     SenderID = appViewModel.User.PersonID,
                     SendDate = DateTime.Now,
                     Content = messageContent
                 };
 
-                Console.WriteLine(donationForm.DonorID);
-
                 unitOfWork.Persons
                     .Entities
-                    .First(person => person.PersonID == donationForm.DonorID)
+                    .First(person => person.PersonID == receiverID)
                     .ReceivedMessages
                     .Add(message);
 
                 unitOfWork.Complete();
-
-                LoadRequestsAsync();
-                ClearFields();
-                SelectedDonationForm = null;
-                VivusConsole.WriteLine("Dontaion results sent successfully!");
-                Popup("Successfull operation!", PopupType.Successful);
             });
         }
 
