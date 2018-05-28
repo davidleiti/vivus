@@ -391,7 +391,7 @@
                 request = new Model.BloodRequest();
 
             Model.Doctor doctor;
-            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
 
             // Update the database
             request.Doctor = doctor;
@@ -415,7 +415,7 @@
             Model.RequestPriority priority;
             priority = unitOfWork.RequestPriorities.Find(r => r.RequestPriorityID == SelectedPriority.Id).Single();
             Model.Doctor doctor;
-            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
             Model.Address workingAddress;
             workingAddress = unitOfWork.Addresses.Find(a => a.AddressID == doctor.WorkAddressID).Single();
            // Model.DonationCenter cdc; //current donation center

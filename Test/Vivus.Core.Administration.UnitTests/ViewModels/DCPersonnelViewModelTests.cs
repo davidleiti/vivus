@@ -17,7 +17,7 @@ namespace Vivus.Core.Administration.UnitTests.ViewModels
     {
 
         private UnitOfWork unitOfWork;
-        private Mock<IApllicationViewModel<Administrator>> appViewModel;
+        private Mock<IApplicationViewModel<Administrator>> appViewModel;
         private DispatcherWrapper dispatcherWrapper;
         private Security security;
         private ParentPage parentPage;
@@ -30,7 +30,7 @@ namespace Vivus.Core.Administration.UnitTests.ViewModels
         public void Setup()
         {
             unitOfWork = new UnitOfWork();
-            appViewModel = new Mock<IApllicationViewModel<Administrator>>();
+            appViewModel = new Mock<IApplicationViewModel<Administrator>>();
             dispatcherWrapper = new DispatcherWrapper();
             parentPage = new ParentPage();
             security = new Security();
