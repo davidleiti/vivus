@@ -480,9 +480,9 @@
                     Email = "valeriac@yahoo.com",
                     Password = BCrypt.HashPassword("constantinescu")
                 },
-                DonationCenterID = 4,
-                BloodTypeID = 1,
-                RhID = 0
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "B"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Positive"),
             });
             unitOfWork.Donors.Add(new Donor
             {
@@ -507,9 +507,9 @@
                     Email = "laur.funar@gmail.com",
                     Password = BCrypt.HashPassword("funar123")
                 },
-                DonationCenterID = 3,
-                BloodTypeID = 3,
-                RhID = 1
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Județean de Urgență Brașov"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "AB"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
             });
             unitOfWork.Donors.Add(new Donor
             {
@@ -535,9 +535,9 @@
                     Email = "meggy.zsolt@hotmail.com",
                     Password = BCrypt.HashPassword("meggyesfalvi")
                 },
-                DonationCenterID = 0,
-                BloodTypeID = 0,
-                RhID = 1
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "A"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
             });
             unitOfWork.Donors.Add(new Donor
             {
@@ -563,9 +563,9 @@
                     Email = "icezar@yahoo.com",
                     Password = BCrypt.HashPassword("ionesco1")
                 },
-                DonationCenterID = 10,
-                BloodTypeID = 2,
-                RhID = 1
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Târgu Mureș"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "AB"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Negative"),
             });
             unitOfWork.Donors.Add(new Donor
             {
@@ -590,9 +590,9 @@
                     Email = "kerekes.tamara@yahoo.com",
                     Password = BCrypt.HashPassword("kerekes1")
                 },
-                DonationCenterID = 0,
-                BloodTypeID = 3,
-                RhID = 0
+                DonationCenter = unitOfWork.DonationCenters.Entities.Single(dc => dc.Name == "Spitalul Clinic Județean de Urgență Cluj-Napoca"),
+                BloodType = unitOfWork.BloodTypes.Entities.Single(bt => bt.Type == "O"),
+                RH = unitOfWork.RHs.Entities.Single(rh => rh.Type == "Positive"),
             });
 
             VivusConsole.WriteLine($"Donors: { unitOfWork.Complete() }");
