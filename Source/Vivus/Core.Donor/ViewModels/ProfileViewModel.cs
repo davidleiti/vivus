@@ -258,11 +258,11 @@
             List<DistanceMatrixApiHelpers.RouteDetails> routes;
 
             // Clear the donation centers collection and add the default one
-            dispatcherWrapper.InvokeAsync(() =>
+            await dispatcherWrapper.InvokeAsync(() =>
             {
                 DonationCenters.Clear();
                 DonationCenters.Add(new BasicEntity<string>(-1, "Select favourite donation center"));
-            }).Wait();
+            });
                 
             // Get the donor
             donor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Donor>>().User.PersonID].Donor;
@@ -358,7 +358,8 @@
             donor = unitOfWork.Persons[appViewModel.User.PersonID].Donor;
 
             Email = donor.Account.Email;
-            //SelectedDonationCenter = new BasicEntity<string>(donor.DonationCenterID.Value, donor.DonationCenter.Name);
+            if (donor.DonationCenterID.HasValue)
+                SelectedDonationCenter = new BasicEntity<string>(donor.DonationCenterID.Value, donor.DonationCenter.Name);
             Person.FirstName = donor.Person.FirstName;
             Person.LastName = donor.Person.LastName;
             Person.BirthDate = donor.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
