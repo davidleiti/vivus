@@ -70,7 +70,7 @@
                 </StackPanel>
 
                 <!-- Notifications panel -->
-                <notifications:NotificationsPanelControl Grid.Row="2" Height="576" />
+                <notifications:NotificationsPanelControl Grid.Row="2" Height="576"  />
                 <!--Height="576"-->
             </Grid>
         </ScrollViewer>
