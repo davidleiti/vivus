@@ -33,6 +33,8 @@
         private IApplicationViewModel<Model.DCPersonnel> appViewModel;
 
         private bool sendingIsRunning;
+
+        private int lastMessageId;
 		#endregion
 
 		#region Public Properties
@@ -205,6 +207,8 @@
 
 			SendCommand = new RelayCommand(async() => await SendAsync());
 
+            lastMessageId = -1;
+
             UpdateNotifications();
 		}
 
@@ -335,7 +339,6 @@
         {
             while (true)
             {
-                Items.Clear();
                 await LoadNotifications();
                 await Task.Delay(5000);
             }
@@ -346,7 +349,14 @@
             await Task.Run(() =>
             {
                 DCPersonnel dcPersonnel = unitOfWork.Persons[appViewModel.User.PersonID].DCPersonnel;
-                List<Message> messages = dcPersonnel.Person.ReceivedMessages.ToList();
+                unitOfWork.CompleteAsync();
+                List<Message> messages = new List<Message>();
+
+                foreach (Message m in unitOfWork.Messages.Entities.Where(m => m.RecieverID == dcPersonnel.PersonID))
+                {
+                    if (m.MessageID > lastMessageId)
+                        messages.Add(m);
+                }
 
                 messages.Sort((m1, m2) =>
                 {
@@ -358,6 +368,9 @@
 
                     return 0;
                 });
+
+                if (messages.Count > 0 && messages[0].MessageID > lastMessageId)
+                    lastMessageId = messages[0].MessageID;
 
                 messages.ForEach(m => 
                 {
