@@ -264,9 +264,12 @@
         {
             await Task.Run(() =>
             {
-                Doctor doctor = unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
+                
+                Doctor doctor = null;
+                doctor=unitOfWork.Persons[appViewModel.User.PersonID].Doctor;
                 unitOfWork.CompleteAsync();
-                List<Message> messages = doctor.Person.ReceivedMessages.ToList();
+                List<Message> messages = unitOfWork.Messages.Entities.Where(m => m.RecieverID == doctor.PersonID).ToList();
+                                        
 
                 messages.Sort((m1, m2) =>
                 {
