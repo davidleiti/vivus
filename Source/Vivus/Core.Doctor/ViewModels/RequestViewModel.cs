@@ -370,7 +370,7 @@
             Model.Address originAddress;
           
             // Get the doctor
-            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
             // Get doctor's work address
             originAddress = unitOfWork.Addresses.Find(a => a.AddressID == doctor.WorkAddressID).Single();
             
@@ -522,7 +522,7 @@
             Model.RequestPriority priority;
             priority = unitOfWork.RequestPriorities.Find(r => r.RequestPriorityID == SelectedPriority.Id).Single();
             Model.Doctor doctor;
-            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
            
 
             // If the instance is null, initialize it
