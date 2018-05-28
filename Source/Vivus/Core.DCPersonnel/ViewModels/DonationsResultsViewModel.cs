@@ -249,6 +249,12 @@
         {
             await Task.Run(() =>
             {
+
+                if (selectedDonationForm is null)
+                {
+                    Popup("No donation request has been selected. Select one from the list and try again.");
+                    return;
+                }
                 dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors > 0)
