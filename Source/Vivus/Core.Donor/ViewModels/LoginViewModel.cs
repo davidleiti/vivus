@@ -144,7 +144,7 @@
                             return;
                         }
 
-                        IoCContainer.Get<IApllicationViewModel<Model.Donor>>().User = new Model.Donor
+                        IoCContainer.Get<IApplicationViewModel<Model.Donor>>().User = new Model.Donor
                         {
                             PersonID = donor.PersonID,
                             AccountID = donor.AccountID,

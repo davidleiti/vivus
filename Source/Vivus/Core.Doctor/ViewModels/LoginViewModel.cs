@@ -119,7 +119,7 @@
                             return;
                         }
 
-                        IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User = doctor;
+                        IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User = doctor;
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
                         IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Patients;

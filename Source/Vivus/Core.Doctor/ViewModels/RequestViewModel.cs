@@ -31,7 +31,7 @@
         private int? requestPlasma;
         private int? requestBlood;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Doctor> appViewModel;
+        private IApplicationViewModel<Model.Doctor> appViewModel;
         private ISecurity security;
         private RequestItemViewModel selectedItem;
 
@@ -233,7 +233,7 @@
             CancelCommand = new RelayCommand(Cancel);
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Doctor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.Doctor>>();
             security = IoCContainer.Get<ISecurity>();
 
             Task.Run(async () =>
@@ -264,7 +264,7 @@
         }
 
 
-        public RequestViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Model.Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        public RequestViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Model.Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
 
             Items = new ObservableCollection<RequestItemViewModel>();

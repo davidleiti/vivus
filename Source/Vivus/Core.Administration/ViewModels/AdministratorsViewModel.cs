@@ -31,7 +31,7 @@
         private bool optionalErrors;
         private bool actionIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Administrator> appViewModel;
+        private IApplicationViewModel<Administrator> appViewModel;
         private ISecurity security;
 
         #endregion
@@ -237,7 +237,7 @@
             ButtonType = ButtonType.Add;
             optionalErrors = false;
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Administrator>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Administrator>>();
             security = IoCContainer.Get<ISecurity>();
 
             Person = new PersonViewModel();
@@ -258,7 +258,7 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public AdministratorsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public AdministratorsViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Administrator> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             IsActiveIsEnabled = true;
             ButtonType = ButtonType.Add;

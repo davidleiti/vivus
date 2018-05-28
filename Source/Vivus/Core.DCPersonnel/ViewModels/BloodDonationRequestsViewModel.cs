@@ -37,7 +37,7 @@
         private ObservableCollection<BloodDonationRequestItem> bloodDonationRequestItems;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
         private ISecurity security;
 
         #endregion
@@ -290,7 +290,7 @@
         public BloodDonationRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
             security = IoCContainer.Get<ISecurity>();
 
             ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
@@ -306,7 +306,7 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public BloodDonationRequestsViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             this.unitOfWork = unitOfWork;
             this.appViewModel = appViewModel;

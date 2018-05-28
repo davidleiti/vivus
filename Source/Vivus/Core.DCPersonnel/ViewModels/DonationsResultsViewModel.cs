@@ -36,7 +36,7 @@
         private object formsLock;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
 
         #endregion
 
@@ -206,7 +206,7 @@
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
 
             formsLock = new object();
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();

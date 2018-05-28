@@ -29,7 +29,7 @@
         private string email;
         private object password;
         private bool updateIsRunning;
-        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
         private IUnitOfWork unitOfWork;
         private ISecurity security;
 
@@ -134,7 +134,7 @@
             Counties = new List<BasicEntity<string>>();
             UpdateCommand = new RelayCommand(async() => await UpdateAsync());
 
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             security = IoCContainer.Get<ISecurity>();
 
@@ -152,14 +152,14 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<DCPersonnel> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             Person = new PersonViewModel();
             IdentificationCardAddress = new AddressViewModel();
             Counties = new List<BasicEntity<string>>();
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
 
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             security = IoCContainer.Get<ISecurity>();
 

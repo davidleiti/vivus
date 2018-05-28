@@ -29,7 +29,7 @@
         private object password;
         private bool updateIsRunning;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Donor> appViewModel;
+        private IApplicationViewModel<Donor> appViewModel;
         private ISecurity security;
         BasicEntity<string> selectedDonationCenter;
 
@@ -186,7 +186,7 @@
             Counties = new ObservableCollection<BasicEntity<string>>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Donor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Donor>>();
             security = IoCContainer.Get<ISecurity>();
 
             UpdateCommand = new RelayCommand(async () => await UpdateAsync());
@@ -207,7 +207,7 @@
         /// <param name="appViewModel">The viewmodel for the application.</param>
         /// <param name="dispatcherWrapper">The ui thread dispatcher.</param>
         /// <param name="security">The collection of security methods.</param>
-        public ProfileViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
+        public ProfileViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Donor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security)
         {
             this.unitOfWork = unitOfWork;
             this.appViewModel = appViewModel;
@@ -265,7 +265,7 @@
             }).Wait();
                 
             // Get the donor
-            donor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Donor>>().User.PersonID].Donor;
+            donor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Donor>>().User.PersonID].Donor;
             // Get donor's address from the national identification card
             originAddress = donor.Person.Address;
             // If th donor has a residence address

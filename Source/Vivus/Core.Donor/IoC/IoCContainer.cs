@@ -26,7 +26,7 @@
             Kernel.Bind<WindowViewModel>().ToConstant(new WindowViewModel());
 
             // Bind to a single instance of the application viewmodel
-            Kernel.Bind<IApllicationViewModel<Donor>>().ToConstant(new ApplicationViewModel());
+            Kernel.Bind<IApplicationViewModel<Donor>>().ToConstant(new ApplicationViewModel());
         }
 
         /// <summary>

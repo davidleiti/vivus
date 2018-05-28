@@ -38,7 +38,7 @@
         private string pastSurgeries;
         private string travelStatus;
         private bool applyIsRunning;
-        private IApllicationViewModel<Donor> appViewModel;
+        private IApplicationViewModel<Donor> appViewModel;
         private IUnitOfWork unitOfWork;
         #endregion
 
@@ -333,11 +333,28 @@
         {
             Diseases = new HashSet<string>();
             
-            ApplyCommand = new RelayCommand(ApplyAsync);
+            ApplyCommand = new RelayCommand(async () => await ApplyAsync());
 
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.Donor>>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
 
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplyViewModel"/> class with the given values
+        /// </summary>
+        /// <param name="unitOfWork">The UoW used to acess repossitories</param>
+        /// <param name="appViewModel">The viewmodel for the application</param>
+        /// <param name="dispathcerWrapper">The ui thread dispatcher</param>
+        public ApplyViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Donor> appViewModel, IDispatcherWrapper dispathcerWrapper)
+        {
+            this.unitOfWork = unitOfWork;
+            this.appViewModel = appViewModel;
+            this.dispatcherWrapper = dispathcerWrapper;
+
+            Diseases = new HashSet<string>();
+
+            ApplyCommand = new RelayCommand(async () => await ApplyAsync());
         }
 
         #endregion
@@ -347,7 +364,7 @@
         /// <summary>
         /// Apply for a donation.
         /// </summary>
-        private async void ApplyAsync()
+        public async Task ApplyAsync()
         {
             await RunCommand(() => ApplyIsRunning, async () =>
             {
@@ -428,7 +445,7 @@
             }
             else
             {
-                RouteDetails bestRoute = await getBetsRouteToDonationCenters(donor);
+                RouteDetails bestRoute = await getBestRouteToDonationCenters(donor);
                 DonationCenter closestDonationCenter = unitOfWork.DonationCenters.Entities.Single(singleDonationCenter => singleDonationCenter.AddressID == bestRoute.DestinationAddress.AddressID);
                 donationForm.DonationCenterID = closestDonationCenter.DonationCenterID;
             }
@@ -450,7 +467,7 @@
         /// </summary>
         /// <param name="donor">The donor from whom we compute the route</param>
         /// <returns></returns>
-        private async Task<RouteDetails> getBetsRouteToDonationCenters(Donor donor)
+        private async Task<RouteDetails> getBestRouteToDonationCenters(Donor donor)
         {
             List<Address> donationCentersAddresses = new List<Address>();
             Address donorAddress;
