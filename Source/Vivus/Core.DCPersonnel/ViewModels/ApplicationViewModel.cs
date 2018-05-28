@@ -8,7 +8,7 @@
     /// <summary>
     /// Represents a view model for the application.
     /// </summary>
-    public class ApplicationViewModel : BaseViewModel, IApllicationViewModel<DCPersonnel>
+    public class ApplicationViewModel : BaseViewModel, IApplicationViewModel<DCPersonnel>
     {
         #region Private Members
 

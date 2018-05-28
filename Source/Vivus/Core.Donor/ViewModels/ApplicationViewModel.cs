@@ -9,7 +9,7 @@ using Vivus.Core.ViewModels.Base;
 
 namespace Vivus.Core.Donor.ViewModels
 {
-    class ApplicationViewModel : BaseViewModel, IApllicationViewModel<Model.Donor>
+    class ApplicationViewModel : BaseViewModel, IApplicationViewModel<Model.Donor>
     {
         #region Private Members
 

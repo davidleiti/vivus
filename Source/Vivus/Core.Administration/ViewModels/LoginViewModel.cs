@@ -120,7 +120,7 @@
                             return;
                         }
 
-                        IoCContainer.Get<IApllicationViewModel<Administrator>>().User = admin;
+                        IoCContainer.Get<IApplicationViewModel<Administrator>>().User = admin;
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
                         IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Doctors;

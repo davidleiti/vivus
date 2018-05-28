@@ -30,13 +30,14 @@
         private string donationDate;
         private string donationResults;
         private string filter;
+        private bool actionIsRunning;
 
         DonationFormItemViewModel selectedDonationForm;
 
         private object formsLock;
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<DCPersonnel> appViewModel;
+        private IApplicationViewModel<DCPersonnel> appViewModel;
 
         #endregion
 
@@ -163,6 +164,18 @@
             }
         }
 
+        private bool ActionIsRunning {
+            get => actionIsRunning;
+            set {
+                if (actionIsRunning == value)
+                    return;
+
+                actionIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Gets the collection of the donation forms.
         /// </summary>
@@ -206,12 +219,22 @@
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<DCPersonnel>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<DCPersonnel>>();
 
             formsLock = new object();
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
             BindingOperations.EnableCollectionSynchronization(DonationForms, formsLock);
-            SendCommand = new RelayCommand(async () => await SendResults());
+            SendCommand = new RelayCommand(() =>  SendResults());
+        }
+
+        #endregion
+
+        #region Public Methods
+        public async void SendResults()
+        {
+            await RunCommand(() => ActionIsRunning, async () => {
+                await SendResultsAsync();
+            });
         }
 
         #endregion
@@ -222,10 +245,16 @@
         /// Sets the DonationDate of the currently selected DonationForm and sends a message to the Donor with the results
         /// </summary>
         /// <returns></returns>
-        private async Task SendResults()
+        private async Task SendResultsAsync()
         {
             await Task.Run(() =>
             {
+
+                if (selectedDonationForm is null)
+                {
+                    Popup("No donation request has been selected. Select one from the list and try again.");
+                    return;
+                }
                 dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors > 0)

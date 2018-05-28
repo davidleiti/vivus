@@ -4,7 +4,7 @@
     /// Represents an interface for a generic application viewmodel.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IApllicationViewModel<T>
+    public interface IApplicationViewModel<T>
         where T : new()
     {
         /// <summary>

@@ -19,7 +19,7 @@
         #region private fields
 
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Donor> appViewModel;
+        private IApplicationViewModel<Model.Donor> appViewModel;
 
         #endregion
 
@@ -41,7 +41,7 @@
         {
             Items = new ObservableCollection<HistoryItemViewModel>();
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Donor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.Donor>>();
 
             Task.Run(async () =>
             {

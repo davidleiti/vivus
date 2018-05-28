@@ -31,7 +31,7 @@
         private int? requestPlasma;
         private int? requestBlood;
         private IUnitOfWork unitOfWork;
-        private IApllicationViewModel<Model.Doctor> appViewModel;
+        private IApplicationViewModel<Model.Doctor> appViewModel;
         private ISecurity security;
         private RequestItemViewModel selectedItem;
 
@@ -233,7 +233,7 @@
             CancelCommand = new RelayCommand(Cancel);
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
-            appViewModel = IoCContainer.Get<IApllicationViewModel<Model.Doctor>>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.Doctor>>();
             security = IoCContainer.Get<ISecurity>();
 
             Task.Run(async () =>
@@ -264,7 +264,7 @@
         }
 
 
-        public RequestViewModel(IUnitOfWork unitOfWork, IApllicationViewModel<Model.Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
+        public RequestViewModel(IUnitOfWork unitOfWork, IApplicationViewModel<Model.Doctor> appViewModel, IDispatcherWrapper dispatcherWrapper, ISecurity security) : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
 
             Items = new ObservableCollection<RequestItemViewModel>();
@@ -285,7 +285,7 @@
             });
 
             // Test whether the binding was done right or not
-            
+            /*
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new RequestItemViewModel
@@ -301,7 +301,7 @@
                     Dcn = "dcn"
                 });
 
-            });
+            });*/
         }
 
         #endregion
@@ -364,13 +364,18 @@
         {               
             SelectedPatientName = new BasicEntity<string>(selectedItem.Id, selectedItem.PatientName);
             SelectedPriority = new BasicEntity<string>(selectedItem.Id, selectedItem.Priority);
-            RequestThrombocytes = selectedItem.Thrombocytes;
-            RequestRedCells = selectedItem.RedCells;
-            //RequestBlood = selectedItem.Blood;
+            List<string> thrombocytesList = selectedItem.Thrombocytes.Split('/').ToList();
+            RequestThrombocytes = Int32.Parse(thrombocytesList[0]);
+            List<string> redCellsList = selectedItem.RedCells.Split('/').ToList();
+            RequestRedCells = Int32.Parse(redCellsList[0]);
+            List<string> plasmaList = selectedItem.Plasma.Split('/').ToList();
+            RequestPlasma = Int32.Parse(plasmaList[0]);
+            List<string> bloodList = selectedItem.Blood.Split('/').ToList();
+            RequestBlood = Int32.Parse(plasmaList[0]);
         }
 
         /// <summary>
-        /// Fills the fields of a request.
+        /// Fills the fields of a request.(when a new one is added)
         /// </summary>
         /// <param name="request">The request instance.</param>
         /// <param name="fillOptional">Whether to fill the optional field also or not.</param>
@@ -385,19 +390,22 @@
             if (request is null)
                 request = new Model.BloodRequest();
 
+            Model.Doctor doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
 
             // Update the database
-
-            //request.Patient = patient;
-            //request.RequestPriority = priority;
-            //request.ThrombocytesQuantity = RequestThrombocytes;
-            //request.RedCellsQuantity = RequestRedCells;
-            //request.PlasmaQuantity = RequestPlasma;
-            //request.BloodQuantity = RequestBlood;
+            request.Doctor = doctor;
+            request.Patient = patient;
+            request.RequestPriority = priority;
+            request.ThrombocytesQuantity = RequestThrombocytes;
+            request.RedCellsQuantity = RequestRedCells;
+            request.PlasmaQuantity = RequestPlasma;
+            request.BloodQuantity = RequestBlood;
+            request.IsFinished = false;
         }
 
         /// <summary>
-        /// Fills the fields of a request viewmodel.
+        /// Fills the fields of a request viewmodel.(when a new one is added)
         /// </summary>
         /// <param name="request">The request viewmodel instance.</param>
         private void FillViewModelRequest(ref RequestItemViewModel request)
@@ -406,17 +414,27 @@
             patient = unitOfWork.Patients.Find(p => p.Person.PersonID == SelectedPatientName.Id).Single();
             Model.RequestPriority priority;
             priority = unitOfWork.RequestPriorities.Find(r => r.RequestPriorityID == SelectedPriority.Id).Single();
+            Model.Doctor doctor;
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApllicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            Model.Address workingAddress;
+            workingAddress = unitOfWork.Addresses.Find(a => a.AddressID == doctor.WorkAddressID).Single();
+           // Model.DonationCenter cdc; //current donation center
+           // cdc = workingAddress.DonationCenters.ToList()[0];
 
             // If the instance is null, initialize it
             if (request is null)
                 request = new RequestItemViewModel();
 
+            request.Id = patient.PersonID;
             request.PatientName = patient.Person.FirstName +" "+ patient.Person.LastName;
-            request.Priority = priority.ToString();
-            request.Thrombocytes = RequestThrombocytes;
-            request.RedCells = RequestRedCells;
-            request.Plasma = RequestPlasma;
-            request.Blood = RequestBlood;
+            request.Priority = priority.Type.ToString();
+            request.Thrombocytes = "0/" + RequestThrombocytes;
+            request.RedCells = "0/" + RequestRedCells;
+            request.Plasma = "0/" + RequestPlasma;
+            request.Blood = "0/" + RequestBlood;
+            request.RequestStatus = "Pending";
+            request.Cdc = workingAddress.ToString();
+            request.Dcn = 0;
         }
 
 
@@ -506,13 +524,13 @@
         private int id;
         private string patientName;
         private string priority;
-        private int? thrombocytes;
-        private int? redCells;
-        private int? plasma;
-        private int? blood;
+        private string thrombocytes;
+        private string redCells;
+        private string plasma;
+        private string blood;
         private string requestStatus;
         private string cdc;
-        private string dcn;
+        private int? dcn;
 
         #endregion
 
@@ -575,7 +593,7 @@
         /// <summary>
         /// Gets or sets the thrombocytes.
         /// </summary>
-        public int? Thrombocytes
+        public string Thrombocytes
         {
             get => thrombocytes;
 
@@ -593,7 +611,7 @@
         /// <summary>
         /// Gets or sets the red cells.
         /// </summary>
-        public int? RedCells
+        public string RedCells
         {
             get => redCells;
 
@@ -611,7 +629,7 @@
         /// <summary>
         /// Gets or sets the plasma.
         /// </summary>
-        public int? Plasma
+        public string Plasma
         {
             get => plasma;
 
@@ -630,7 +648,7 @@
         /// <summary>
         /// Gets or sets the blood.
         /// </summary>
-        public int? Blood
+        public string Blood
         {
             get => blood;
 
@@ -684,7 +702,7 @@
         /// <summary>
         /// Gets or sets the patientName.
         /// </summary>
-        public string Dcn
+        public int? Dcn
         {
             get => dcn;
 
