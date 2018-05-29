@@ -91,8 +91,6 @@
 
             set
             {
-                lastSelectedPatient = value;
-
                 if (selectedPatient == value)
                     return;
 
@@ -111,13 +109,29 @@
 
             set
             {
-                lastSelectedPatient = value;
-
                 if (mySelectedPatient == value)
                     return;
 
                 mySelectedPatient = value;
                 VivusConsole.WriteLine(mySelectedPatient.Name);
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the last selected patient from both of the tables.
+        /// </summary>
+        public PatientItemViewModel LastSelectedPatient
+        {
+            get => lastSelectedPatient;
+
+            set
+            {
+                if (lastSelectedPatient == value)
+                    return;
+
+                lastSelectedPatient = value;
 
                 OnPropertyChanged();
             }
@@ -211,7 +225,7 @@
             allPatientsLockObj = new object();
             myPatientsLockObj = new object();
             allPatients = new List<PatientItemViewModel>();
-            lastSelectedPatient = null;
+            LastSelectedPatient = null;
             counties = new ObservableCollection<BasicEntity<string>>();
             bloodTypes = new ObservableCollection<BasicEntity<string>>();
             rhs = new ObservableCollection<BasicEntity<string>>();
@@ -387,7 +401,7 @@
         /// <param name="newPopup">The create popup action.</param>
         private async void ModifyPatient(Action newPopup)
         {
-            if (lastSelectedPatient is null)
+            if (LastSelectedPatient is null)
                 return;
 
             await dispatcherWrapper.InvokeAsync(() =>
@@ -405,12 +419,12 @@
                     RhTypes = rhs,
                     Person = new PersonViewModel
                     {
-                        FirstName = lastSelectedPatient.FirstName,
-                        LastName = lastSelectedPatient.LastName,
-                        BirthDate = lastSelectedPatient.BirthDate,
-                        NationalIdentificationNumber = lastSelectedPatient.NationalIdentificationNumber,
-                        PhoneNumber = lastSelectedPatient.PhoneNumber,
-                        Gender = lastSelectedPatient.Gender
+                        FirstName = LastSelectedPatient.FirstName,
+                        LastName = LastSelectedPatient.LastName,
+                        BirthDate = LastSelectedPatient.BirthDate,
+                        NationalIdentificationNumber = LastSelectedPatient.NationalIdentificationNumber,
+                        PhoneNumber = LastSelectedPatient.PhoneNumber,
+                        Gender = LastSelectedPatient.Gender
                     },
                     IdentificationCardAddress = new AddressViewModel
                     {
@@ -420,9 +434,9 @@
                         County = lastSelectedPatient.Address.County,
                         ZipCode = lastSelectedPatient.Address.ZipCode
                     },
-                    SelectedBloodType = lastSelectedPatient.BloodType,
-                    SelectedRh = lastSelectedPatient.RH,
-                    Status = lastSelectedPatient.Status.Value == "Alive" ? true : false,
+                    SelectedBloodType = LastSelectedPatient.BloodType,
+                    SelectedRh = LastSelectedPatient.RH,
+                    Status = LastSelectedPatient.Status.Value == "Alive" ? true : false,
                     ButtonType = ButtonType.Modify
                 };
 

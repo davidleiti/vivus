@@ -1,6 +1,7 @@
 ﻿namespace Vivus.Client.Doctor.Desktop.Pages
 {
     using System;
+    using System.Windows.Controls;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
     using Vivus.Core.Doctor.DataModels;
@@ -44,6 +45,7 @@
         /// <param name="e">The event arguments.</param>
         private void ModifyPatientPreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            ViewModel.LastSelectedPatient = (sender as DataGrid).SelectedItem as PatientItemViewModel;
             ViewModel.ModifyPatientCommand.Execute(new Action(LoadPopup));
         }
 
