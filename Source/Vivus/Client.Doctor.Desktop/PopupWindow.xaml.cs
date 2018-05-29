@@ -42,8 +42,8 @@
             DataContext = windowViewModel;
 
             PreviewKeyDown += PopupWindow_PreviewKeyDown;
-            PreviewMouseLeftButtonDown += PopupWindow_PreviewMouseLeftButtonDown;
-            PreviewMouseLeftButtonUp += PopupWindow_PreviewMouseLeftButtonUp;
+            MouseLeftButtonDown += PopupWindow_MouseLeftButtonDown;
+            MouseLeftButtonUp += PopupWindow_MouseLeftButtonUp;
         }
 
         #endregion
@@ -107,7 +107,7 @@
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void PopupWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void PopupWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             leftMouseButtonDownPosition = Mouse.GetPosition(this);
         }
@@ -117,7 +117,7 @@
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void PopupWindow_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void PopupWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Point leftMouseButtonUpPosition = Mouse.GetPosition(this);
 
