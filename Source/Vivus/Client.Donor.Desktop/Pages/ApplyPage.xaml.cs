@@ -48,6 +48,14 @@
         }
 
         /// <summary>
+        /// Closes the window the page is part of.
+        /// </summary>
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// Raisen when a disease checkbox is checked.
         /// </summary>
         /// <param name="sender">A disease checkbox.</param>

@@ -18,5 +18,9 @@
         public void DontAllowErrors()
         {
         }
+
+        public void Close()
+        {
+        }
     }
 }

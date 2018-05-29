@@ -42,5 +42,12 @@
         public void AllowOptionalErrors()
         {
         }
+
+        /// <summary>
+        /// Closes the window the page is part of.
+        /// </summary>
+        public void Close()
+        {
+        }
     }
 }

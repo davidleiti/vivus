@@ -31,5 +31,10 @@
         public void AllowOptionalErrors()
         {
         }
+
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

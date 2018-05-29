@@ -94,5 +94,13 @@
             else
                 pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
         }
+
+        /// <summary>
+        /// Closes the window the page is part of.
+        /// </summary>
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
