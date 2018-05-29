@@ -600,6 +600,8 @@
                 List<Model.BloodRequest> bloodRequests = unitOfWork.BloodRequests.Entities.ToList();
                 Model.BloodRequest bloodRequest = bloodRequests.Find(br => br.BloodRequestID == SelectedTableItem.Id);
                 bloodRequests.Remove(bloodRequest);
+                // Make changes persistent
+                unitOfWork.Complete();
 
                 // Remove from table
                 Items.Remove(SelectedTableItem);
