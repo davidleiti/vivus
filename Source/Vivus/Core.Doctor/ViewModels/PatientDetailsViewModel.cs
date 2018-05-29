@@ -314,7 +314,7 @@
             patient.RhID = SelectedRh.Id;
             patient.PersonStatus = await unitOfWork.PersonStatuses.SingleAsync(ps => ps.Type == (Status ? "Alive" : "Dead"));
 
-            //await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         /// <summary>
@@ -347,7 +347,7 @@
                 PersonStatus = await unitOfWork.PersonStatuses.SingleAsync(ps => ps.Type == (Status ? "Alive" : "Dead"))
             });
             
-            //await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         #endregion
