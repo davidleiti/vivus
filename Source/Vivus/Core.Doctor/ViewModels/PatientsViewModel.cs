@@ -422,6 +422,7 @@
                     },
                     SelectedBloodType = lastSelectedPatient.BloodType,
                     SelectedRh = lastSelectedPatient.RH,
+                    Status = lastSelectedPatient.Status.Value == "Alive" ? true : false,
                     ButtonType = ButtonType.Modify
                 };
 
