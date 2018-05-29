@@ -387,10 +387,71 @@
             {
                 await dispatcherWrapper.InvokeAsync(() =>
                 {
+                    PatientDetailsViewModel patientDetailsVM;
+                    PatientItemViewModel patientItemVM;
+
                     // Create new popup instance
                     newPopup();
+
+                    // Populate the fields
+                    patientDetailsVM = new PatientDetailsViewModel
+                    {
+                        Counties = counties,
+                        BloodTypes = bloodTypes,
+                        RhTypes = rhs,
+                        IdentificationCardAddress = new AddressViewModel
+                        {
+                            County = counties[0]
+                        },
+                        SelectedBloodType = bloodTypes[0],
+                        SelectedRh = rhs[0]
+                    };
+
                     // Show the popup
-                    PatientDetailsPopup.ShowDialog(null);
+                    PatientDetailsPopup.ShowDialog(patientDetailsVM);
+
+                    // If the popup was closed, return
+                    if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Closed)
+                        return;
+
+                    // If the popup failed, show message and return
+                    if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Failed)
+                    {
+                        Popup("An unexpected error occured.");
+                        return;
+                    }
+
+                    // Create the patient viewmodel
+                    patientItemVM = new PatientItemViewModel
+                    {
+                        FirstName = patientDetailsVM.Person.FirstName,
+                        LastName = patientDetailsVM.Person.LastName,
+                        BirthDate = patientDetailsVM.Person.BirthDate,
+                        NationalIdentificationNumber = patientDetailsVM.Person.NationalIdentificationNumber,
+                        PhoneNumber = patientDetailsVM.Person.PhoneNumber,
+                        Gender = patientDetailsVM.Person.Gender,
+                        Address = new AddressViewModel
+                        {
+                            StreetName = patientDetailsVM.IdentificationCardAddress.StreetName,
+                            StreetNumber = patientDetailsVM.IdentificationCardAddress.StreetNumber,
+                            City = patientDetailsVM.IdentificationCardAddress.City,
+                            County = patientDetailsVM.IdentificationCardAddress.County,
+                            ZipCode = patientDetailsVM.IdentificationCardAddress.ZipCode
+                        },
+                        BloodType = patientDetailsVM.SelectedBloodType,
+                        RH = patientDetailsVM.SelectedRh,
+                        Status = new BasicEntity<string>(-1, (patientDetailsVM.Status ? "Alive" : "Dead")),
+                    };
+
+                    // Add the patient to all patients table
+                    lock (allPatientsLockObj)
+                        AllPatients.Add(patientItemVM);
+
+                    // Add the patient to the hidden list of patient
+                    allPatients.Add(patientItemVM);
+
+                    // Show successful message
+                    Popup("Patient added successfully!", PopupType.Successful);
                 });
             });
         }
@@ -401,6 +462,7 @@
         /// <param name="newPopup">The create popup action.</param>
         private async void ModifyPatient(Action newPopup)
         {
+            // If there is no selected patient, return
             if (LastSelectedPatient is null)
                 return;
 
@@ -414,6 +476,7 @@
                 // Populate the fields
                 patientDetailsVM = new PatientDetailsViewModel
                 {
+                    Id = LastSelectedPatient.Id,
                     Counties = counties,
                     BloodTypes = bloodTypes,
                     RhTypes = rhs,
@@ -442,6 +505,36 @@
 
                 // Show the popup
                 PatientDetailsPopup.ShowDialog(patientDetailsVM);
+
+                // If the popup was closed, return
+                if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Closed)
+                    return;
+
+                // If the popup failed, show message and return
+                if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Failed)
+                {
+                    Popup("An unexpected error occured.");
+                    return;
+                }
+
+                // Update the patient details
+                LastSelectedPatient.FirstName = patientDetailsVM.Person.FirstName;
+                LastSelectedPatient.LastName = patientDetailsVM.Person.LastName;
+                LastSelectedPatient.BirthDate = patientDetailsVM.Person.BirthDate;
+                LastSelectedPatient.NationalIdentificationNumber = patientDetailsVM.Person.NationalIdentificationNumber;
+                LastSelectedPatient.PhoneNumber = patientDetailsVM.Person.PhoneNumber;
+                LastSelectedPatient.Gender = patientDetailsVM.Person.Gender;
+                LastSelectedPatient.Address.StreetName = patientDetailsVM.IdentificationCardAddress.StreetName;
+                LastSelectedPatient.Address.StreetNumber = patientDetailsVM.IdentificationCardAddress.StreetNumber;
+                LastSelectedPatient.Address.City = patientDetailsVM.IdentificationCardAddress.City;
+                LastSelectedPatient.Address.County = patientDetailsVM.IdentificationCardAddress.County;
+                LastSelectedPatient.Address.ZipCode = patientDetailsVM.IdentificationCardAddress.ZipCode;
+                LastSelectedPatient.BloodType = patientDetailsVM.SelectedBloodType;
+                LastSelectedPatient.RH = patientDetailsVM.SelectedRh;
+                LastSelectedPatient.Status = new BasicEntity<string>(-1, (patientDetailsVM.Status ? "Alive" : "Dead"));
+
+                // Show successful message
+                Popup("Patient details modified successfully!", PopupType.Successful);
             });
         }
 
@@ -549,6 +642,7 @@
 
             rhs = (List<RH>)await unitOfWork.RHs.GetAllAsync();
 
+            this.rhs.Add(new BasicEntity<string>(-1, "Select rh"));
             rhs.ForEach(rh =>
             {
                 this.rhs.Add(new BasicEntity<string>(rh.RhID, rh.Type));
@@ -565,6 +659,7 @@
 
             bloodTypes = (List<BloodType>)await unitOfWork.BloodTypes.GetAllAsync();
 
+            this.bloodTypes.Add(new BasicEntity<string>(-1, "Select blood type"));
             bloodTypes.ForEach(bloodType =>
             {
                 this.bloodTypes.Add(new BasicEntity<string>(bloodType.BloodTypeID, bloodType.Type));
@@ -581,6 +676,7 @@
 
             counties = (List<County>)await unitOfWork.Counties.GetAllAsync();
 
+            this.counties.Add(new BasicEntity<string>(-1, "Select county"));
             counties.ForEach(county =>
             {
                 this.counties.Add(new BasicEntity<string>(county.CountyID, county.Name));

@@ -19,5 +19,10 @@
         /// Allows only the optional errors to be displayed.
         /// </summary>
         void AllowOptionalErrors();
+
+        /// <summary>
+        /// Closes the window the page is part of.
+        /// </summary>
+        void Close();
     }
 }

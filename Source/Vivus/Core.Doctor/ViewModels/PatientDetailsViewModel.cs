@@ -1,12 +1,16 @@
 ﻿namespace Vivus.Core.Doctor.ViewModels
 {
+    using System;
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Doctor.IoC;
     using Vivus.Core.Doctor.Validators;
+    using Vivus.Core.Model;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
-    using VivusConsole = Console.Console;
 
     /// <summary>
     /// Represents a view model for the patient details page.
@@ -16,19 +20,42 @@
         #region Private Members
 
         ButtonType buttonType;
+        private int id;
         private BasicEntity<string> bloodType;
         private BasicEntity<string> rhType;
         private bool status;
         private bool actionIsRunning;
+        private FinishState finishState;
+        private IUnitOfWork unitOfWork;
+
+        #endregion
+
+        #region Public Enumeration
+
+        /// <summary>
+        /// Represents an enumeration of finish states of an operation.
+        /// </summary>
+        public enum FinishState
+        {
+            /// <summary>
+            /// The operation was not performed.
+            /// </summary>
+            Closed,
+
+            /// <summary>
+            /// The operation failed.
+            /// </summary>
+            Failed,
+
+            /// <summary>
+            /// The operation succeded.
+            /// </summary>
+            Succeded
+        }
 
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the parent page of the viewmodel.
-        /// </summary>
-        public IPage ParentPage { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the button on the page.
@@ -47,6 +74,49 @@
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the identificator of the patient.
+        /// </summary>
+        public int Id
+        {
+            get => id;
+
+            set
+            {
+                if (id == value)
+                    return;
+
+                id = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets the person view model.
+        /// </summary>
+        public PersonViewModel Person { get; set; }
+
+        /// <summary>
+        /// Gets the identification card address view model.
+        /// </summary>
+        public AddressViewModel IdentificationCardAddress { get; set; }
+
+        /// <summary>
+        /// Gets the list of counties.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> Counties { get; set; }
+
+        /// <summary>
+        /// Gets the list of blood types.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> BloodTypes { get; set; }
+
+        /// <summary>
+        /// Gets the list of RHs.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> RhTypes { get; set; }
 
         /// <summary>
         /// Gets or sets the blood type of the patient.
@@ -103,31 +173,6 @@
         }
 
         /// <summary>
-        /// Gets the person view model.
-        /// </summary>
-        public PersonViewModel Person { get; set; }
-
-        /// <summary>
-        /// Gets the identification card address view model.
-        /// </summary>
-        public AddressViewModel IdentificationCardAddress { get; set; }
-
-        /// <summary>
-        /// Gets the list of counties.
-        /// </summary>
-        public ObservableCollection<BasicEntity<string>> Counties { get; set; }
-
-        /// <summary>
-        /// Gets the list of blood types.
-        /// </summary>
-        public ObservableCollection<BasicEntity<string>> BloodTypes { get; set; }
-
-        /// <summary>
-        /// Gets the list of RHs.
-        /// </summary>
-        public ObservableCollection<BasicEntity<string>> RhTypes { get; set; }
-
-        /// <summary>
         /// Gets the error string of a property.
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
@@ -164,6 +209,24 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the state at the end of the operation.
+        /// </summary>
+        public FinishState EndState
+        {
+            get => finishState;
+            
+            set
+            {
+                if (finishState == value)
+                    return;
+
+                finishState = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Public Commands
@@ -188,25 +251,103 @@
             Counties = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select county") };
             BloodTypes = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
             RhTypes = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select rh") };
-            AddModifyCommand = new RelayCommand(AddModify);
+            AddModifyCommand = new RelayCommand(async() => await AddModify());
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
         }
 
         #endregion
 
         #region Private Methods
 
-        private void AddModify()
+        /// <summary>
+        /// Adds or modifies a patient.
+        /// </summary>
+        private async Task AddModify()
         {
-            ParentPage.AllowErrors();
-
-            if (Errors + Person.Errors + IdentificationCardAddress.Errors > 0)
+            await RunCommand(() => ActionIsRunning, async () =>
             {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
+                ParentPage.AllowErrors();
 
-            VivusConsole.WriteLine("Doctor: Add successfull");
-            Popup("Successfull operation!", PopupType.Successful);
+                if (Errors + Person.Errors + IdentificationCardAddress.Errors > 0)
+                {
+                    Popup("Some errors were found. Fix them before going forward.");
+                    return;
+                }
+
+                try
+                {
+                    if (ButtonType == ButtonType.Add)
+                        await AddPatient();
+                    else
+                        await ModifyPatient();
+
+                    EndState = FinishState.Succeded;
+                }
+                catch
+                {
+                    EndState = FinishState.Failed;
+                }
+
+                ParentPage.Close();
+            });
+        }
+
+        /// <summary>
+        /// Modifies a patient.
+        /// </summary>
+        private async Task ModifyPatient()
+        {
+            Patient patient = await unitOfWork.Patients.SingleAsync(p => p.PersonID == Id);
+
+            patient.Person.FirstName = Person.FirstName;
+            patient.Person.LastName = Person.LastName;
+            patient.Person.BirthDate = DateTime.Parse(Person.BirthDate);
+            patient.Person.Nin = Person.NationalIdentificationNumber;
+            patient.Person.PhoneNo = Person.PhoneNumber;
+            patient.Person.Gender = await unitOfWork.Genders.SingleAsync(g => g.Type == Person.Gender.Value);
+            patient.Person.Address.Street = IdentificationCardAddress.StreetName;
+            patient.Person.Address.StreetNo = IdentificationCardAddress.StreetNumber;
+            patient.Person.Address.City = IdentificationCardAddress.City;
+            patient.Person.Address.CountyID = IdentificationCardAddress.County.Id;
+            patient.Person.Address.ZipCode = IdentificationCardAddress.ZipCode;
+            patient.BloodTypeID = SelectedBloodType.Id;
+            patient.RhID = SelectedRh.Id;
+            patient.PersonStatus = await unitOfWork.PersonStatuses.SingleAsync(ps => ps.Type == (Status ? "Alive" : "Dead"));
+
+            //await unitOfWork.CompleteAsync();
+        }
+
+        /// <summary>
+        /// Adds a patient.
+        /// </summary>
+        /// <returns></returns>
+        private async Task AddPatient()
+        {
+            unitOfWork.Patients.Add(new Patient
+            {
+                Person = new Person
+                {
+                    FirstName = Person.FirstName,
+                    LastName = Person.LastName,
+                    BirthDate = DateTime.Parse(Person.BirthDate),
+                    Nin = Person.NationalIdentificationNumber,
+                    PhoneNo = Person.PhoneNumber,
+                    Gender = await unitOfWork.Genders.SingleAsync(g => g.Type == Person.Gender.Value),
+                    Address = new Address
+                    {
+                        Street = IdentificationCardAddress.StreetName,
+                        StreetNo = IdentificationCardAddress.StreetNumber,
+                        City = IdentificationCardAddress.City,
+                        CountyID = IdentificationCardAddress.County.Id,
+                        ZipCode = IdentificationCardAddress.ZipCode
+                    }
+                },
+                BloodTypeID = SelectedBloodType.Id,
+                RhID = SelectedRh.Id,
+                PersonStatus = await unitOfWork.PersonStatuses.SingleAsync(ps => ps.Type == (Status ? "Alive" : "Dead"))
+            });
+            
+            //await unitOfWork.CompleteAsync();
         }
 
         #endregion

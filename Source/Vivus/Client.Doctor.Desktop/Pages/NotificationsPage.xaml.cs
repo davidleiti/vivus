@@ -35,5 +35,10 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -66,5 +66,10 @@
             else
                 pbPassword.SetValue(PasswordBoxExtensions.ShowErrorTemplateProperty, true);
         }
+
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -32,6 +32,11 @@
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the parent page of the viewmodel.
+        /// </summary>
+        public IPage ParentPage { get; set; }
+
+        /// <summary>
         /// Gets the current visibility of the popup.
         /// </summary>
         public bool ShowPopup

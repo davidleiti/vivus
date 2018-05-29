@@ -140,7 +140,10 @@
 
             // If the sent parameter is not null, change the page viewmodel
             if (viewModel != null)
+            {
+                viewModel.ParentPage = CurrentPage;
                 PageViewModel = viewModel;
+            }
 
             if (Owner.WindowState != WindowState.Maximized)
             {

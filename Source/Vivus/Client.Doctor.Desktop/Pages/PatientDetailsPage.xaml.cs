@@ -1,5 +1,6 @@
 ﻿namespace Vivus.Client.Doctor.Desktop.Pages
 {
+    using System.Windows;
     using Vivus.Client.Core.AttachedProperties;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
@@ -55,6 +56,14 @@
         public void AllowOptionalErrors()
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Closes the window the page is part of.
+        /// </summary>
+        public void Close()
+        {
+            Window.GetWindow(this).Close();
         }
     }
 }
