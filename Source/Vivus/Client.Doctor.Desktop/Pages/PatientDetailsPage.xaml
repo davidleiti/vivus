@@ -10,6 +10,7 @@
       xmlns:valueConverters="clr-namespace:Vivus.Client.Core.ValueConverters;assembly=Vivus.Client.Core"
       xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
+      MaxHeight="763"
       SnapsToDevicePixels="True"
       Title="PatientDetailsPage">
 
