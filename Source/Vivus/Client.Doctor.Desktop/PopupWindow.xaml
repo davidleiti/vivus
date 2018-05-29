@@ -19,7 +19,7 @@
             <SolidColorBrush Color="Black" Opacity="0.25" />
         </Border.Background>
 
-        <Border CornerRadius="4" Background="#fafafa">
+        <Border CornerRadius="4" Background="#fafafa" MaxHeight="{Binding ElementName=Frame, Path=MaxHeight}">
             <Frame x:Name="Frame" Content="{Binding CurrentPage, Converter={valueConverters:ApplicationPageToPageValueConverter}}" KeyboardNavigation.IsTabStop="False" />
         </Border>
     </Border>

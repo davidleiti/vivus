@@ -10,7 +10,6 @@
       xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
-      Background="#fafafa"
       Title="LoginPage"
       UseLayoutRounding="True">
 

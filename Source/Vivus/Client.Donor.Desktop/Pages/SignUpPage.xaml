@@ -11,8 +11,11 @@
       xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
-      Background="#fafafa"
       Title="SignUpPage">
+
+    <pages:BasePage.Background>
+        <SolidColorBrush Color="#fafafa" Opacity=".85" />
+    </pages:BasePage.Background>
 
     <Grid>
         <ScrollViewer>

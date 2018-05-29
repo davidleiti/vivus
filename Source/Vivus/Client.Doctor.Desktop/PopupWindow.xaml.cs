@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
@@ -14,9 +15,9 @@
     public partial class PopupWindow : Window, IPopup
     {
         #region Private Members
-
-        private Point leftMouseButtonDownPosition;
+        
         private BaseViewModel viewModel;
+        private object clickedObject;
 
         #endregion
 
@@ -109,7 +110,7 @@
         /// <param name="e">The event arguments.</param>
         private void PopupWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            leftMouseButtonDownPosition = Mouse.GetPosition(this);
+            clickedObject = e.OriginalSource;
         }
 
         /// <summary>
@@ -119,10 +120,8 @@
         /// <param name="e">The event arguments.</param>
         private void PopupWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Point leftMouseButtonUpPosition = Mouse.GetPosition(this);
-
-            // If the both mouse press and release were on the padding, close the window
-            if (MouseClickOnPadding(leftMouseButtonUpPosition) && MouseClickOnPadding(leftMouseButtonDownPosition))
+            // If the button up source is the same with the button down source and the sourse is the container, close
+            if (e.OriginalSource is Border && e.OriginalSource == clickedObject && (e.OriginalSource as Border).Name == "Container")
                 Close();
         }
 
@@ -137,6 +136,9 @@
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
+
+            // Set the maximum height of the Frame to the maximum height of the content
+            Frame.MaxHeight = (Frame.Content as Page).MaxHeight;
 
             // If the sent parameter is not null, change the page viewmodel
             if (viewModel != null)
@@ -162,29 +164,6 @@
 
             Opacity = 1;
             Visibility = System.Windows.Visibility.Visible;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Checks whether the mouse click was on the container's padding or not.
-        /// </summary>
-        /// <param name="location">The mouse click location.</param>
-        /// <returns></returns>
-        private bool MouseClickOnPadding(Point location)
-        {
-            // If the click was on the left/right of the container, return true
-            if (location.X >= 0 && location.X <= Width && (location.X < Container.Padding.Left || location.X > Width - Container.Padding.Right))
-                return true;
-
-            // If the click was on the top/bottom of the container, close the window
-            if (location.Y >= 0 && location.Y <= Height && (location.Y < Container.Padding.Top || location.Y > Height - Container.Padding.Bottom))
-                return true;
-
-            // Return false otherwise
-            return false;
         }
 
         #endregion

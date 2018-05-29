@@ -11,7 +11,6 @@
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
       Title="LoginPage"
-      Background="#fafafa"
       UseLayoutRounding="True">
 
     <Grid>
