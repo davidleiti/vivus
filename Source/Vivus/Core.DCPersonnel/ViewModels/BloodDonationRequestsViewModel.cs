@@ -328,15 +328,15 @@
             this.security = security;
             
             BloodDonationRequestItems = new ObservableCollection<BloodDonationRequestItem>();
-            ApproveCommand = new RelayCommand(() => ApproveOrRejectDonation(true));
-            DenyCommand = new RelayCommand(() => ApproveOrRejectDonation(false));
+            ApproveCommand = new RelayCommand(async () => await ApproveOrRejectDonation(true));
+            DenyCommand = new RelayCommand(async () => await ApproveOrRejectDonation(false));
             LoadRequestsAsync();
         }
         #endregion
 
         #region Public Methods
 
-        public async void ApproveOrRejectDonation(bool decision)
+        public async Task ApproveOrRejectDonation(bool decision)
         {
             await RunCommand(() => ActionIsRunning, async () => {
                 await ApproveOrRejectDonationAsync(decision);
@@ -376,32 +376,49 @@
                         .First(f => f.DonationFormID == selectedBloodDonationRequestItem.Id);
                     form.DCPersonnelID = appViewModel.User.PersonID;
                     form.DonationStatus = decision;
+                    unitOfWork.Complete();
 
                     string messageContent = decision ? "Donation request has been approved!" : "Donation request has been rejected!";
                     messageContent += "\n" + Messages;
 
-                    Message message = new Message
-                    {
-                        RecieverID = form.DonorID,
-                        SenderID = appViewModel.User.PersonID,
-                        SendDate = DateTime.Now,
-                        Content = messageContent
-                    };
-
-                    unitOfWork.Persons
-                        .Entities
-                        .First(p => p.PersonID == form.DonorID)
-                        .ReceivedMessages
-                        .Add(message);
-
-                    unitOfWork.Complete();
+                    SendMessage(form.DonorID, messageContent);
 
                     LoadRequestsAsync();
                     SelectedBloodDonationRequestItem = null;
                     ClearFields();
                     Popup("Request handled successfully!", PopupType.Successful);
                 }
-                catch (Exception e) { MessageBox.Show(e.Message); }
+                catch
+                {
+                    Popup("Something went wrong when handling the request");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sends a message to the person with the given ID
+        /// </summary>
+        /// <param name="receiverID">ID of the receiver Person</param>
+        /// <param name="messageContent">Text of the message</param>
+        private async void SendMessage(int recieverID, string messageContent)
+        {
+            await Task.Run(() =>
+            {
+                Message message = new Message
+                {
+                    RecieverID = recieverID,
+                    SenderID = appViewModel.User.PersonID,
+                    SendDate = DateTime.Now,
+                    Content = messageContent
+                };
+
+                unitOfWork.Persons
+                    .Entities
+                    .First(p => p.PersonID == recieverID)
+                    .ReceivedMessages
+                    .Add(message);
+
+                unitOfWork.Complete();
             });
         }
 

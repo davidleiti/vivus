@@ -15,6 +15,7 @@
     using Vivus.Core.Doctor.IoC;
     using System.Threading.Tasks;
     using System.Linq;
+    using Vivus.Core.Helpers;
 
     /// <summary>
     /// Represents a view model for the request page.
@@ -33,7 +34,7 @@
         private IUnitOfWork unitOfWork;
         private IApplicationViewModel<Model.Doctor> appViewModel;
         private ISecurity security;
-        private RequestItemViewModel selectedItem;
+        List<DistanceMatrixApiHelpers.RouteDetails> routes;
 
 
         #endregion
@@ -170,24 +171,7 @@
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>
-		/// Gets or sets the selected item in the administrators table
-		/// </summary>
-		public RequestItemViewModel SelectedItem
-        {
-            get => selectedItem;
-
-            set
-            {
-                if (value == selectedItem)
-                    return;
-
-                selectedItem = value;
-                
-                OnPropertyChanged();
-            }
-        }
+     
 
 
         public override string this[string propertyName]
@@ -240,27 +224,13 @@
             {
                 await LoadPatientsAsync();
                 await LoadPrioritiesAsync();
+                await LoadDonationCentersAsync();
+                await LoadRequestsAsync();
                 PopulateFields();
             });
 
-            // Test whether the binding was done right or not
-            /*
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Items.Add(new RequestItemViewModel
-                {
-                    Id = 39,
-                    PatientName = "Ionut",
-                    Priority = "easy",
-                    Thrombocytes = 1,
-                    RedCells = 213,
-                    Plasma = 555,
-                    RequestStatus = "done",
-                    Cdc = "???",
-                    Dcn = "dcn"
-                });
+            //UpdateRequests();
 
-            });*/
         }
 
 
@@ -306,7 +276,23 @@
 
         #endregion
 
+
+
         #region Private Methods
+
+        /// <summary>
+        /// Updates the table of requests.
+        /// </summary>
+        /// <returns></returns>
+        private async void UpdateRequests()
+        {
+            while (true)
+            {
+                Items.Clear();
+                await LoadRequestsAsync();
+                await Task.Delay(15000);
+            }
+        }
 
         /// <summary>
         /// Loads all the patients asynchronously.
@@ -362,16 +348,137 @@
         /// </summary>
         private void PopulateFields()
         {               
-            SelectedPatientName = new BasicEntity<string>(selectedItem.Id, selectedItem.PatientName);
-            SelectedPriority = new BasicEntity<string>(selectedItem.Id, selectedItem.Priority);
-            List<string> thrombocytesList = selectedItem.Thrombocytes.Split('/').ToList();
+            SelectedPatientName = new BasicEntity<string>(SelectedTableItem.Id, SelectedTableItem.PatientName);
+            SelectedPriority = new BasicEntity<string>(SelectedTableItem.Id, SelectedTableItem.Priority);
+            List<string> thrombocytesList = SelectedTableItem.Thrombocytes.Split('/').ToList();
             RequestThrombocytes = Int32.Parse(thrombocytesList[0]);
-            List<string> redCellsList = selectedItem.RedCells.Split('/').ToList();
+            List<string> redCellsList = SelectedTableItem.RedCells.Split('/').ToList();
             RequestRedCells = Int32.Parse(redCellsList[0]);
-            List<string> plasmaList = selectedItem.Plasma.Split('/').ToList();
+            List<string> plasmaList = SelectedTableItem.Plasma.Split('/').ToList();
             RequestPlasma = Int32.Parse(plasmaList[0]);
-            List<string> bloodList = selectedItem.Blood.Split('/').ToList();
+            List<string> bloodList = SelectedTableItem.Blood.Split('/').ToList();
             RequestBlood = Int32.Parse(plasmaList[0]);
+        }
+
+        /// <summary>
+        /// Loads all the donation centers asynchronously sorted by their location.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadDonationCentersAsync()
+        {
+            Model.Doctor doctor;
+            Model.Address originAddress;
+          
+            // Get the doctor
+            doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
+            // Get doctor's work address
+            originAddress = unitOfWork.Addresses.Find(a => a.AddressID == doctor.WorkAddressID).Single();
+            
+            // Clear the doctor
+            doctor = null;
+            // Get the routes
+            routes = (await DistanceMatrixApiHelpers.GetDistancesAsync(originAddress, unitOfWork.DonationCenters.Entities.Select(dc => dc.Address))).ToList();
+            // Sort them by the distance ascending
+            routes.Sort((r1, r2) =>
+            {
+                if (r1.Distance < r2.Distance)
+                    return -1;
+
+                if (r1.Distance > r2.Distance)
+                    return 1;
+
+                if (r1.Duration < r2.Duration)
+                    return -1;
+
+                if (r1.Duration > r2.Duration)
+                    return 1;
+
+                return 0;
+            });
+
+        }
+
+        
+
+        /// <summary>
+        /// Loads all the requests asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadRequestsAsync()
+        {
+            await Task.Run(() =>
+                unitOfWork.BloodRequests
+                        .Entities
+                        .Where(request => request.Doctor.PersonID == appViewModel.User.PersonID)
+                        .ToList()
+                        .ForEach(request =>
+                            dispatcherWrapper.InvokeAsync(() =>
+                            {
+                                int Id = request.BloodRequestID;
+                                string PatientName = request.Patient.Person.FirstName + " " + request.Patient.Person.LastName;
+                                string Priority = request.RequestPriority.Type;
+                                List<Model.BloodContainer> bloodContainers = request.BloodContainers.ToList();
+                                string Trombocytes;
+                                string RedCells;
+                                string Plasma;
+                                string Blood;
+                                string RequestStatus;
+                                string Cdc;
+                                int? Dcn;
+
+                                if (bloodContainers == null || bloodContainers.Count == 0)
+                                {
+                                    Trombocytes = "0" + "/" + request.ThrombocytesQuantity;
+                                    RedCells = "0" + "/" + request.RedCellsQuantity;
+                                    Plasma = "0" + "/" + request.PlasmaQuantity;
+                                    Blood = "0" + "/" + request.BloodQuantity;
+                                }
+                                else
+                                {
+                                    Trombocytes = bloodContainers.Where(bc => bc.BloodRequestID == request.BloodRequestID).ToList()
+                                                        .Where(bc => bc.BloodContainerType.Type == "Trombocytes").Count().ToString()
+                                                        + "/" + request.ThrombocytesQuantity;
+                                    RedCells = bloodContainers.Where(bc => bc.BloodRequestID == request.BloodRequestID).ToList()
+                                                        .Where(bc => bc.BloodContainerType.Type == "Red cells").Count().ToString()
+                                                        + "/" + request.RedCellsQuantity;
+                                    Plasma = bloodContainers.Where(bc => bc.BloodRequestID == request.BloodRequestID).ToList()
+                                                        .Where(bc => bc.BloodContainerType.Type == "Plasma").Count().ToString()
+                                                        + "/" + request.PlasmaQuantity;
+                                    Blood = bloodContainers.Where(bc => bc.BloodRequestID == request.BloodRequestID).ToList()
+                                                    .Where(bc => bc.BloodContainerType.Type == "Blood").Count().ToString()
+                                                    + "/" + request.BloodQuantity;
+                                }
+
+                                if (request.IsFinished == true)
+                                    RequestStatus = "Done";
+                                else
+                                    RequestStatus = "Pending";
+
+                                if (request.DonationCenters.ToList() == null || request.DonationCenters.ToList().Count == 0)
+                                    Cdc = routes[0].DestinationAddress.DonationCenters.ToList()[0].Name;
+                                else
+                                {
+                                    Cdc = request.DonationCenters.ToList().Last().Name;
+                                }
+                                Dcn = request.DonationCenters.Count;
+
+                                RequestItemViewModel requestItem = new RequestItemViewModel();
+                                requestItem.Id = Id;
+                                requestItem.PatientName = PatientName;
+                                requestItem.Priority = Priority;
+                                requestItem.Thrombocytes = Trombocytes;
+                                requestItem.RedCells = RedCells;
+                                requestItem.Plasma = Plasma;
+                                requestItem.Blood = Blood;
+                                requestItem.RequestStatus = RequestStatus;
+                                requestItem.Cdc = Cdc;
+                                requestItem.Dcn = Dcn;
+                                Items.Add(requestItem);
+                                
+                             }
+                            )
+                        )
+            );
         }
 
         /// <summary>
@@ -416,10 +523,7 @@
             priority = unitOfWork.RequestPriorities.Find(r => r.RequestPriorityID == SelectedPriority.Id).Single();
             Model.Doctor doctor;
             doctor = unitOfWork.Persons[IoCContainer.Get<IApplicationViewModel<Model.Doctor>>().User.PersonID].Doctor;
-            Model.Address workingAddress;
-            workingAddress = unitOfWork.Addresses.Find(a => a.AddressID == doctor.WorkAddressID).Single();
-           // Model.DonationCenter cdc; //current donation center
-           // cdc = workingAddress.DonationCenters.ToList()[0];
+           
 
             // If the instance is null, initialize it
             if (request is null)
@@ -433,9 +537,11 @@
             request.Plasma = "0/" + RequestPlasma;
             request.Blood = "0/" + RequestBlood;
             request.RequestStatus = "Pending";
-            request.Cdc = workingAddress.ToString();
+            request.Cdc = routes[0].DestinationAddress.DonationCenters.ToList()[0].Name;
             request.Dcn = 0;
         }
+
+
 
 
         /// <summary>
@@ -480,34 +586,31 @@
                     Popup($"An error occured while adding the request.");
                 }
             });
-            /*
-            ParentPage.AllowErrors();
-
-            if(Errors > 0)
-            {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }
-
-            Vivus.Console.WriteLine("Doctor: Add works!");
-            Popup("Add works!", PopupType.Successful);*/
         }
+
 
         /// <summary>
         /// Cancel.
         /// </summary>
         private void Cancel()
         {
-            /*ParentPage.AllowErrors();
-
-            if (Errors > 0)
+            try
             {
-                Popup("Some errors were found. Fix them before going forward.");
-                return;
-            }*/
+                // Remove from DB
+                List<Model.BloodRequest> bloodRequests = unitOfWork.BloodRequests.Entities.ToList();
+                Model.BloodRequest bloodRequest = bloodRequests.Find(br => br.BloodRequestID == SelectedTableItem.Id);
+                bloodRequests.Remove(bloodRequest);
 
-            Vivus.Console.WriteLine("Doctor: Cancel works!");
-            Popup("Cancel works!", PopupType.Successful);
+                // Remove from table
+                Items.Remove(SelectedTableItem);
+
+                Vivus.Console.WriteLine("Doctor: Canceled a request!");
+                Popup("The request was canceled!", PopupType.Successful);
+            }
+            catch
+            {
+                Popup($"An error occured while canceling the request.");
+            }
         }
 
         #endregion

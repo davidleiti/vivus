@@ -322,6 +322,7 @@
             });
         }
 
+
         /// <summary>
         /// Clears all the fields of the viewmodel.
         /// </summary>
