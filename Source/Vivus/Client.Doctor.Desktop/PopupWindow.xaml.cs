@@ -15,8 +15,7 @@
     public partial class PopupWindow : Window, IPopup
     {
         #region Private Members
-
-        private Point leftMouseButtonDownPosition;
+        
         private BaseViewModel viewModel;
         private object clickedObject;
 
@@ -165,29 +164,6 @@
 
             Opacity = 1;
             Visibility = System.Windows.Visibility.Visible;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Checks whether the mouse click was on the container's padding or not.
-        /// </summary>
-        /// <param name="location">The mouse click location.</param>
-        /// <returns></returns>
-        private bool MouseClickOnPadding(Point location)
-        {
-            // If the click was on the left/right of the container, return true
-            if (location.X >= 0 && location.X <= Width && (location.X < Container.Margin.Left || location.X > Width - Container.Margin.Right))
-                return true;
-
-            // If the click was on the top/bottom of the container, close the window
-            if (location.Y >= 0 && location.Y <= Height && (location.Y < Container.Margin.Top || location.Y > Height - Container.Margin.Bottom))
-                return true;
-
-            // Return false otherwise
-            return false;
         }
 
         #endregion
