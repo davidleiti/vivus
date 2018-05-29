@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -462,10 +463,10 @@
             ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             DonationCenters = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
-            AddCommand = new RelayCommand(AddRequest);
-            RemoveCommand = new RelayCommand(RemoveRequest);
-            RedirectCommand = new RelayCommand(RedirectRequest);
-            FinishCommand = new RelayCommand(FinishRequest);
+            AddCommand = new RelayCommand(AddRequestAsync);
+            RemoveCommand = new RelayCommand(RemoveRequestAsync);
+            RedirectCommand = new RelayCommand(RedirectRequestAsync);
+            FinishCommand = new RelayCommand(FinishRequestAsync);
 
             // lock objects for the 2 Observable Collections
             requestDetailsLockObj = new object();
@@ -660,6 +661,11 @@
         /// </summary>
         private async Task LoadContainerTypesAsync()
         {
+            if(selectedAllRequestsItem == null)
+            {
+                return;
+            }
+
             DCPersonnel dcPersonnel = appViewModel.User;
             int currentDonationCenterId = dcPersonnel.DonationCenterID;
 
@@ -679,12 +685,12 @@
                 }
             }
 
-           ContainerTypes.Clear();
-           ContainerTypes.Add(new BasicEntity<string>(-1, "Select container code"));
+           this.ContainerTypes.Clear();
+           this.ContainerTypes.Add(new BasicEntity<string>(-1, "Select container code"));
            foreach (String bloodConType in stashBloodContainers.Keys)
            {
                 BloodContainerType containerType = unitOfWork.BloodContainerTypes.Entities.Single(bloodContainerType => bloodContainerType.Type == bloodConType);
-                ContainerTypes.Add(new BasicEntity<String>(containerType.ContainerTypeID, containerType.Type));
+                this.ContainerTypes.Add(new BasicEntity<String>(containerType.ContainerTypeID, containerType.Type));
            }
         }
 
@@ -699,8 +705,8 @@
 
             if(containerType is null || containerType.Id == -1)
             {
-                containerCodes.Clear();
-                containerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+                this.ContainerCodes.Clear();
+                this.ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
                 return;
             }
 
@@ -713,11 +719,11 @@
                     contCodes.Add(new BasicEntity<string>(bloodContainer.BloodContainerID, bloodContainer.ContainerCode));
                 }
             }
-            ContainerCodes.Clear();
-            ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+            this.ContainerCodes.Clear();
+            this.ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
             foreach (BasicEntity<String> contCode in contCodes)
             {
-                ContainerCodes.Add(contCode);
+                this.ContainerCodes.Add(contCode);
             }
         }
 
@@ -728,15 +734,15 @@
         {
             if(containerCode is null || containerCode.Id == -1)
             {
-                BloodType = string.Empty;
-                HarvestDate = null;
+                this.bloodType = string.Empty;
+                this.harvestDate = null;
                 return;
             }
 
             BloodContainer bloodContainer = await unitOfWork.BloodContainers.SingleAsync(bloodCon => bloodCon.BloodContainerID == containerCode.Id);
             BloodType bloodTy = await unitOfWork.BloodTypes.SingleAsync(bloodT => bloodT.BloodTypeID == bloodContainer.BloodTypeID);
-            BloodType = bloodTy.Type;
-            HarvestDate = bloodContainer.HarvestDate;
+            this.BloodType = bloodTy.Type;
+            this.HarvestDate = bloodContainer.HarvestDate;
         }
 
         private void PopulateFields()
@@ -764,8 +770,21 @@
             DonationCenters.Add(new BasicEntity<string>(-1, "Select donation center"));
         }
 
+        private void FillModelBloodContainer(ref BloodContainer container)
+        {
 
-        public void AddRequest()
+        }
+
+        private void FillRequestDetailsItem(ref RequestDetailsItem requestDetail, int id)
+        {
+            requestDetail.BloodType = this.BloodType;
+            requestDetail.ContainerCode = this.ContainerCode.Value;
+            requestDetail.ContainerType = this.ContainerType.Value;
+            requestDetail.HarvestDate = this.HarvestDate.GetValueOrDefault();
+            requestDetail.Id = id;
+        }
+
+        public async void AddRequestAsync()
         {
             int count;
 
@@ -784,10 +803,40 @@
                 return;
             }
 
+            if(this.containerCode == null)
+            {
+                Popup("No container is selected!");
+
+                return;
+            }
+
+            await dispatcherWrapper.InvokeAsync(async () =>
+            {
+                DCPersonnel dcPersonnel = appViewModel.User;
+                int currentDonationCenterId = dcPersonnel.DonationCenterID;
+
+                BloodContainer bloodContainer = await unitOfWork.BloodContainers.SingleAsync(bloodCont => bloodCont.BloodContainerID == this.containerCode.Id);
+                IEnumerable<BloodRequest> bloodRequests = await unitOfWork.BloodRequests.GetAllAsync();
+                BloodRequest bloodRequest = null;
+                foreach (BloodRequest bloodReq in bloodRequests)
+                {
+                    DonationCenter lastDonationCenter = bloodReq.DonationCenters.Last();
+
+                    if (lastDonationCenter.DonationCenterID == currentDonationCenterId)
+                    {
+                        bloodRequest = bloodReq;
+                    }
+                }
+                bloodContainer.BloodRequestID = bloodRequest.BloodRequestID;
+                RequestDetailsItem bloodContainerVM = new RequestDetailsItem();
+                FillRequestDetailsItem(ref bloodContainerVM, bloodContainer.BloodContainerID);
+                this.RequestDetailsItems.Add(bloodContainerVM);
+            });
+
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request added!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-        public void RemoveRequest()
+        public void RemoveRequestAsync()
         {
             int count;
 
@@ -808,7 +857,7 @@
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request removed!");
             Popup("Successfull operation!", PopupType.Successful);
         }
-        public void RedirectRequest()
+        public void RedirectRequestAsync()
         {
             int count;
 
@@ -827,7 +876,7 @@
             Popup("Successfull operation!", PopupType.Successful);
         }
 
-        private void FinishRequest()
+        private void FinishRequestAsync()
         {
             Vivus.Console.WriteLine("DCPersonnel BloodRequest: Request finished!");
             Popup("Successfull operation!", PopupType.Successful);
