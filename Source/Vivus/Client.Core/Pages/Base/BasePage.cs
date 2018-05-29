@@ -13,7 +13,34 @@
     /// </summary>
     public class BasePage : Page
     {
+        #region Private Members
+
+        protected BaseViewModel viewModel;
+
+        #endregion
+
         #region Public Properties
+
+        /// <summary>
+        /// The View Model associated with this page.
+        /// </summary>
+        public virtual BaseViewModel ViewModel
+        {
+            get => viewModel;
+
+            set
+            {
+                // If nothing changed, return
+                if (viewModel == value)
+                    return;
+
+                // Update the value
+                viewModel = value;
+
+                // Set the data context for this page
+                DataContext = viewModel;
+            }
+        }
 
         /// <summary>
         /// The animation to play when the page is first loaded.
@@ -358,16 +385,14 @@
     public class BasePage<VM> : BasePage
         where VM : BaseViewModel, new()
     {
-        private VM viewModel;
-
         #region Public Properties
 
         /// <summary>
         /// The View Model associated with this page.
         /// </summary>
-        public VM ViewModel
+        public new VM ViewModel
         {
-            get => viewModel;
+            get => (VM)viewModel;
 
             set
             {

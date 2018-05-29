@@ -137,6 +137,7 @@
     <Compile Include="DataModels\Interfaces\IContainPassword.cs" />
     <Compile Include="DataModels\Interfaces\IDispatcherWrapper.cs" />
     <Compile Include="DataModels\Interfaces\IPage.cs" />
+    <Compile Include="DataModels\Interfaces\IPopup.cs" />
     <Compile Include="DataModels\PopupType.cs" />
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
@@ -258,7 +259,7 @@
       <LastGenOutput>VivusModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="dbConfigurations.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Model\VivusModel.edmx.diagram">
       <DependentUpon>VivusModel.edmx</DependentUpon>

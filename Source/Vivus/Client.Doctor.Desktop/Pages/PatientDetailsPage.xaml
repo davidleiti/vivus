@@ -11,12 +11,11 @@
       xmlns:attachedProperties="clr-namespace:Vivus.Client.Core.AttachedProperties;assembly=Vivus.Client.Core"
       mc:Ignorable="d" 
       SnapsToDevicePixels="True"
-      Background="#fafafa"
       Title="PatientDetailsPage">
 
     <Grid>
-        <ScrollViewer>
-            <StackPanel Margin="75 40" MinWidth="612">
+        <ScrollViewer Padding="75 40">
+            <StackPanel MinWidth="612">
                 <TextBlock Text="Patient details" Foreground="#212529" FontSize="24" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 18" />
 
                 <!-- Personal informations -->

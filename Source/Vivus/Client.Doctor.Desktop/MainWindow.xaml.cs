@@ -6,6 +6,7 @@
     using VivusConsole = Vivus.Core.Console.Console;
     using Windows.Theme.Data;
     using Vivus.Core.Doctor.IoC;
+    using Vivus.Core.DataModels;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -19,6 +20,7 @@
             InitializeComponent();
 
             DataContext = IoCContainer.Get<Vivus.Core.Doctor.ViewModels.WindowViewModel>();
+            (DataContext as Vivus.Core.Doctor.ViewModels.WindowViewModel).Owner = this;
 
             SourceInitialized += MainWindow_SourceInitialized;
         }

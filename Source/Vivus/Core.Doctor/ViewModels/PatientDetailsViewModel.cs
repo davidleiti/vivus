@@ -105,27 +105,27 @@
         /// <summary>
         /// Gets the person view model.
         /// </summary>
-        public PersonViewModel Person { get;  }
+        public PersonViewModel Person { get; set; }
 
         /// <summary>
         /// Gets the identification card address view model.
         /// </summary>
-        public AddressViewModel IdentificationCardAddress { get;  }
+        public AddressViewModel IdentificationCardAddress { get; set; }
 
         /// <summary>
         /// Gets the list of counties.
         /// </summary>
-        public ObservableCollection<BasicEntity<string>> Counties { get; }
+        public ObservableCollection<BasicEntity<string>> Counties { get; set; }
 
         /// <summary>
         /// Gets the list of blood types.
         /// </summary>
-        public ObservableCollection<BasicEntity<string>> BloodTypes { get;  }
+        public ObservableCollection<BasicEntity<string>> BloodTypes { get; set; }
 
         /// <summary>
         /// Gets the list of RHs.
         /// </summary>
-        public ObservableCollection<BasicEntity<string>> RhTypes { get;  }
+        public ObservableCollection<BasicEntity<string>> RhTypes { get; set; }
 
         /// <summary>
         /// Gets the error string of a property.
@@ -197,6 +197,8 @@
 
         private void AddModify()
         {
+            ParentPage.AllowErrors();
+
             if (Errors + Person.Errors + IdentificationCardAddress.Errors > 0)
             {
                 Popup("Some errors were found. Fix them before going forward.");

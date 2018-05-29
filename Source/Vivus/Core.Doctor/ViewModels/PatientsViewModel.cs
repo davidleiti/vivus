@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
@@ -23,7 +24,6 @@
     /// </summary>
     public class PatientsViewModel : BaseViewModel
     {
-
         #region Private Members
 
         private string filter;
@@ -38,10 +38,19 @@
         private IUnitOfWork unitOfWork;
         private IApplicationViewModel<Doctor> appViewModel;
         private List<PatientItemViewModel> allPatients;
+        private PatientItemViewModel lastSelectedPatient;
+        private ObservableCollection<BasicEntity<string>> counties;
+        private ObservableCollection<BasicEntity<string>> bloodTypes;
+        private ObservableCollection<BasicEntity<string>> rhs;
 
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the popup for the patient details.
+        /// </summary>
+        public IPopup PatientDetailsPopup { get; set; }
 
         /// <summary>
         /// Gets or sets the filter value.
@@ -71,21 +80,23 @@
         /// <summary>
         /// Gets the collection of own patients
         /// </summary>
-        public ObservableCollection<PatientItemViewModel> MyPatients { get; }
+        public ObservableCollection<PatientItemViewModel> MyPatients { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected patient
         /// </summary>
-        public PatientItemViewModel SelectedPatient {
+        public PatientItemViewModel SelectedPatient
+        {
             get => selectedPatient;
 
             set
             {
+                lastSelectedPatient = value;
+
                 if (selectedPatient == value)
                     return;
 
                 selectedPatient = value;
-                VivusConsole.WriteLine(selectedPatient.Name);
 
                 OnPropertyChanged();
             }
@@ -94,11 +105,14 @@
         /// <summary>
         /// Gets or set the my selected patient
         /// </summary>
-        public PatientItemViewModel MySelectedPatient {
+        public PatientItemViewModel MySelectedPatient
+        {
             get => mySelectedPatient;
 
             set
             {
+                lastSelectedPatient = value;
+
                 if (mySelectedPatient == value)
                     return;
 
@@ -168,17 +182,22 @@
         #region Public Commands
 
         /// <summary>
-        /// Gets the new patient command
+        /// Gets the new patient command.
         /// </summary>
         public ICommand NewPatientCommand { get; }
 
         /// <summary>
-        /// Gets the choose command
+        /// Gets the modify patient command.
+        /// </summary>
+        public ICommand ModifyPatientCommand { get; }
+
+        /// <summary>
+        /// Gets the choose command.
         /// </summary>
         public ICommand ChooseCommand { get; }
 
         /// <summary>
-        /// Get the dismiss command
+        /// Get the dismiss command.
         /// </summary>
         public ICommand DismissCommand { get; }
 
@@ -192,6 +211,10 @@
             allPatientsLockObj = new object();
             myPatientsLockObj = new object();
             allPatients = new List<PatientItemViewModel>();
+            lastSelectedPatient = null;
+            counties = new ObservableCollection<BasicEntity<string>>();
+            bloodTypes = new ObservableCollection<BasicEntity<string>>();
+            rhs = new ObservableCollection<BasicEntity<string>>();
 
             AllPatients = new ObservableCollection<PatientItemViewModel>();
             MyPatients = new ObservableCollection<PatientItemViewModel>();
@@ -199,12 +222,20 @@
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
             appViewModel = IoCContainer.Get<IApplicationViewModel<Doctor>>();
 
-            NewPatientCommand = new RelayCommand(NewPatient);
+            NewPatientCommand = new RelayCommand<Action>(action => NewPatient(action));
+            ModifyPatientCommand = new RelayCommand<Action>(action => ModifyPatient(action));
             ChooseCommand = new RelayCommand(ChoosePatientAsync);
             DismissCommand = new RelayCommand(DismissPatientAsync);
 
             BindingOperations.EnableCollectionSynchronization(AllPatients, allPatientsLockObj);
             BindingOperations.EnableCollectionSynchronization(MyPatients, myPatientsLockObj);
+
+            Task.Run(async () =>
+            {
+                await LoadCounties();
+                await LoadBloodTypes();
+                await LoadRhs();
+            }).Wait();
 
             LoadPatientsAsync();
         }
@@ -213,6 +244,9 @@
 
         #region Private Methods
 
+        /// <summary>
+        /// Filters the patients from the all patients table based on the components of the <see cref="Filter"/> property.
+        /// </summary>
         private void FilterPatients()
         {
             int filterId;
@@ -279,12 +313,23 @@
                     patientVM = new PatientItemViewModel
                     {
                         Id = patient.PersonID,
-                        Name = $"{ patient.Person.FirstName } { patient.Person.LastName }",
+                        FirstName = patient.Person.FirstName,
+                        LastName = patient.Person.LastName,
+                        BirthDate = patient.Person.BirthDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
                         NationalIdentificationNumber = patient.Person.Nin,
-                        BloodType = patient.BloodType.Type + (patient.RH.Type == "Positive" ? "+" : "-"),
-                        Age = DateTime.Now.Year - patient.Person.BirthDate.Year,
-                        Gender = patient.Person.Gender.Type,
-                        Status = patient.PersonStatus.Type
+                        PhoneNumber = patient.Person.PhoneNo,
+                        Gender = new BasicEntity<string>(patient.Person.Gender.GenderID, patient.Person.Gender.Type),
+                        Address = new AddressViewModel
+                        {
+                            StreetName = patient.Person.Address.Street,
+                            StreetNumber = patient.Person.Address.StreetNo,
+                            City = patient.Person.Address.City,
+                            County = new BasicEntity<string>(patient.Person.Address.County.CountyID, patient.Person.Address.County.Name),
+                            ZipCode = patient.Person.Address.ZipCode
+                        },
+                        BloodType = new BasicEntity<string>(patient.BloodType.BloodTypeID, patient.BloodType.Type),
+                        RH = new BasicEntity<string>(patient.RH.RhID, patient.RH.Type),
+                        Status = new BasicEntity<string>(patient.PersonStatus.PersonStatusID, patient.PersonStatus.Type)
                     };
 
                     if (patient.DoctorID.HasValue && patient.DoctorID == doctorId)
@@ -319,12 +364,70 @@
         }
 
         /// <summary>
-        /// Add a new patient
+        /// Adds a new patient.
         /// </summary>
-        private void NewPatient()
+        /// <param name="newPopup">The create popup action.</param>
+        private async void NewPatient(Action newPopup)
         {
-            VivusConsole.WriteLine("PatientsPage: Add new patient!");
-            Popup("Successfull operation!", PopupType.Successful);
+            await RunCommand(() => NewPatientIsRunning, async () =>
+            {
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    // Create new popup instance
+                    newPopup();
+                    // Show the popup
+                    PatientDetailsPopup.ShowDialog(null);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Modifies an existing patient.
+        /// </summary>
+        /// <param name="newPopup">The create popup action.</param>
+        private async void ModifyPatient(Action newPopup)
+        {
+            if (lastSelectedPatient is null)
+                return;
+
+            await dispatcherWrapper.InvokeAsync(() =>
+            {
+                PatientDetailsViewModel patientDetailsVM;
+
+                // Create new popup instance
+                newPopup();
+
+                // Populate the fields
+                patientDetailsVM = new PatientDetailsViewModel
+                {
+                    Counties = counties,
+                    BloodTypes = bloodTypes,
+                    RhTypes = rhs,
+                    Person = new PersonViewModel
+                    {
+                        FirstName = lastSelectedPatient.FirstName,
+                        LastName = lastSelectedPatient.LastName,
+                        BirthDate = lastSelectedPatient.BirthDate,
+                        NationalIdentificationNumber = lastSelectedPatient.NationalIdentificationNumber,
+                        PhoneNumber = lastSelectedPatient.PhoneNumber,
+                        Gender = lastSelectedPatient.Gender
+                    },
+                    IdentificationCardAddress = new AddressViewModel
+                    {
+                        StreetName = lastSelectedPatient.Address.StreetName,
+                        StreetNumber = lastSelectedPatient.Address.StreetNumber,
+                        City = lastSelectedPatient.Address.City,
+                        County = lastSelectedPatient.Address.County,
+                        ZipCode = lastSelectedPatient.Address.ZipCode
+                    },
+                    SelectedBloodType = lastSelectedPatient.BloodType,
+                    SelectedRh = lastSelectedPatient.RH,
+                    ButtonType = ButtonType.Modify
+                };
+
+                // Show the popup
+                PatientDetailsPopup.ShowDialog(patientDetailsVM);
+            });
         }
 
         /// <summary>
@@ -367,7 +470,7 @@
         }
 
         /// <summary>
-        /// Dismiss a patient
+        /// Dismisses a patient.
         /// </summary>
         private async void DismissPatientAsync()
         {
@@ -421,6 +524,54 @@
             });
         }
 
+        /// <summary>
+        /// Loads asynchronously all the RHs.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadRhs()
+        {
+            List<RH> rhs;
+
+            rhs = (List<RH>)await unitOfWork.RHs.GetAllAsync();
+
+            rhs.ForEach(rh =>
+            {
+                this.rhs.Add(new BasicEntity<string>(rh.RhID, rh.Type));
+            });
+        }
+
+        /// <summary>
+        /// Loads asynchronously all the blood types.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadBloodTypes()
+        {
+            List<BloodType> bloodTypes;
+
+            bloodTypes = (List<BloodType>)await unitOfWork.BloodTypes.GetAllAsync();
+
+            bloodTypes.ForEach(bloodType =>
+            {
+                this.bloodTypes.Add(new BasicEntity<string>(bloodType.BloodTypeID, bloodType.Type));
+            });
+        }
+
+        /// <summary>
+        /// Loads asynchronously all the counties. 
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadCounties()
+        {
+            List<County> counties;
+
+            counties = (List<County>)await unitOfWork.Counties.GetAllAsync();
+
+            counties.ForEach(county =>
+            {
+                this.counties.Add(new BasicEntity<string>(county.CountyID, county.Name));
+            });
+        }
+
         #endregion
     }
 
@@ -428,13 +579,11 @@
     {
         #region Private Members
 
+        private PersonViewModel personVM;
         private int id;
-        private string name;
-        private string nin;
-        private string bloodType;
-        private int age;
-        private string gender;
-        private string status;
+        private BasicEntity<string> bloodType;
+        private BasicEntity<string> rh;
+        private BasicEntity<string> status;
 
         #endregion
 
@@ -459,21 +608,76 @@
         }
 
         /// <summary>
-        /// Gets or sets the name
+        /// Gets or sets the first name of the patient.
         /// </summary>
-        public string Name
+        public string FirstName
         {
-            get => name;
+            get => personVM.FirstName;
 
             set
             {
-                if (name == value)
+                if (personVM.FirstName == value)
                     return;
 
-                name = value;
+                personVM.FirstName = value;
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Name));
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the las name of the patient.
+        /// </summary>
+        public string LastName
+        {
+            get => personVM.LastName;
+
+            set
+            {
+                if (personVM.LastName == value)
+                    return;
+
+                personVM.LastName = value;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        /// <summary>
+        /// Gets the full name of the patient.
+        /// </summary>
+        public string Name
+        {
+            get => $"{ FirstName.Trim() } { LastName.Trim() }";
+        }
+
+        /// <summary>
+        /// Gets or sets the birth date of the patient.
+        /// </summary>
+        public string BirthDate
+        {
+            get => personVM.BirthDate;
+
+            set
+            {
+                if (personVM.BirthDate == value)
+                    return;
+
+                personVM.BirthDate = value;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Age));
+            }
+        }
+
+        /// <summary>
+        /// Gets the age of the patient.
+        /// </summary>
+        public int Age
+        {
+            get => DateTime.Now.AddYears(-DateTime.Parse(BirthDate).Year).Year;
         }
 
         /// <summary>
@@ -481,23 +685,64 @@
         /// </summary>
         public string NationalIdentificationNumber
         {
-            get => nin;
+            get => personVM.NationalIdentificationNumber;
 
             set
             {
-                if (nin == value)
+                if (personVM.NationalIdentificationNumber == value)
                     return;
 
-                nin = value;
+                personVM.NationalIdentificationNumber = value;
 
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
-        /// Gets or sets the blood type
+        /// Gets or sets the phone number of the patient.
         /// </summary>
-        public string BloodType
+        public string PhoneNumber
+        {
+            get => personVM.PhoneNumber;
+
+            set
+            {
+                if (personVM.PhoneNumber == value)
+                    return;
+
+                personVM.PhoneNumber = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the gender
+        /// </summary>
+        public BasicEntity<string> Gender
+        {
+            get => personVM.Gender;
+
+            set
+            {
+                if (personVM.Gender == value)
+                    return;
+
+                personVM.Gender = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the address of the patient.
+        /// </summary>
+        public AddressViewModel Address { get; set; }
+
+        /// <summary>
+        /// Gets or sets the blood type of the patient.
+        /// </summary>
+        public BasicEntity<string> BloodType
         {
             get => bloodType;
 
@@ -509,49 +754,38 @@
                 bloodType = value;
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(BloodTypeRH));
             }
         }
 
         /// <summary>
-        /// Gets or sets the age
+        /// Gets or sets the RH of the patient.
         /// </summary>
-        public int Age
+        public BasicEntity<string> RH
         {
-            get => age;
+            get => rh;
 
             set
             {
-                if (age == value)
+                if (rh == value)
                     return;
 
-                age = value;
+                rh = value;
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(BloodTypeRH));
             }
         }
 
-        /// <summary>
-        /// Gets or sets the gender
-        /// </summary>
-        public string Gender
+        public string BloodTypeRH
         {
-            get => gender;
-
-            set
-            {
-                if (gender == value)
-                    return;
-
-                gender = value;
-
-                OnPropertyChanged();
-            }
+            get => $"{ BloodType.Value }{ (RH.Value == "Positive" ? "+" : "-") }";
         }
 
         /// <summary>
-        /// Gets or sets the status
+        /// Gets or sets the status of the patient.
         /// </summary>
-        public string Status
+        public BasicEntity<string> Status
         {
             get => status;
 
@@ -564,6 +798,18 @@
 
                 OnPropertyChanged();
             }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initalizes a new insance of the <see cref="PatientItemViewModel"/> class with the default values.
+        /// </summary>
+        public PatientItemViewModel()
+        {
+            personVM = new PersonViewModel();
         }
 
         #endregion
