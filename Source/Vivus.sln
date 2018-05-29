@@ -3,16 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Client.Administration.Desktop", "Vivus\Client.Administration.Desktop\Vivus.Client.Administration.Desktop.csproj", "{13FC264C-F606-45C7-9DA6-024C5ED400C4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Client.DCPersonnel.Desktop", "Vivus\Client.DCPersonnel.Desktop\Vivus.Client.DCPersonnel.Desktop.csproj", "{135FC0AE-F74E-4C80-96A8-0741475E3F7E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Client.Doctor.Desktop", "Vivus\Client.Doctor.Desktop\Vivus.Client.Doctor.Desktop.csproj", "{3B988C76-E448-4F73-8642-4BB90E869813}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Client.Donor.Desktop", "Vivus\Client.Donor.Desktop\Vivus.Client.Donor.Desktop.csproj", "{8756DBCC-7677-4AFC-A829-0F5D0965D1C6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core", "Vivus\Core\Vivus.Core.csproj", "{23EE977C-4348-4F29-A974-0CCFEB189D95}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.Administration", "Vivus\Core.Administration\Vivus.Core.Administration.csproj", "{FA135821-1A81-40B4-959E-3A3F0795B992}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vivus.Core.DCPersonnel", "Vivus\Core.DCPersonnel\Vivus.Core.DCPersonnel.csproj", "{FED25EB6-82B1-467C-A657-0C1165B97B0D}"
@@ -41,26 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{13FC264C-F606-45C7-9DA6-024C5ED400C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13FC264C-F606-45C7-9DA6-024C5ED400C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13FC264C-F606-45C7-9DA6-024C5ED400C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13FC264C-F606-45C7-9DA6-024C5ED400C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{135FC0AE-F74E-4C80-96A8-0741475E3F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{135FC0AE-F74E-4C80-96A8-0741475E3F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{135FC0AE-F74E-4C80-96A8-0741475E3F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{135FC0AE-F74E-4C80-96A8-0741475E3F7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B988C76-E448-4F73-8642-4BB90E869813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B988C76-E448-4F73-8642-4BB90E869813}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B988C76-E448-4F73-8642-4BB90E869813}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B988C76-E448-4F73-8642-4BB90E869813}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8756DBCC-7677-4AFC-A829-0F5D0965D1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8756DBCC-7677-4AFC-A829-0F5D0965D1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8756DBCC-7677-4AFC-A829-0F5D0965D1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8756DBCC-7677-4AFC-A829-0F5D0965D1C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23EE977C-4348-4F29-A974-0CCFEB189D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23EE977C-4348-4F29-A974-0CCFEB189D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23EE977C-4348-4F29-A974-0CCFEB189D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23EE977C-4348-4F29-A974-0CCFEB189D95}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA135821-1A81-40B4-959E-3A3F0795B992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA135821-1A81-40B4-959E-3A3F0795B992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA135821-1A81-40B4-959E-3A3F0795B992}.Release|Any CPU.ActiveCfg = Release|Any CPU
