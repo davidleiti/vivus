@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -26,6 +25,7 @@
     public class BloodRequestsViewModel : BaseViewModel
     {
         #region Private members
+
         private int? thrombocytes;
         private int? plasma;
         private int? redCells;
@@ -43,9 +43,9 @@
         private BasicEntity<string> containerCode;
         private BasicEntity<string> donationCenter;
 
-        private List<BasicEntity<string>> containerTypes;
-        private List<BasicEntity<string>> containerCodes;
-        private List<BasicEntity<string>> donationCenters;
+        private ObservableCollection<BasicEntity<string>> containerTypes;
+        private ObservableCollection<BasicEntity<string>> containerCodes;
+        private ObservableCollection<BasicEntity<string>> donationCenters;
 
         private RequestDetailsItem selectedRequestDetailsItem;
         private AllRequestsItem selectedAllRequestsItem;
@@ -92,6 +92,7 @@
                 OnPropertyChanged();
             }
         }
+
         public int? Plasma
         {
             get => plasma;
@@ -108,6 +109,7 @@
             }
 
         }
+
         public int? RedCells
         {
 
@@ -165,6 +167,7 @@
                 OnPropertyChanged();
             }
         }
+
         public string CurrentPlasma
         {
             get => currentPlasma;
@@ -180,6 +183,7 @@
                 OnPropertyChanged();
             }
         }
+
         public string CurrentRedCells
         {
             get => currentRedCells;
@@ -272,7 +276,7 @@
                 OnPropertyChanged();
             }
         }
-        private DateTime? HarvestDate
+        public DateTime? HarvestDate
         {
 
             get => harvestDate;
@@ -322,9 +326,8 @@
                 return null;
             }
         }
-        public IPage ParentPage { get; set; }
 
-        public List<BasicEntity<string>> ContainerTypes
+        public ObservableCollection<BasicEntity<string>> ContainerTypes
         {
             get => containerTypes;
 
@@ -338,7 +341,7 @@
                 OnPropertyChanged();
             }
         }
-        public List<BasicEntity<string>> ContainerCodes
+        public ObservableCollection<BasicEntity<string>> ContainerCodes
         {
             get => containerCodes;
 
@@ -355,7 +358,7 @@
 
             }
         }
-        public List<BasicEntity<string>> DonationCenters
+        public ObservableCollection<BasicEntity<string>> DonationCenters
         {
             get => donationCenters;
 
@@ -457,12 +460,12 @@
         #region Constructors
         public BloodRequestsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
-            ContainerTypes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
+            ContainerTypes = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container type") };
             // ContainerTypes.Add(new BasicEntity<string>(11, "value"));
             //ContainerTypes = new List<BasicEntity<string>> { };
-            ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
+            ContainerCodes = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
             //ContainerCodes = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select container code") };
-            DonationCenters = new List<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
+            DonationCenters = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select donation center") };
             AddCommand = new RelayCommand(AddRequestAsync);
             RemoveCommand = new RelayCommand(RemoveRequestAsync);
             RedirectCommand = new RelayCommand(RedirectRequestAsync);
@@ -661,8 +664,14 @@
         /// </summary>
         private async Task LoadContainerTypesAsync()
         {
-            if(selectedAllRequestsItem == null)
+            if (selectedAllRequestsItem == null)
             {
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    ContainerTypes.Clear();
+                    ContainerTypes.Add(new BasicEntity<string>(-1, "Select container type"));
+                    ContainerType = ContainerTypes[0];
+                });
                 return;
             }
 
@@ -685,13 +694,20 @@
                 }
             }
 
-           this.ContainerTypes.Clear();
-           this.ContainerTypes.Add(new BasicEntity<string>(-1, "Select container code"));
-           foreach (String bloodConType in stashBloodContainers.Keys)
-           {
+            await dispatcherWrapper.InvokeAsync(() =>
+            {
+                ContainerTypes.Clear();
+                ContainerTypes.Add(new BasicEntity<string>(-1, "Select container type"));
+                ContainerType = ContainerTypes[0];
+            });
+            foreach (String bloodConType in stashBloodContainers.Keys)
+            {
                 BloodContainerType containerType = unitOfWork.BloodContainerTypes.Entities.Single(bloodContainerType => bloodContainerType.Type == bloodConType);
-                this.ContainerTypes.Add(new BasicEntity<String>(containerType.ContainerTypeID, containerType.Type));
-           }
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    ContainerTypes.Add(new BasicEntity<String>(containerType.ContainerTypeID, containerType.Type));
+                });
+            }
         }
 
 
@@ -705,8 +721,12 @@
 
             if(containerType is null || containerType.Id == -1)
             {
-                this.ContainerCodes.Clear();
-                this.ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    ContainerCodes.Clear();
+                    ContainerCodes.Add(new BasicEntity<string>(-1, "Select container code"));
+                    ContainerCode = ContainerCodes[0];
+                });
                 return;
             }
 
@@ -719,12 +739,15 @@
                     contCodes.Add(new BasicEntity<string>(bloodContainer.BloodContainerID, bloodContainer.ContainerCode));
                 }
             }
-            this.ContainerCodes.Clear();
-            this.ContainerCodes.Add(new BasicEntity<string>(-1, "Select container type"));
-            foreach (BasicEntity<String> contCode in contCodes)
+
+            await dispatcherWrapper.InvokeAsync(() =>
             {
-                this.ContainerCodes.Add(contCode);
-            }
+                ContainerCodes.Clear();
+                ContainerCodes.Add(new BasicEntity<string>(-1, "Select container code"));
+                ContainerCode = ContainerCodes[0];
+            });
+            foreach (BasicEntity<String> contCode in contCodes)
+                await dispatcherWrapper.InvokeAsync(() => ContainerCodes.Add(contCode));
         }
 
         /// <summary>
@@ -734,15 +757,15 @@
         {
             if(containerCode is null || containerCode.Id == -1)
             {
-                this.bloodType = string.Empty;
-                this.harvestDate = null;
+                bloodType = string.Empty;
+                harvestDate = null;
                 return;
             }
 
             BloodContainer bloodContainer = await unitOfWork.BloodContainers.SingleAsync(bloodCon => bloodCon.BloodContainerID == containerCode.Id);
             BloodType bloodTy = await unitOfWork.BloodTypes.SingleAsync(bloodT => bloodT.BloodTypeID == bloodContainer.BloodTypeID);
-            this.BloodType = bloodTy.Type;
-            this.HarvestDate = bloodContainer.HarvestDate;
+            BloodType = bloodTy.Type;
+            HarvestDate = bloodContainer.HarvestDate;
         }
 
         private void PopulateFields()
@@ -793,7 +816,9 @@
 
             count = errors.Keys
                         .Where(key => key != nameof(DonationCenter))
-                        .Select(key => errors[key]).Aggregate((l1, l2) => l1.Concat(l2).ToList())
+                        .DefaultIfEmpty()
+                        .Select(key => key is null ? new List<string>() : errors[key])
+                        .Aggregate((l1, l2) => l1.Concat(l2).ToList())
                         .Count;
 
             if (count > 0)
@@ -968,6 +993,7 @@
         }
         #endregion
     }
+
     public class AllRequestsItem : BaseViewModel
     {
         #region Private memebers
@@ -1126,5 +1152,4 @@
        
         #endregion
     }
-
 }

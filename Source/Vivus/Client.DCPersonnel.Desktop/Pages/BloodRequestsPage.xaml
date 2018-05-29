@@ -129,7 +129,7 @@
                     <!-- Harverst date -->
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Harverst date" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
-                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" Text="{Binding HarvestDate,Converter={valueConverters:DateTimeToStringConverter},ValidatesOnDataErrors=True,Mode=OneWay}"/>
+                        <TextBox Tag="dd/mm/yyyy" IsReadOnly="True" Text="{Binding HarvestDate, Converter={valueConverters:NullableDateTimeToStringConverter}, Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
