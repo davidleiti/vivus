@@ -23,14 +23,13 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid Background="White">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <controls:PageHostControl Grid.Column="1"
-                                  Background="#fafafa"
                                   DataContext="{Binding WindowViewModel.CurrentPage, Source={x:Static viewModels:ViewModelLocator.Instance}, Converter={valueConverter:ApplicationPageToPageValueConverter}}"
                                   CurrentPage="{Binding}" />
 
