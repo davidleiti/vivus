@@ -90,15 +90,15 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="*" />
+                        <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="150" />
                         <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" Width="70" />
-                        <DataGridTextColumn Header="Thrombocytes" Binding="{Binding Thrombocytes}" Width="108" />
+                        <DataGridTextColumn Header="Thrombocytes" Binding="{Binding Thrombocytes}" Width="107" />
                         <DataGridTextColumn Header="Red cells" Binding="{Binding RedCells}" Width="78" />
                         <DataGridTextColumn Header="Plasma" Binding="{Binding Plasma}" Width="69" />
                         <DataGridTextColumn Header="Blood" Binding="{Binding Blood}" Width="69" />
                         <DataGridTextColumn Header="Request status" Binding="{Binding RequestStatus}" Width="109" />
-                        <DataGridTextColumn Header="CDC" Binding="{Binding Cdc}" Width="*" />
-                        <DataGridTextColumn Header="DCN" Binding="{Binding Dcn}" Width="60" />
+                        <DataGridTextColumn Header="CDC" Binding="{Binding Cdc}" Width="300" />
+                        <DataGridTextColumn Header="DCN" Binding="{Binding Dcn}" Width="56" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- Cancel request button -->
