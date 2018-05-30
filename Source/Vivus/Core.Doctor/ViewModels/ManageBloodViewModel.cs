@@ -123,8 +123,12 @@
             {
                 ContainersStorageItemViewModel selectedContainer = SelectedItem;
                 await unitOfWork.CompleteAsync();
-                // unitOfWork.BloodContainers[selectedContainer.Id] - do something about it when on return
+
+                // this container does not belong to any doctor after setting the request to null
+                unitOfWork.BloodContainers[selectedContainer.Id].BloodRequestID = null;
+                
                 Items.Remove(selectedContainer);
+                // todo: remove request?
                 Popup("Blood container return request sent successfully!", PopupType.Successful);
             }
             catch
@@ -179,10 +183,6 @@
         public ManageBloodViewModel():base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Items = new ObservableCollection<ContainersStorageItemViewModel>();
-
-            // todo delete these
-            //DismissCommand = new RelayCommand(DismissBloodContainer);
-            //ReturnCommand = new RelayCommand(ReturnBloodContainer);
 
             DismissCommand = new RelayCommand(async () => await DismissBloodContainerAsync());
             ReturnCommand = new RelayCommand(async () => await ReturnBloodContainerAsync());
