@@ -596,7 +596,7 @@
                                     SenderID = dcId,
                                     SendDate = DateTime.Now,
                                     Content = "We lack in blood of your type, we are already waiting for you at the donation center you are registered at, come and donate to save a life!",
-                                    RecieverID = donor.AccountID
+                                    RecieverID = donor.PersonID
                                 })
                             );
                     // Make changes persistent
