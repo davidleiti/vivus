@@ -585,11 +585,10 @@
 
                 try
                 {
-                    int dcId = unitOfWork.DCPersonnel[appViewModel.User.AccountID].DonationCenterID;
-                    
+                    int dcId = unitOfWork.DCPersonnel[appViewModel.User.PersonID].DonationCenterID;
                     unitOfWork.Donors
                         .Entities.ToList()
-                        .Where(donor => donor.DonationCenterID == dcId)
+                        .Where(donor => donor.DonationCenterID == dcId && donor.BloodType.Type.Equals(RequestBloodType.Value) && donor.RH.Type.Equals(RequestRH.Value))
                         .ToList()
                             .ForEach(donor =>
                                 unitOfWork.Messages.Add(new Model.Message
@@ -601,12 +600,13 @@
                                 })
                             );
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                 }
                 catch
                 {
                     Popup("An error occured while sending requests.");
+                    return false;
                 }
 
                 Vivus.Console.WriteLine("DC Personnel: Blood requested!");
