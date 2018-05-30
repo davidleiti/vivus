@@ -502,7 +502,7 @@
             DonationForm donationForm = await CreateDonationForm(true);
             unitOfWork.DonationForms.Add(donationForm);
             // Make changes persistent
-            //unitOfWork.Complete();
+            await unitOfWork.CompleteAsync();
         }
 
         #endregion
