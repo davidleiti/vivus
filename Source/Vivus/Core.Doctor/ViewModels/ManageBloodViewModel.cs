@@ -2,10 +2,16 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
     using Vivus.Core.DataModels;
+    using Vivus.Core.Doctor.IoC;
+    using Vivus.Core.Security;
+    using Vivus.Core.UoW;
     using Vivus.Core.ViewModels;
+    using Vivus.Core.ViewModels.Base;
     using Vivus = Console;
 
     /// <summary>
@@ -13,7 +19,22 @@
     /// </summary>
     public class ManageBloodViewModel : BaseViewModel
     {
+        #region Private fields
+
+        private ButtonType buttonType;
+        private bool actionIsRunning;
+        private ContainersStorageItemViewModel selectedItem;
+        private IUnitOfWork unitOfWork;
+        private IApplicationViewModel<Model.Doctor> appViewModel;
+        private ISecurity security;
+        private bool operationSuccessful;
+
+        #endregion
+
         #region Public properties
+
+        public IPage ParentPage { get; set; }
+
         public ObservableCollection<ContainersStorageItemViewModel> Items { get; }
 
         /// <summary>
@@ -23,39 +44,156 @@
 
         public ICommand ReturnCommand { get; }
 
+        public ContainersStorageItemViewModel SelectedItem
+        {
+            get => selectedItem;
+
+            set
+            {
+                if (value == selectedItem)
+                    return;
+                selectedItem = value;
+
+                if(selectedItem is null)
+                {
+                    // todo : is here something related to button type needed?
+                    return;
+                }
+                else
+                {
+                    // todo same with button type
+                    
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+                    // populate fields not needed
+                }
+                OnPropertyChanged();
+            }
+        }
+
+
+        public bool ActionIsRunning
+        {
+            get => actionIsRunning;
+
+            set
+            {
+                if (ActionIsRunning == value)
+                    return;
+
+                actionIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Private methonds
 
-        private void DismissBloodContainer()
+        private async Task DismissBloodContainerAsync()
         {
-            Vivus.Console.WriteLine("Doctor: Dismiss a blood container!");
-            Popup("Successfull operation!", PopupType.Successful);
+            if (SelectedItem is null)
+            {
+                Popup("No container selected, before dismissing please select one.");
+                return;
+            }
+
+            try
+            {
+                ContainersStorageItemViewModel selectedContainer = SelectedItem;
+                await unitOfWork.CompleteAsync();
+                Items.Remove(selectedContainer);
+                Popup("Blood container dismissed successfully!", PopupType.Successful);
+            } 
+            catch
+            {
+                Popup("Unexpected error occured. Please try again later.");
+            }
+
         }
 
-        private void ReturnBloodContainer()
+        private async Task ReturnBloodContainerAsync()
         {
-            Vivus.Console.WriteLine("Doctor: Return a blood container!");
-            Popup("Successfull operation!", PopupType.Successful);
+            if (SelectedItem is null)
+            {
+                Popup("Before returning a blood container, select one.");
+                return;
+            }
+            try
+            {
+                ContainersStorageItemViewModel selectedContainer = SelectedItem;
+                await unitOfWork.CompleteAsync();
+                // unitOfWork.BloodContainers[selectedContainer.Id] - do something about it when on return
+                Items.Remove(selectedContainer);
+                Popup("Blood container return request sent successfully!", PopupType.Successful);
+            }
+            catch
+            {
+                Popup("Operation encountered some errors. Try again later.");
+            }
         }
 
+        private bool isExpired(string containerType, DateTime harvestDate)
+        {
+            if (containerType.Equals("Thrombocytes"))
+                return harvestDate.AddDays(6) <= DateTime.Now;
+            if (containerType.Equals("Red cells"))
+                return harvestDate.AddDays(43) <= DateTime.Now;
+            if (containerType.Equals("Plasma"))
+                return harvestDate.AddMonths(12).AddDays(1) <= DateTime.Now;
+            return harvestDate.AddDays(43) <= DateTime.Now;
+        }
+
+        private async Task LoadContainersAsync()
+        {
+            await Task.Run(() =>
+            {
+                dispatcherWrapper.InvokeAsync(() => Items.Clear());
+                unitOfWork.BloodContainers
+                .Entities
+                .ToList()
+                .ForEach(bloodContainer =>
+                   dispatcherWrapper.InvokeAsync(() =>
+                       Items.Add(
+                           new ContainersStorageItemViewModel
+                           {
+                               ContainerType = bloodContainer.BloodContainerType.Type,
+                               ContainerCode = bloodContainer.ContainerCode,
+                               BloodType = bloodContainer.BloodType.Type,
+                               HarvestDate = bloodContainer.HarvestDate,
+                               Expired = isExpired(bloodContainer.BloodContainerType.Type, bloodContainer.HarvestDate)           
+                           }
+                           )
+                   )
+                );
+            });
+        }
 
         #endregion
-
 
         #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageBloodViewModel"/> class with the default values.
         /// </summary>
-        public ManageBloodViewModel()
+        public ManageBloodViewModel():base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             Items = new ObservableCollection<ContainersStorageItemViewModel>();
 
-            DismissCommand = new RelayCommand(DismissBloodContainer);
-            ReturnCommand = new RelayCommand(ReturnBloodContainer);
+            // todo delete these
+            //DismissCommand = new RelayCommand(DismissBloodContainer);
+            //ReturnCommand = new RelayCommand(ReturnBloodContainer);
+
+            DismissCommand = new RelayCommand(async () => await DismissBloodContainerAsync());
+            ReturnCommand = new RelayCommand(async () => await ReturnBloodContainerAsync());
+
+            unitOfWork = IoCContainer.Get<IUnitOfWork>();
+            appViewModel = IoCContainer.Get<IApplicationViewModel<Model.Doctor>>();
+            security = IoCContainer.Get<ISecurity>();
 
             // Test whether the binding was done right or not
+
+            /*
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Items.Add(new ContainersStorageItemViewModel
@@ -68,7 +206,18 @@
                     Expired = false
                 });
             });
+            */
+
+            Task.Run(async () =>
+            {
+                await LoadContainersAsync();
+            });
         }
+
+        #endregion
+
+        #region Public Methods
+
 
         #endregion
 
