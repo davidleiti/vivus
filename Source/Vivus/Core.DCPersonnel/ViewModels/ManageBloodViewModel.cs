@@ -500,7 +500,7 @@
                     FillModelBloodContainer(ref bloodContainer);
                     unitOfWork.BloodContainers.Add(bloodContainer);
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                     //Update the table
                     FillContainersStorageItemViewModel(ref storageItemViewModel);
@@ -547,7 +547,7 @@
 
                     FillModelBloodContainer(ref bloodContainer);
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                     FillContainersStorageItemViewModel(ref selectedItem);
 
