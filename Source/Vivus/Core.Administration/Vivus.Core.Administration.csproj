@@ -52,6 +52,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Twilio, Version=5.13.2.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Windows.Theme, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -65,6 +66,7 @@
     <Compile Include="ViewModels\DCPersonnelViewModel.cs" />
     <Compile Include="ViewModels\DoctorsViewModel.cs" />
     <Compile Include="ViewModels\DonationCentersViewModel.cs" />
+    <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />

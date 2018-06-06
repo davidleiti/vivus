@@ -21,6 +21,9 @@
                 case ApplicationPage.Login:
                     return new LoginPage();
 
+                case ApplicationPage.ForgotPassword:
+                    return new ForgotPasswordPage();
+
                 case ApplicationPage.Doctors:
                     return new DoctorsPage();
 

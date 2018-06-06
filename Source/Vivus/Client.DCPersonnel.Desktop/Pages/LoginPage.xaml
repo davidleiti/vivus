@@ -35,7 +35,7 @@
                             </StackPanel>
                         </Border>
                         <Button Content="Sign in" Command="{Binding LoginCommand}" attachedProperties:IsBusyProperty.Value="{Binding LoginIsRunning}" Style="{StaticResource SignInButton}" Margin="2 36 2 0" />
-                        <Button Content="Forgot your password?" Style="{StaticResource LoginTextButton}" FontFamily="{StaticResource SFProDisplay-Light}" FontSize="13.5" Margin="0 67 0 3" Width="127" />
+                        <Button Content="Forgot your password?" Click="ForgotPasswordButton_Click" Style="{StaticResource LoginTextButton}" FontFamily="{StaticResource SFProDisplay-Light}" FontSize="13.5" Margin="0 67 0 3" Width="127" />
                     </StackPanel>
                 </Border>
             </Canvas>

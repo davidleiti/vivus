@@ -1,4 +1,4 @@
-﻿namespace Vivus.Client.Doctor.Desktop
+﻿namespace Vivus.Client.DCPersonnel.Desktop
 {
     using System;
     using System.Windows;
@@ -15,19 +15,19 @@
     public partial class PopupWindow : Window, IPopup
     {
         #region Private Members
-        
+
         private BaseViewModel viewModel;
         private object clickedObject;
 
         #endregion
 
-        #region Consturctors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PopupWindow"/> class with the given value.
         /// </summary>
         /// <param name="windowViewModel">The window viewmodel.</param>
-        public PopupWindow(Vivus.Core.Doctor.ViewModels.WindowViewModel windowViewModel)
+        public PopupWindow(Vivus.Core.DCPersonnel.ViewModels.WindowViewModel windowViewModel)
         {
             InitializeComponent();
 
@@ -128,7 +128,7 @@
         #endregion
 
         #region Protected Handlers
-        
+
         /// <summary>
         /// Raised when the window is fully rendered.
         /// </summary>

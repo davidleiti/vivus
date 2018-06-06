@@ -12,6 +12,7 @@
     using BCrypt.Net;
     using Vivus.Core.ViewModels.Base;
     using System.Windows;
+    using System;
 
     /// <summary>
     /// Represents a view model for the login page.
@@ -21,15 +22,21 @@
         #region Private Members
 
         private bool loginIsRunning;
+        private bool forgotPasswordIsRunning;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the popup for the forgot password.
+        /// </summary>
+        public IPopup ForgotPasswordPopup { get; set; }
+
+        /// <summary>
         /// Gets or sets the parent page of the current <see cref="LoginViewModel"/>.
         /// </summary>
-        public IContainPassword ParentPage { get; set; }
+        public new IContainPassword ParentPage { get; set; }
 
         /// <summary>
         /// Gets or sets the email address of the user.
@@ -54,6 +61,24 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the flag that indicates whether the forgot password command is running or not.
+        /// </summary>
+        public bool ForgotPasswordIsRunning
+        {
+            get => forgotPasswordIsRunning;
+
+            set
+            {
+                if (forgotPasswordIsRunning == value)
+                    return;
+
+                forgotPasswordIsRunning = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Public Commands
@@ -62,6 +87,11 @@
         /// Gets the login command.
         /// </summary>
         public ICommand LoginCommand { get; }
+
+        /// <summary>
+        /// Gets the forgot password command.
+        /// </summary>
+        public ICommand ForgotPasswordCommand { get; }
 
         #endregion
 
@@ -73,6 +103,7 @@
         public LoginViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
             LoginCommand = new RelayCommand(async () => await LoginAsync());
+            ForgotPasswordCommand = new RelayCommand<Action>(async action => await ForgotPasswordAsync(action));
         }
 
         #endregion
@@ -134,6 +165,41 @@
                         Popup("Invalid email or password.");
                         VivusConsole.WriteLine("No user found.");
                     }
+                });
+            });
+        }
+
+        /// <summary>
+        /// Opens the forgot password popup.
+        /// </summary>
+        /// <param name="newPopup">The create popup action.</param>
+        private async Task ForgotPasswordAsync(Action newPopup)
+        {
+            await RunCommand(() => ForgotPasswordIsRunning, async () =>
+            {
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel();
+
+                    // Create new popup instance
+                    newPopup();
+
+                    // Show the popup
+                    ForgotPasswordPopup.ShowDialog(forgotPasswordVM);
+
+                    // If the popup was closed, return
+                    if (forgotPasswordVM.EndState == FinishState.Closed)
+                        return;
+
+                    // If the popup failed, show message and return
+                    if (forgotPasswordVM.EndState == FinishState.Failed)
+                    {
+                        Popup("An unexpected error occured.");
+                        return;
+                    }
+
+                    // Show successful message
+                    Popup("Password changed successfully!", PopupType.Successful);
                 });
             });
         }

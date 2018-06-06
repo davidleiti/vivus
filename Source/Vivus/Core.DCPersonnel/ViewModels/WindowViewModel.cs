@@ -4,6 +4,7 @@
     using Vivus.Core.DCPersonnel.DataModels;
     using Vivus.Core.DCPersonnel.IoC;
     using Vivus.Core.ViewModels.SideMenu;
+    using Windows.Theme.Data;
 
     /// <summary>
     /// Represents a viewmodel for the window.
@@ -17,6 +18,11 @@
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the window owner of this viewmodel.
+        /// </summary>
+        public IWindow Owner { get; set; }
 
         /// <summary>
         /// Gets or sets the current page displayed on the window.
