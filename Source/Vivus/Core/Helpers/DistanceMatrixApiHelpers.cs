@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Vivus.Core.GoogleAPIs.DistanceMatrixAPI;
+    using Vivus.Core.APIs.Google.DistanceMatrix;
     using Vivus.Core.Model;
 
     /// <summary>

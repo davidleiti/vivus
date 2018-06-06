@@ -1,4 +1,4 @@
-﻿namespace Vivus.Core.GoogleAPIs.DistanceMatrixAPI
+﻿namespace Vivus.Core.APIs.Google.DistanceMatrix
 {
     using Newtonsoft.Json;
 

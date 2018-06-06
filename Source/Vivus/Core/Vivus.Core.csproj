@@ -66,6 +66,12 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.IdentityModel.Logging.1.1.2\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.IdentityModel.Tokens.5.1.2\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -87,6 +93,9 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.5.1.2\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.Interactive.Async, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
@@ -98,6 +107,7 @@
       <HintPath>..\..\packages\System.Linq.Expressions.4.1.0\lib\net463\System.Linq.Expressions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Reflection, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Reflection.4.1.0\lib\net462\System.Reflection.dll</HintPath>
       <Private>True</Private>
@@ -121,6 +131,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Twilio, Version=5.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Twilio.5.13.2\lib\net451\Twilio.dll</HintPath>
+    </Reference>
     <Reference Include="Windows.Theme">
       <HintPath>..\..\..\Resources\Libraries\Windows.Theme.dll</HintPath>
     </Reference>
@@ -134,19 +147,22 @@
     <Compile Include="DataModels\ButtonType.cs" />
     <Compile Include="DataModels\DispatcherWrapper.cs" />
     <Compile Include="DataModels\Gender.cs" />
+    <Compile Include="DataModels\FinishState.cs" />
     <Compile Include="DataModels\Interfaces\IContainPassword.cs" />
     <Compile Include="DataModels\Interfaces\IDispatcherWrapper.cs" />
     <Compile Include="DataModels\Interfaces\IPage.cs" />
     <Compile Include="DataModels\Interfaces\IPopup.cs" />
+    <Compile Include="DataModels\PageStep.cs" />
     <Compile Include="DataModels\PopupType.cs" />
     <Compile Include="DataModels\Visibility.cs" />
     <Compile Include="Expression\ExpressionHelpers.cs" />
-    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrix.cs" />
-    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoute.cs" />
-    <Compile Include="GoogleAPIs\DistanceMatrixAPI\DistanceMatrixRoutes.cs" />
+    <Compile Include="APIs\Google\DistanceMatrix\DistanceMatrix.cs" />
+    <Compile Include="APIs\Google\DistanceMatrix\DistanceMatrixRoute.cs" />
+    <Compile Include="APIs\Google\DistanceMatrix\DistanceMatrixRoutes.cs" />
     <Compile Include="Helpers\AddressHelpers.cs" />
     <Compile Include="Helpers\DistanceMatrixApiHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
+    <Compile Include="Helpers\TwilioApiHelpers.cs" />
     <Compile Include="Http\Requests.cs" />
     <Compile Include="Model\Account.cs">
       <DependentUpon>VivusModel.tt</DependentUpon>
@@ -281,5 +297,6 @@
       <LastGenOutput>VivusModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

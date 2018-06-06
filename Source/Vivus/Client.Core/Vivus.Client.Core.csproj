@@ -162,5 +162,8 @@
   <ItemGroup>
     <Resource Include="Fonts\FontAwesome-Solid.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

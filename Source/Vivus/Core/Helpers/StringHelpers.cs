@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Vivus.Core.Helpers
 {
@@ -61,6 +62,34 @@ namespace Vivus.Core.Helpers
             }
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        /// <summary>
+        /// Transforms a phone number to a generic pattern.
+        /// </summary>
+        /// <param name="phoneNo">The phone number to transform.</param>
+        /// <returns></returns>
+        public static string FormatPhoneNumber(this string phoneNo)
+        {
+            Regex pattern;
+            string newPhoneNo;
+
+            pattern = new Regex(@"[\+\(\) ]");
+            newPhoneNo = pattern.Replace(phoneNo, string.Empty);
+
+            if (!string.IsNullOrEmpty(newPhoneNo))
+            {
+                if ("407".IndexOf(newPhoneNo[0]) < 0)
+                    newPhoneNo = '7' + newPhoneNo;
+
+                if (newPhoneNo[0] == '7')
+                    newPhoneNo = '0' + newPhoneNo;
+
+                if (newPhoneNo[0] == '0')
+                    newPhoneNo = '4' + newPhoneNo;
+            }
+
+            return newPhoneNo;
         }
     }
 }

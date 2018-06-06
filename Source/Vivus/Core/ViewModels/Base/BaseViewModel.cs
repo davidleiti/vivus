@@ -19,6 +19,7 @@
 
         private string popupMessage;
         private PopupType popupType;
+        private IPage parentPage;
 
         #endregion
 
@@ -34,7 +35,20 @@
         /// <summary>
         /// Gets or sets the parent page of the viewmodel.
         /// </summary>
-        public IPage ParentPage { get; set; }
+        public IPage ParentPage
+        {
+            get => parentPage;
+
+            set
+            {
+                if (parentPage == value)
+                    return;
+
+                parentPage = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets the current visibility of the popup.

@@ -411,11 +411,11 @@
                     PatientDetailsPopup.ShowDialog(patientDetailsVM);
 
                     // If the popup was closed, return
-                    if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Closed)
+                    if (patientDetailsVM.EndState == FinishState.Closed)
                         return;
 
                     // If the popup failed, show message and return
-                    if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Failed)
+                    if (patientDetailsVM.EndState == FinishState.Failed)
                     {
                         Popup("An unexpected error occured.");
                         return;
@@ -507,11 +507,11 @@
                 PatientDetailsPopup.ShowDialog(patientDetailsVM);
 
                 // If the popup was closed, return
-                if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Closed)
+                if (patientDetailsVM.EndState == FinishState.Closed)
                     return;
 
                 // If the popup failed, show message and return
-                if (patientDetailsVM.EndState == PatientDetailsViewModel.FinishState.Failed)
+                if (patientDetailsVM.EndState == FinishState.Failed)
                 {
                     Popup("An unexpected error occured.");
                     return;

@@ -19,6 +19,7 @@
             InitializeComponent();
 
             DataContext = IoCContainer.Get<Vivus.Core.Donor.ViewModels.WindowViewModel>();
+            (DataContext as Vivus.Core.Donor.ViewModels.WindowViewModel).Owner = this;
 
             SourceInitialized += MainWindow_SourceInitialized;
         }
