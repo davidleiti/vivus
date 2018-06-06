@@ -45,11 +45,6 @@
         #region Public Members
 
         /// <summary>
-        /// Gets or sets the parent page of the current <see cref="ApplyViewModel"/>.
-        /// </summary>
-        public IPage ParentPage { get; set; }
-
-        /// <summary>
         /// Gets or sets the weight of the donor.
         /// </summary>
         public int? Weight

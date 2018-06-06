@@ -44,7 +44,7 @@
         #endregion
 
         #region Public Properties
-        public IPage Parentpage { get; set; }
+
         public string FullName
         {
             get => fullName;
@@ -233,13 +233,13 @@
 
                 if (selectedBloodDonationRequestItem is null)
                 {
-                    dispatcherWrapper.InvokeAsync(() => Parentpage.DontAllowErrors());
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.DontAllowErrors());
 
                     ClearFields();
                 }
                 else
                 {
-                    dispatcherWrapper.InvokeAsync(() => Parentpage.AllowOptionalErrors());
+                    dispatcherWrapper.InvokeAsync(() => ParentPage.AllowOptionalErrors());
 
                     PopulateFields();
                 }
@@ -361,7 +361,7 @@
                     return;
                 }
 
-                dispatcherWrapper.InvokeAsync(() => Parentpage.AllowErrors());
+                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
                 if (Errors > 0)
                 {

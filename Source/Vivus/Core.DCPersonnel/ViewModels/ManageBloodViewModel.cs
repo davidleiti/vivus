@@ -62,8 +62,6 @@
 
         #region Public properties
 
-        public IPage ParentPage { get; set; }
-
         public ObservableCollection<ContainersStorageItemViewModel> Containers { get; }
 
         public List<BasicEntity<string>> ContainerTypes { get; }

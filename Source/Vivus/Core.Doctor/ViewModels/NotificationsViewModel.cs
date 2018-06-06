@@ -35,7 +35,6 @@
         #endregion
 
         #region Public Members
-        public IPage ParentPage { get; set; }
 
         public bool SendingIsRunning
         {

@@ -52,8 +52,6 @@
 
         public List<BasicEntity<string>> Priorities { get; }
 
-        public IPage ParentPage { get; set; }
-
         /// <summary>
         /// Gets the register command.
         /// </summary>

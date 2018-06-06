@@ -36,8 +36,7 @@
         #endregion
 
         #region Public Properties
-
-        public IPage ParentPage { get; set; }
+        
         /// <summary>
         /// Gets or sets the name of donation center
         /// </summary>

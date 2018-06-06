@@ -38,11 +38,6 @@
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the parent page of the current <see cref="SignUpViewModel"/>.
-        /// </summary>
-        public IPage ParentPage { get; set; }
-
-        /// <summary>
         /// Gets or sets the email address of the donor.
         /// </summary>
         public string Email

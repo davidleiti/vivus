@@ -39,8 +39,6 @@
 
         #region Public Properties
 
-        public IPage ParentPage { get; set; }
-
         public ButtonType ButtonType { get; set; }
 
         /// <summary>

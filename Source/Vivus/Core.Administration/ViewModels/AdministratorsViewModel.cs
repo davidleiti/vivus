@@ -38,8 +38,6 @@
 
         #region Public Members
 
-        public IPage ParentPage { get; set; }
-
 		///<summary>
 		///Gets or sets the email address of the adminstrator
 		/// </summary>

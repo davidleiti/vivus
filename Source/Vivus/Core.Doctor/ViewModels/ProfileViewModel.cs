@@ -35,8 +35,6 @@
 
         #region Public Properties
 
-        public IPage ParentPage { get; set; }
-
         public bool UpdateIsRunning
         {
             get => updateIsRunning;
