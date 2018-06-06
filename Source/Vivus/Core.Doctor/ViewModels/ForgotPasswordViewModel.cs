@@ -54,7 +54,10 @@
                 OnPropertyChanged();
             }
         }
-
+        
+        /// <summary>
+        /// Gets or sets the current step on the page.
+        /// </summary>
         public PageStep PageStep
         {
             get => pageStep;
