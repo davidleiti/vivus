@@ -80,9 +80,9 @@
                     Title = "Donor",
                     Items = new List<SideMenuItemViewModel>
                     {
-                        new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.Dashboard)
+                        new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.ReasonsToDonate)
                         {
-                            Title = "Dashboard"
+                            Title = "Reasons to donate"
                         },
                         new SideMenuItemViewModel(() => IoCContainer.Get<WindowViewModel>().CurrentPage = ApplicationPage.Apply)
                         {

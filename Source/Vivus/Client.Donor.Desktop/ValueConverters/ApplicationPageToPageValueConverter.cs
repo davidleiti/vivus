@@ -27,8 +27,8 @@
                 case ApplicationPage.Register:
                     return new SignUpPage();
 
-                case ApplicationPage.Dashboard:
-                    return new DashboardPage();
+                case ApplicationPage.ReasonsToDonate:
+                    return new ReasonsToDonatePage();
 
                 case ApplicationPage.Apply:
                     return new ApplyPage();

@@ -184,7 +184,7 @@
                         };
 
                         IoCContainer.Get<WindowViewModel>().OnUnloadAnimateLoginPage = false;
-                        IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.Dashboard;
+                        IoCContainer.Get<WindowViewModel>().CurrentPage = DataModels.ApplicationPage.ReasonsToDonate;
                         IoCContainer.Get<WindowViewModel>().ShowMenu();
 
                         IoCContainer.Get<WindowViewModel>().SideMenuVisibility = Visibility.Visible;

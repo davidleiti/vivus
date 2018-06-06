@@ -21,9 +21,9 @@
         Register,
 
         /// <summary>
-        /// The dashboard page.
+        /// The reasons to donate page.
         /// </summary>
-        Dashboard,
+        ReasonsToDonate,
 
         /// <summary>
         /// The apply page.
