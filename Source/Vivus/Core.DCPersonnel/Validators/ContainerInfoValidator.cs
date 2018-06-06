@@ -29,7 +29,7 @@
         public static List<string> BloodTypeValidation(BasicEntity<string> bloodType)
         {
             if (bloodType is null || bloodType.Id < 0)
-                return new List<string> { "Blood type is mandatory." };
+                return new List<string> { "Blood type field is mandatory." };
 
             return null;
         }
@@ -37,7 +37,7 @@
         public static List<string> RHValidation(BasicEntity<string> rh)
         {
             if (rh is null || rh.Id < 0)
-                return new List<string> { "RH is mandatory." };
+                return new List<string> { "RH field is mandatory." };
 
             return null;
         }

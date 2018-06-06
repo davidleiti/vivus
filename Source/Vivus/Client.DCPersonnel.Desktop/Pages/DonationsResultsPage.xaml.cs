@@ -1,6 +1,5 @@
 ﻿namespace Vivus.Client.DCPersonnel.Desktop.Pages
 {
-    using System;
     using Vivus.Client.Core.AttachedProperties;
     using Vivus.Client.Core.Pages;
     using Vivus.Core.DataModels;
@@ -23,6 +22,8 @@
         /// </summary>
         public void AllowErrors()
         {
+            cbBloodType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
+            cbRH.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, true);
             tbDonationDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
             tbDonationResults.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, true);
         }
@@ -32,6 +33,8 @@
         /// </summary>
         public void DontAllowErrors()
         {
+            cbBloodType.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
+            cbRH.SetValue(ComboBoxExtensions.ShowErrorTemplateProperty, false);
             tbDonationDate.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
             tbDonationResults.SetValue(TextBoxExtensions.ShowErrorTemplateProperty, false);
         }

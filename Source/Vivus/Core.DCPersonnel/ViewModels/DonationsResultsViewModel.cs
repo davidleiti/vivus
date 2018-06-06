@@ -31,6 +31,8 @@
         private string donationResults;
         private string filter;
         private bool actionIsRunning;
+        private BasicEntity<string> selectedBloodType;
+        private BasicEntity<string> selectedRH;
 
         DonationFormItemViewModel selectedDonationForm;
 
@@ -42,11 +44,6 @@
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the parent page.
-        /// </summary>
-        public IPage ParentPage { get; set; }
 
         /// <summary>
         /// Gets or sets the full name of the donor.
@@ -177,6 +174,52 @@
         }
 
         /// <summary>
+        /// Gets or sets the selected blood type.
+        /// </summary>
+        public BasicEntity<string> SelectedBloodType
+        {
+            get => selectedBloodType;
+
+            set
+            {
+                if (selectedBloodType == value)
+                    return;
+
+                selectedBloodType = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected rh.
+        /// </summary>
+        public BasicEntity<string> SelectedRH
+        {
+            get => selectedRH;
+
+            set
+            {
+                if (selectedRH == value)
+                    return;
+
+                selectedRH = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection of all the blood types.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> BloodTypes { get; }
+
+        /// <summary>
+        /// Gets the collection of all the rhs.
+        /// </summary>
+        public ObservableCollection<BasicEntity<string>> RHs { get; }
+
+        /// <summary>
         /// Gets the collection of the donation forms.
         /// </summary>
         public ObservableCollection<DonationFormItemViewModel> DonationForms { get; }
@@ -187,7 +230,14 @@
         /// <param name="propertyName">The name of the property.</param>
         /// <returns></returns>
         public override string this[string propertyName] {
-            get {
+            get
+            {
+                if (propertyName == nameof(SelectedBloodType))
+                    return GetErrorString(propertyName, ContainerInfoValidator.BloodTypeValidation(SelectedBloodType));
+
+                if (propertyName == nameof(SelectedRH))
+                    return GetErrorString(propertyName, ContainerInfoValidator.RHValidation(SelectedRH));
+
                 if (propertyName == nameof(DonationDate))
                     return GetErrorString(propertyName, DCPersonnelValidator.DonationDateValidation(DonationDate));
 
@@ -216,6 +266,8 @@
         /// </summary>
         public DonationsResultsViewModel() : base(new DispatcherWrapper(Application.Current.Dispatcher))
         {
+            BloodTypes = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select blood type") };
+            RHs = new ObservableCollection<BasicEntity<string>> { new BasicEntity<string>(-1, "Select rh") };
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
 
             unitOfWork = IoCContainer.Get<IUnitOfWork>();
@@ -225,6 +277,12 @@
             DonationForms = new ObservableCollection<DonationFormItemViewModel>();
             BindingOperations.EnableCollectionSynchronization(DonationForms, formsLock);
             SendCommand = new RelayCommand(async () => await SendResults());
+
+            Task.Run(async () =>
+            {
+                await LoadBloodTypesAsync();
+                await LoadRHTypesAsync();
+            });
         }
 
         #endregion
@@ -247,45 +305,47 @@
         /// <returns></returns>
         private async Task SendResultsAsync()
         {
-            await Task.Run(() =>
+            Donor donor;
+            string messageContent;
+
+            if (selectedDonationForm is null)
             {
+                Popup("No donation request has been selected. Select one from the list and try again.");
+                return;
+            }
 
-                if (selectedDonationForm is null)
-                {
-                    Popup("No donation request has been selected. Select one from the list and try again.");
-                    return;
-                }
-                dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
+            await dispatcherWrapper.InvokeAsync(() => ParentPage.AllowErrors());
 
-                if (Errors > 0)
-                {
-                    Popup("Some errors were found. Fix them before going forward.");
-                    return;
-                }
+            if (Errors > 0)
+            {
+                Popup("Some errors were found. Fix them before going forward.");
+                return;
+            }
 
-                try
-                {
-                    DonationForm donationForm = unitOfWork.DonationForms
-                    .Entities
-                    .First(form => form.DonorID == selectedDonationForm.PersonId);
-                    donationForm.DonationDate = DateTime.Parse(DonationDate);
+            try
+            {
+                DonationForm donationForm = unitOfWork.DonationForms
+                .Entities
+                .First(form => form.DonorID == selectedDonationForm.PersonId);
+                donationForm.DonationDate = DateTime.Parse(DonationDate);
 
-                    string messageContent = "Below are the results of your latest donation:\n" + DonationResults;
+                donor = await unitOfWork.Donors.SingleAsync(d => d.PersonID == donationForm.DonorID);
+                donor.RhID = SelectedRH.Id;
+                donor.BloodTypeID = selectedBloodType.Id;
 
-                    SendMessage(donationForm.DonorID, messageContent);
+                messageContent = "Below are the results of your latest donation:\n" + DonationResults;
+                SendMessage(donationForm.DonorID, messageContent);
 
-                    LoadRequestsAsync();
-                    ClearFields();
-                    SelectedDonationForm = null;
+                LoadRequestsAsync();
+                ClearFields();
+                SelectedDonationForm = null;
 
-                    Popup("Successfull operation!", PopupType.Successful);
-                }
-                catch
-                {
-                    Popup("Something went wrong when handling the request");
-                }
-
-            });
+                Popup("Successfull operation!", PopupType.Successful);
+            }
+            catch
+            {
+                Popup("Something went wrong when handling the request");
+            }
         }
 
         /// <summary>
@@ -408,6 +468,46 @@
             DonationDate = string.Empty;
             NationalIdentificationNumber = string.Empty;
             DonationResults = string.Empty;
+        }
+
+        /// <summary>
+        /// Loads asynchronously all the blood types.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadBloodTypesAsync()
+        {
+            await unitOfWork.BloodTypes.GetAllAsync().ContinueWith(async bloodTypes =>
+            {
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    BloodTypes.Clear();
+                    BloodTypes.Add(new BasicEntity<string>(-1, "Select blood type"));
+                    SelectedBloodType = BloodTypes[0];
+                });
+
+                foreach (BloodType bt in bloodTypes.Result)
+                    await dispatcherWrapper.InvokeAsync(() => BloodTypes.Add(new BasicEntity<string>(bt.BloodTypeID, bt.Type)));
+            });
+        }
+
+        /// <summary>
+        /// Loads asynchronously all the types of RH.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadRHTypesAsync()
+        {
+            await unitOfWork.RHs.GetAllAsync().ContinueWith(async rhs =>
+            {
+                await dispatcherWrapper.InvokeAsync(() =>
+                {
+                    RHs.Clear();
+                    RHs.Add(new BasicEntity<string>(-1, "Select rh"));
+                    SelectedRH = RHs[0];
+                });
+
+                foreach (RH rh in rhs.Result)
+                    await dispatcherWrapper.InvokeAsync(() => RHs.Add(new BasicEntity<string>(rh.RhID, rh.Type)));
+            });
         }
 
         #endregion

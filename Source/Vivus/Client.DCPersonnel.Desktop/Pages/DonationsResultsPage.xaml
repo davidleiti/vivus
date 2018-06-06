@@ -43,6 +43,26 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- Blood type & RH -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Blood type -->
+                    <StackPanel>
+                        <TextBlock Text="Blood type" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox x:Name="cbBloodType" ItemsSource="{Binding BloodTypes}" SelectedItem="{Binding SelectedBloodType, ValidatesOnDataErrors=True}"/>
+                    </StackPanel>
+                    <!-- RH -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="RH" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
+                        <ComboBox x:Name="cbRH" ItemsSource="{Binding RHs}" SelectedItem="{Binding SelectedRH, ValidatesOnDataErrors=True}"/>
+                    </StackPanel>
+                </Grid>
+
                 <!-- Message -->
                 <StackPanel Margin="0 0 0 20">
                     <TextBlock Text="Message" FontSize="15.5" FontFamily="{StaticResource SFProDisplay-Light}" Margin="0 0 0 10" />
