@@ -7,7 +7,7 @@
     using Vivus.Core.DataModels;
     using System.Collections.Generic;
     using System.Windows.Input;
-    using Vivus = Console;
+    using VivusConsole = Core.Console.Console;
     using Vivus.Core.Doctor.Validators;
     using Vivus.Core.UoW;
     using Vivus.Core.ViewModels.Base;
@@ -597,12 +597,15 @@
                 // Remove from DB
                 List<Model.BloodRequest> bloodRequests = unitOfWork.BloodRequests.Entities.ToList();
                 Model.BloodRequest bloodRequest = bloodRequests.Find(br => br.BloodRequestID == SelectedTableItem.Id);
-                bloodRequests.Remove(bloodRequest);
+                unitOfWork.BloodRequests.Remove(bloodRequest);
+
+                // Make changes persistent
+                unitOfWork.Complete();
 
                 // Remove from table
                 Items.Remove(SelectedTableItem);
 
-                Vivus.Console.WriteLine("Doctor: Canceled a request!");
+                VivusConsole.WriteLine("Doctor: Canceled a request!");
                 Popup("The request was canceled!", PopupType.Successful);
             }
             catch

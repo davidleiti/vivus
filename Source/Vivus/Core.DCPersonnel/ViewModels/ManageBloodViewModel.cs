@@ -498,7 +498,7 @@
                     FillModelBloodContainer(ref bloodContainer);
                     unitOfWork.BloodContainers.Add(bloodContainer);
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                     //Update the table
                     FillContainersStorageItemViewModel(ref storageItemViewModel);
@@ -545,7 +545,7 @@
 
                     FillModelBloodContainer(ref bloodContainer);
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                     FillContainersStorageItemViewModel(ref selectedItem);
 
@@ -583,11 +583,10 @@
 
                 try
                 {
-                    int dcId = unitOfWork.DCPersonnel[appViewModel.User.AccountID].DonationCenterID;
-                    
+                    int dcId = unitOfWork.DCPersonnel[appViewModel.User.PersonID].DonationCenterID;
                     unitOfWork.Donors
                         .Entities.ToList()
-                        .Where(donor => donor.DonationCenterID == dcId)
+                        .Where(donor => donor.DonationCenterID == dcId && donor.BloodType.Type.Equals(RequestBloodType.Value) && donor.RH.Type.Equals(RequestRH.Value))
                         .ToList()
                             .ForEach(donor =>
                                 unitOfWork.Messages.Add(new Model.Message
@@ -595,16 +594,17 @@
                                     SenderID = dcId,
                                     SendDate = DateTime.Now,
                                     Content = "We lack in blood of your type, we are already waiting for you at the donation center you are registered at, come and donate to save a life!",
-                                    RecieverID = donor.AccountID
+                                    RecieverID = donor.PersonID
                                 })
                             );
                     // Make changes persistent
-                    //unitOfWork.Complete();
+                    unitOfWork.Complete();
 
                 }
                 catch
                 {
                     Popup("An error occured while sending requests.");
+                    return false;
                 }
 
                 Vivus.Console.WriteLine("DC Personnel: Blood requested!");
