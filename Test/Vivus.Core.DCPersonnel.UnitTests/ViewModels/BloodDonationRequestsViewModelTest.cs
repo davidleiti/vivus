@@ -35,7 +35,7 @@ namespace Vivus.Core.DCPersonnel.UnitTests.ViewModels
             security = new Security();
             viewModel = new BloodDonationRequestsViewModel(unitOfWork, appViewModel.Object, dispatcherWrapper, security)
             {
-                Parentpage = parentPage
+                ParentPage = parentPage
             };
             
         }

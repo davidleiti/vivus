@@ -15,7 +15,7 @@
         public BloodDonationRequestsPage()
         {
             InitializeComponent();
-            ViewModel.Parentpage = this;
+            ViewModel.ParentPage = this;
         }
         public void AllowErrors()
         {
