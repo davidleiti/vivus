@@ -430,7 +430,7 @@
         /// <summary>
         /// Loads all the Containers asynchronously.
         /// </summary>
-        private async void LoadContainersAsync()
+        private async Task LoadContainersAsync()
         {
             await Task.Run(() =>
             {
