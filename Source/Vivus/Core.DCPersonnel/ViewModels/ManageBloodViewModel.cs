@@ -434,7 +434,7 @@
         {
             await Task.Run(() =>
             {
-                dispatcherWrapper.InvokeAsync(() => Containers.Clear());
+                Containers.Clear();
                 unitOfWork.BloodContainers
                 .Entities
                 .ToList()
