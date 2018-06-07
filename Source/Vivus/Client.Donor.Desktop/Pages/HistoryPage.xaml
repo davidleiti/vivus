@@ -38,7 +38,7 @@
                     <DataGridTextColumn Header="Heart rate" Binding="{Binding HeartRate, StringFormat='{}{0} bpm'}" Width="*" />
                     <DataGridTextColumn Header="Systolic BP" Binding="{Binding SystolicBP, StringFormat='{}{0} mmHg'}" Width="*" />
                     <DataGridTextColumn Header="Diastolic BP" Binding="{Binding DiastolicBP, StringFormat='{}{0} mmHg'}" Width="*" />
-                    <DataGridTextColumn Header="Approved" Binding="{Binding Approved, Converter={valueConverters:BoolToStringConverter}}" Width="*" />
+                    <DataGridTextColumn Header="Approved" Binding="{Binding Approved}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -56,14 +56,22 @@
         /// </summary>
         private async Task LoadHistoryAsync()
         {
-            await Task.Run(() =>
-            {
-                dispatcherWrapper.InvokeAsync(() => Items.Clear());
-                unitOfWork.DonationForms
-                .Entities
-                .ToList()
-                .ForEach(history =>
-                    dispatcherWrapper.InvokeAsync(() =>
+            await dispatcherWrapper.InvokeAsync(() => Items.Clear());
+
+            unitOfWork.DonationForms
+            .Entities
+            .ToList()
+            .ForEach(history =>
+                dispatcherWrapper.InvokeAsync(() =>
+                    {
+                        string status = "Pending";
+
+                        if (history.DonationStatus.HasValue)
+                            if (history.DonationStatus.Value)
+                                status = "Yes";
+                            else
+                                status = "No";
+
                         Items.Add(new HistoryItemViewModel
                         {
                             Id = history.DonationFormID,
@@ -72,10 +80,9 @@
                             HeartRate = history.HeartRate,
                             SystolicBP = history.SystolicBloodPressure,
                             DiastolicBP = history.DiastolicBloodPressure,
-                            Approved = !(history.DonationDate is null)
-                        })));
-
-            });
+                            Approved = status
+                        });
+                    }));
         }
     }
 
@@ -92,7 +99,7 @@
         private int heartRate;
         private int? systolicBP;
         private int? diastolicBP;
-        private bool approved;
+        private string approved;
 
         #endregion
 
@@ -209,7 +216,7 @@
         /// <summary>
         /// Gets or sets the donation status.
         /// </summary>
-        public bool Approved
+        public string Approved
         {
             get => approved;
 
