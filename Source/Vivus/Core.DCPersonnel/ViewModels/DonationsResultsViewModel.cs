@@ -123,11 +123,11 @@
 
                 if (!String.IsNullOrEmpty(filter))
                 {
-                    FilterForms();
+                    dispatcherWrapper.InvokeAsync(async () => await FilterForms());
                 }
                 else
                 {
-                    LoadRequestsAsync();
+                    dispatcherWrapper.InvokeAsync(async () => await LoadRequestsAsync());
                 }
 
                 OnPropertyChanged();
@@ -353,7 +353,7 @@
         /// </summary>
         /// <param name="receiverID">ID of the receiver Person</param>
         /// <param name="messageContent">Text of the message</param>
-        private async void SendMessage(int receiverID, string messageContent)
+        private async Task SendMessage(int receiverID, string messageContent)
         {
             await Task.Run(() =>
             {
@@ -378,20 +378,20 @@
         /// <summary>
         /// Loads all <see cref="DonationForm"/> items which don't yet have a DonationDate specified
         /// </summary>
-        private async void LoadRequestsAsync()
+        private async Task LoadRequestsAsync()
         {
             await Task.Run(() =>
             {
                 lock (formsLock)
                 {
-                    DonationForms.Clear();
+                    dispatcherWrapper.InvokeAsync(() => DonationForms.Clear());
                     unitOfWork.DonationForms
                         .Entities
                         .Where(form => form.DonationStatus == true && form.DonationDate is null)
                         .ToList()
                         .ForEach(form =>
                         {
-                            DonationForms.Add(FormToViewModel(form));
+                            dispatcherWrapper.InvokeAsync(() => DonationForms.Add(FormToViewModel(form)));
                         });
                 }
             });
@@ -400,13 +400,13 @@
         /// <summary>
         /// Loads only the <see cref="DonationForm"/> items which match the specified filtering criteria
         /// </summary>
-        private async void FilterForms()
+        private async Task FilterForms()
         {
             await Task.Run(() =>
             {
-
                 string[] patterns = Filter.Trim().Split(' ');
                 List<DonationFormItemViewModel> allForms = unitOfWork.DonationForms.Entities.ToList()
+                                   .Where(form => form.DonationStatus == true && form.DonationDate is null)
                                    .Select(form => FormToViewModel(form))
                                    .Where(form => IsValidForm(form, patterns))
                                    .ToList();
