@@ -126,6 +126,19 @@
             }
         }
 
+        /// <summary>
+        /// Gets the error string of a property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns></returns>
+        public override string this[string propertyName]
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public ButtonType ButtonType { get; set; }
 
         #endregion
