@@ -304,6 +304,7 @@
                 PatientNames.Add(new BasicEntity<string>(-1, "Select patient"));
                 unitOfWork.Patients
                             .Entities
+                            .Where(p => p.DoctorID == appViewModel.User.PersonID)
                             .ToList()
                             .ForEach(patient => dispatcherWrapper
                             .InvokeAsync(() => PatientNames.Add(new BasicEntity<string>(patient.PersonID,
@@ -579,7 +580,7 @@
 
                     Popup($"Request added successfully!", PopupType.Successful);
                 }
-                catch
+                catch (Exception e)
                 {
                     Popup($"An error occured while adding the request.");
                 }

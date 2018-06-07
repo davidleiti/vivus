@@ -275,7 +275,7 @@
       <LastGenOutput>VivusModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="dbConfigurations.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Model\VivusModel.edmx.diagram">
       <DependentUpon>VivusModel.edmx</DependentUpon>
