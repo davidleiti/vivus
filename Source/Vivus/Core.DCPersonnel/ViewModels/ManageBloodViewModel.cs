@@ -290,7 +290,7 @@
                 await LoadContainerTypesAsync();
                 await LoadBloodTypesAsync();
                 await LoadRHTypesAsync();
-                LoadContainersAsync();
+                await LoadContainersAsync();
             });
         }
 
