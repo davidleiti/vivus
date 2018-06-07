@@ -101,9 +101,9 @@
                 </StackPanel>
 
                 <!-- Table -->
-                <DataGrid Grid.Row="2" MinHeight="240">
+                <DataGrid Grid.Row="2" MinHeight="240" ItemsSource="{Binding DonationCenters}" SelectedItem="{Binding SelectedDonationCenter}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#">
+                        <DataGridTextColumn Header="#" Binding="{Binding DonationCenterID}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridFirstColumnHeaderTemplate}" />
                             </DataGridTextColumn.HeaderStyle>
@@ -111,7 +111,7 @@
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DataGridFirstCellTemplate}" />
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" Binding="{Binding DonationCenterName, Mode=OneWay}" Width="*" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding DonationCenterNAme, Mode=OneWay}" Width="*" />
                         <DataGridTextColumn Header="Address" Binding="{Binding ResidencyAddress, Mode=OneWay}" Width="1.65*" />
                     </DataGrid.Columns>
                 </DataGrid>

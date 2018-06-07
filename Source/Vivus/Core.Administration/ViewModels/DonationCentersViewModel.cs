@@ -198,8 +198,7 @@
         }
 
         #endregion
-
-
+        
         #region Private methods
 
         private async Task AddDonationCenterAsync()
@@ -331,8 +330,8 @@
             unitOfWork.DonationCenters
             .Entities
             .ToList()
-            .ForEach(donationCenter =>
-                dispatcherWrapper.InvokeAsync(() =>
+            .ForEach(async donationCenter =>
+                await dispatcherWrapper.InvokeAsync(() =>
                 {
                     AddressViewModel residency = new AddressViewModel(true);
                     //Console.Console.WriteLine("i got a doctor " + doctor.Person.LastName);
@@ -344,7 +343,7 @@
                     DonationCenters.Add(new DonationCenterItemViewModel
                     {
 
-                        
+                        DonationCenterID = donationCenter.DonationCenterID,
                         ResidencyAddressViewModel = new AddressViewModel
                         {
                             County = new BasicEntity<string>(add.CountyID, add.County.Name),
@@ -417,8 +416,7 @@
 
         
         #endregion
-
-
+        
         public class DonationCenterItemViewModel: BaseViewModel
         {
             #region Private members
