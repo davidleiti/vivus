@@ -387,8 +387,8 @@
         {
             await Task.Run(() =>
             {
-                ContainerTypes.Clear();
-                ContainerTypes.Add(new BasicEntity<string>(-1, "Select container type"));
+                dispatcherWrapper.InvokeAsync(() => ContainerTypes.Clear());
+                dispatcherWrapper.InvokeAsync(() => ContainerTypes.Add(new BasicEntity<string>(-1, "Select container type")));
                 unitOfWork.BloodContainerTypes.Entities.ToList().ForEach(c =>
                     dispatcherWrapper.InvokeAsync(() => ContainerTypes.Add(new BasicEntity<string>(c.ContainerTypeID, c.Type)))
                 );
@@ -403,8 +403,8 @@
         {
             await Task.Run(() =>
             {
-                BloodTypes.Clear();
-                BloodTypes.Add(new BasicEntity<string>(-1, "Select blood type"));
+                dispatcherWrapper.InvokeAsync(() => BloodTypes.Clear());
+                dispatcherWrapper.InvokeAsync(() => BloodTypes.Add(new BasicEntity<string>(-1, "Select blood type")));
                 unitOfWork.BloodTypes.Entities.ToList().ForEach(b =>
                     dispatcherWrapper.InvokeAsync(() => BloodTypes.Add(new BasicEntity<string>(b.BloodTypeID, b.Type)))
                 );
@@ -419,8 +419,8 @@
         {
             await Task.Run(() =>
             {
-                RHTypes.Clear();
-                RHTypes.Add(new BasicEntity<string>(-1, "Select rh"));
+                dispatcherWrapper.InvokeAsync(() => RHTypes.Clear());
+                dispatcherWrapper.InvokeAsync(() => RHTypes.Add(new BasicEntity<string>(-1, "Select rh")));
                 unitOfWork.RHs.Entities.ToList().ForEach(rh =>
                     dispatcherWrapper.InvokeAsync(() => RHTypes.Add(new BasicEntity<string>(rh.RhID, rh.Type)))
                 );
